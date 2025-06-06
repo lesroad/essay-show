@@ -29,6 +29,7 @@ func Init() {
 	http.DefaultTransport = otelhttp.NewTransport(http.DefaultTransport)
 }
 
+
 func main() {
 	Init()
 	c := provider.Get().Config

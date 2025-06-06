@@ -67,20 +67,17 @@ func (s *StsService) ApplySignedUrl(ctx context.Context, req *show.ApplySignedUr
 }
 
 func (s *StsService) OCR(ctx context.Context, req *show.OCRReq) (*show.OCRResp, error) {
-	// 获取用户信息
 	aUser := adaptor.ExtractUserMeta(ctx)
 	if aUser.GetUserId() == "" {
 		return nil, consts.ErrNotAuthentication
 	}
 
-	// 图片url与保留类型
 	images := req.Ocr
 	left := ""
 	if req.LeftType != nil {
 		left = *req.LeftType
 	}
 
-	// 调用ocr接口
 	client := util.GetHttpClient()
 	resp, err := client.BeeTitleUrlOCR(images, left)
 	if err != nil {
