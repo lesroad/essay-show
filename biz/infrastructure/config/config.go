@@ -11,7 +11,7 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/redis"
 )
 
-//go:embed config.local.yaml
+// //go:embed config.local.yaml
 var embeddedConfig []byte
 
 var config *Config
@@ -47,16 +47,14 @@ type API struct {
 func NewConfig() (*Config, error) {
 	c := new(Config)
 
-	// 优先使用环境变量指定的配置文件
-	path := os.Getenv("CONFIG_PATH")
-	if path != "" {
+	if len(embeddedConfig) == 0 {
+		path := os.Getenv("CONFIG_PATH")
 		log.Info("NewConfig load config from path: %s", path)
 		err := conf.Load(path, c)
 		if err != nil {
 			return nil, err
 		}
 	} else {
-		// 使用嵌入的配置文件
 		err := conf.LoadFromYamlBytes(embeddedConfig, c)
 		if err != nil {
 			return nil, err

@@ -6,7 +6,7 @@ ENV CGO_ENABLED=0
 ENV GOPROXY=https://goproxy.cn,direct
 
 # 修改 Alpine 包管理工具 apk 的软件源为阿里云镜像
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+# RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 RUN apk update --no-cache && apk add --no-cache tzdata
 
