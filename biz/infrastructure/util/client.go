@@ -179,12 +179,6 @@ func (c *HttpClient) SendRequestStream(ctx context.Context, method, url string, 
 
 	// 使用bufio.Scanner逐行读取SSE流
 	scanner := bufio.NewScanner(resp.Body)
-
-	// 设置更大的缓冲区以支持大段数据 (默认64KB -> 10MB)
-	maxTokenSize := 10 * 1024 * 1024 // 10MB
-	buf := make([]byte, maxTokenSize)
-	scanner.Buffer(buf, maxTokenSize)
-
 	var eventData strings.Builder
 
 	for scanner.Scan() {
@@ -201,13 +195,6 @@ func (c *HttpClient) SendRequestStream(ctx context.Context, method, url string, 
 		if line == "" {
 			if eventData.Len() > 0 {
 				data := eventData.String()
-				dataSize := len(data)
-
-				// 记录大数据块的传输（超过1KB时记录）
-				if dataSize > 1024 {
-					log.Info("发送大型SSE事件，数据大小: %d bytes (%.2f KB)", dataSize, float64(dataSize)/1024)
-				}
-
 				eventData.Reset()
 
 				// 发送到结果通道
@@ -251,14 +238,12 @@ func (c *HttpClient) SendRequestStream(ctx context.Context, method, url string, 
 	// 检查scanner是否遇到错误
 	if err := scanner.Err(); err != nil {
 		span.RecordError(err)
-		// 添加更详细的错误信息以便诊断大数据传输问题
-		return fmt.Errorf("读取SSE流失败 (可能是数据过大或网络问题): %w", err)
+		return fmt.Errorf("读取SSE流失败: %w", err)
 	}
 
 	// 处理最后一个事件（如果没有以空行结尾）
 	if eventData.Len() > 0 {
 		data := eventData.String()
-		log.Info("处理最后一个SSE事件，数据大小: %d bytes", len(data))
 		select {
 		case resultChan <- data:
 		case <-ctx.Done():
