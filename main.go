@@ -15,7 +15,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/network/standard"
 	prometheus "github.com/hertz-contrib/monitor-prometheus"
 	"github.com/hertz-contrib/obs-opentelemetry/tracing"
-	"github.com/xh-polaris/gopkg/hertz/middleware"
 	"github.com/zeromicro/go-zero/core/logx"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/contrib/propagators/b3"
@@ -44,7 +43,7 @@ func main() {
 	)
 
 	// h.Use(hertztracing.ServerMiddleware(cfg)) 入站的HTTP span, span的名称通常是 HTTP GET /path 或 HTTP POST /path 格式
-	h.Use(tracing.ServerMiddleware(cfg), middleware.EnvironmentMiddleware, recovery.Recovery(), func(ctx context.Context, c *app.RequestContext) {
+	h.Use(tracing.ServerMiddleware(cfg), recovery.Recovery(), func(ctx context.Context, c *app.RequestContext) {
 		ctx = adaptor.InjectContext(ctx, c)
 		c.Next(ctx)
 	})
