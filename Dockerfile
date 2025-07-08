@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine AS builder
+FROM registry.cn-shanghai.aliyuncs.com/lesroad/infrastructure:golang_1.23-alpine AS builder
 
 LABEL stage=gobuilder
 
@@ -18,7 +18,7 @@ RUN go mod download
 COPY . .
 RUN sh ./build.sh
 
-FROM alpine:3.18
+FROM registry.cn-shanghai.aliyuncs.com/lesroad/infrastructure:alpine_3.18
 
 COPY --from=builder /usr/share/zoneinfo/Asia/Shanghai /usr/share/zoneinfo/Asia/Shanghai
 
