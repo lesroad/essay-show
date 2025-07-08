@@ -104,11 +104,11 @@ type SignUpReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	AuthId     string `protobuf:"bytes,1,opt,name=authId,proto3" form:"authId" json:"authId,omitempty" query:"authId"`
-	AuthType   string `protobuf:"bytes,2,opt,name=authType,proto3" form:"authType" json:"authType,omitempty" query:"authType"`
-	VerifyCode string `protobuf:"bytes,3,opt,name=verifyCode,proto3" form:"verifyCode" json:"verifyCode,omitempty" query:"verifyCode"`
-	Password   string `protobuf:"bytes,4,opt,name=password,proto3" form:"password" json:"password,omitempty" query:"password"` // 需要MD5加密
-	Name       string `protobuf:"bytes,5,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`
+	AuthId     string `protobuf:"bytes,1,opt,name=authId,proto3" form:"authId" json:"authId" query:"authId"`
+	AuthType   string `protobuf:"bytes,2,opt,name=authType,proto3" form:"authType" json:"authType" query:"authType"`
+	VerifyCode string `protobuf:"bytes,3,opt,name=verifyCode,proto3" form:"verifyCode" json:"verifyCode" query:"verifyCode"`
+	Password   string `protobuf:"bytes,4,opt,name=password,proto3" form:"password" json:"password" query:"password"` // 需要MD5加密
+	Name       string `protobuf:"bytes,5,opt,name=name,proto3" form:"name" json:"name" query:"name"`
 }
 
 func (x *SignUpReq) Reset() {
@@ -184,10 +184,10 @@ type SignUpResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id           string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	AccessToken  string `protobuf:"bytes,2,opt,name=accessToken,proto3" form:"accessToken" json:"accessToken,omitempty" query:"accessToken"`
-	AccessExpire int64  `protobuf:"varint,3,opt,name=accessExpire,proto3" form:"accessExpire" json:"accessExpire,omitempty" query:"accessExpire"`
-	Name         string `protobuf:"bytes,4,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`
+	Id           string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	AccessToken  string `protobuf:"bytes,2,opt,name=accessToken,proto3" form:"accessToken" json:"accessToken" query:"accessToken"`
+	AccessExpire int64  `protobuf:"varint,3,opt,name=accessExpire,proto3" form:"accessExpire" json:"accessExpire" query:"accessExpire"`
+	Name         string `protobuf:"bytes,4,opt,name=name,proto3" form:"name" json:"name" query:"name"`
 }
 
 func (x *SignUpResp) Reset() {
@@ -256,10 +256,10 @@ type SignInReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	AuthId     string  `protobuf:"bytes,1,opt,name=authId,proto3" form:"authId" json:"authId,omitempty" query:"authId"`
-	AuthType   string  `protobuf:"bytes,2,opt,name=authType,proto3" form:"authType" json:"authType,omitempty" query:"authType"`
-	VerifyCode *string `protobuf:"bytes,3,opt,name=verifyCode,proto3,oneof" form:"verifyCode" json:"verifyCode,omitempty" query:"verifyCode"`
-	Password   *string `protobuf:"bytes,4,opt,name=password,proto3,oneof" form:"password" json:"password,omitempty" query:"password"`
+	AuthId     string  `protobuf:"bytes,1,opt,name=authId,proto3" form:"authId" json:"authId" query:"authId"`
+	AuthType   string  `protobuf:"bytes,2,opt,name=authType,proto3" form:"authType" json:"authType" query:"authType"`
+	VerifyCode *string `protobuf:"bytes,3,opt,name=verifyCode,proto3,oneof" form:"verifyCode" json:"verifyCode" query:"verifyCode"`
+	Password   *string `protobuf:"bytes,4,opt,name=password,proto3,oneof" form:"password" json:"password" query:"password"`
 }
 
 func (x *SignInReq) Reset() {
@@ -328,10 +328,10 @@ type SignInResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id           string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	AccessToken  string `protobuf:"bytes,2,opt,name=accessToken,proto3" form:"accessToken" json:"accessToken,omitempty" query:"accessToken"`
-	AccessExpire int64  `protobuf:"varint,3,opt,name=accessExpire,proto3" form:"accessExpire" json:"accessExpire,omitempty" query:"accessExpire"`
-	Name         string `protobuf:"bytes,4,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`
+	Id           string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	AccessToken  string `protobuf:"bytes,2,opt,name=accessToken,proto3" form:"accessToken" json:"accessToken" query:"accessToken"`
+	AccessExpire int64  `protobuf:"varint,3,opt,name=accessExpire,proto3" form:"accessExpire" json:"accessExpire" query:"accessExpire"`
+	Name         string `protobuf:"bytes,4,opt,name=name,proto3" form:"name" json:"name" query:"name"`
 }
 
 func (x *SignInResp) Reset() {
@@ -394,6 +394,134 @@ func (x *SignInResp) GetName() string {
 	return ""
 }
 
+// 绑定请求
+type BindAuthReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	AuthId     string  `protobuf:"bytes,1,opt,name=authId,proto3" form:"authId" json:"authId" query:"authId"`
+	AuthType   string  `protobuf:"bytes,2,opt,name=authType,proto3" form:"authType" json:"authType" query:"authType"`
+	VerifyCode *string `protobuf:"bytes,3,opt,name=verifyCode,proto3,oneof" form:"verifyCode" json:"verifyCode" query:"verifyCode"`
+	Password   *string `protobuf:"bytes,4,opt,name=password,proto3,oneof" form:"password" json:"password" query:"password"`
+}
+
+func (x *BindAuthReq) Reset() {
+	*x = BindAuthReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BindAuthReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BindAuthReq) ProtoMessage() {}
+
+func (x *BindAuthReq) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BindAuthReq.ProtoReflect.Descriptor instead.
+func (*BindAuthReq) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *BindAuthReq) GetAuthId() string {
+	if x != nil {
+		return x.AuthId
+	}
+	return ""
+}
+
+func (x *BindAuthReq) GetAuthType() string {
+	if x != nil {
+		return x.AuthType
+	}
+	return ""
+}
+
+func (x *BindAuthReq) GetVerifyCode() string {
+	if x != nil && x.VerifyCode != nil {
+		return *x.VerifyCode
+	}
+	return ""
+}
+
+func (x *BindAuthReq) GetPassword() string {
+	if x != nil && x.Password != nil {
+		return *x.Password
+	}
+	return ""
+}
+
+// 绑定响应
+type BindAuthResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Code int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+}
+
+func (x *BindAuthResp) Reset() {
+	*x = BindAuthResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BindAuthResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BindAuthResp) ProtoMessage() {}
+
+func (x *BindAuthResp) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BindAuthResp.ProtoReflect.Descriptor instead.
+func (*BindAuthResp) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *BindAuthResp) GetCode() int64 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *BindAuthResp) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
 // 获取用户信息请求
 type GetUserInfoReq struct {
 	state         protoimpl.MessageState
@@ -404,7 +532,7 @@ type GetUserInfoReq struct {
 func (x *GetUserInfoReq) Reset() {
 	*x = GetUserInfoReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[6]
+		mi := &file_essay_show_common_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -417,7 +545,7 @@ func (x *GetUserInfoReq) String() string {
 func (*GetUserInfoReq) ProtoMessage() {}
 
 func (x *GetUserInfoReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[6]
+	mi := &file_essay_show_common_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -430,7 +558,7 @@ func (x *GetUserInfoReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserInfoReq.ProtoReflect.Descriptor instead.
 func (*GetUserInfoReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{6}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{8}
 }
 
 // 获取用户信息响应
@@ -439,15 +567,15 @@ type GetUserInfoResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code    int64                    `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg     string                   `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Payload *GetUserInfoResp_Payload `protobuf:"bytes,3,opt,name=payload,proto3" form:"payload" json:"payload,omitempty" query:"payload"`
+	Code    int64                    `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg     string                   `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Payload *GetUserInfoResp_Payload `protobuf:"bytes,3,opt,name=payload,proto3" form:"payload" json:"payload" query:"payload"`
 }
 
 func (x *GetUserInfoResp) Reset() {
 	*x = GetUserInfoResp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[7]
+		mi := &file_essay_show_common_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -460,7 +588,7 @@ func (x *GetUserInfoResp) String() string {
 func (*GetUserInfoResp) ProtoMessage() {}
 
 func (x *GetUserInfoResp) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[7]
+	mi := &file_essay_show_common_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -473,7 +601,7 @@ func (x *GetUserInfoResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserInfoResp.ProtoReflect.Descriptor instead.
 func (*GetUserInfoResp) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{7}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *GetUserInfoResp) GetCode() int64 {
@@ -503,15 +631,15 @@ type UpdateUserInfoReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name   string `protobuf:"bytes,1,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`
-	School string `protobuf:"bytes,2,opt,name=school,proto3" form:"school" json:"school,omitempty" query:"school"`
-	Grade  int64  `protobuf:"varint,3,opt,name=grade,proto3" form:"grade" json:"grade,omitempty" query:"grade"`
+	Name   string `protobuf:"bytes,1,opt,name=name,proto3" form:"name" json:"name" query:"name"`
+	School string `protobuf:"bytes,2,opt,name=school,proto3" form:"school" json:"school" query:"school"`
+	Grade  int64  `protobuf:"varint,3,opt,name=grade,proto3" form:"grade" json:"grade" query:"grade"`
 }
 
 func (x *UpdateUserInfoReq) Reset() {
 	*x = UpdateUserInfoReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[8]
+		mi := &file_essay_show_common_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -524,7 +652,7 @@ func (x *UpdateUserInfoReq) String() string {
 func (*UpdateUserInfoReq) ProtoMessage() {}
 
 func (x *UpdateUserInfoReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[8]
+	mi := &file_essay_show_common_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -537,7 +665,7 @@ func (x *UpdateUserInfoReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserInfoReq.ProtoReflect.Descriptor instead.
 func (*UpdateUserInfoReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{8}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *UpdateUserInfoReq) GetName() string {
@@ -567,14 +695,14 @@ type UpdatePasswordReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	VerifyCode string `protobuf:"bytes,1,opt,name=verifyCode,proto3" form:"verifyCode" json:"verifyCode,omitempty" query:"verifyCode"`
-	Password   string `protobuf:"bytes,2,opt,name=password,proto3" form:"password" json:"password,omitempty" query:"password"`
+	VerifyCode string `protobuf:"bytes,1,opt,name=verifyCode,proto3" form:"verifyCode" json:"verifyCode" query:"verifyCode"`
+	Password   string `protobuf:"bytes,2,opt,name=password,proto3" form:"password" json:"password" query:"password"`
 }
 
 func (x *UpdatePasswordReq) Reset() {
 	*x = UpdatePasswordReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[9]
+		mi := &file_essay_show_common_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -587,7 +715,7 @@ func (x *UpdatePasswordReq) String() string {
 func (*UpdatePasswordReq) ProtoMessage() {}
 
 func (x *UpdatePasswordReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[9]
+	mi := &file_essay_show_common_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -600,7 +728,7 @@ func (x *UpdatePasswordReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePasswordReq.ProtoReflect.Descriptor instead.
 func (*UpdatePasswordReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{9}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *UpdatePasswordReq) GetVerifyCode() string {
@@ -623,16 +751,16 @@ type UpdatePasswordResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id           string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	AccessToken  string `protobuf:"bytes,2,opt,name=accessToken,proto3" form:"accessToken" json:"accessToken,omitempty" query:"accessToken"`
-	AccessExpire int64  `protobuf:"varint,3,opt,name=accessExpire,proto3" form:"accessExpire" json:"accessExpire,omitempty" query:"accessExpire"`
-	Name         string `protobuf:"bytes,4,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`
+	Id           string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	AccessToken  string `protobuf:"bytes,2,opt,name=accessToken,proto3" form:"accessToken" json:"accessToken" query:"accessToken"`
+	AccessExpire int64  `protobuf:"varint,3,opt,name=accessExpire,proto3" form:"accessExpire" json:"accessExpire" query:"accessExpire"`
+	Name         string `protobuf:"bytes,4,opt,name=name,proto3" form:"name" json:"name" query:"name"`
 }
 
 func (x *UpdatePasswordResp) Reset() {
 	*x = UpdatePasswordResp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[10]
+		mi := &file_essay_show_common_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -645,7 +773,7 @@ func (x *UpdatePasswordResp) String() string {
 func (*UpdatePasswordResp) ProtoMessage() {}
 
 func (x *UpdatePasswordResp) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[10]
+	mi := &file_essay_show_common_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -658,7 +786,7 @@ func (x *UpdatePasswordResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePasswordResp.ProtoReflect.Descriptor instead.
 func (*UpdatePasswordResp) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{10}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *UpdatePasswordResp) GetId() string {
@@ -699,7 +827,7 @@ type DailyAttendReq struct {
 func (x *DailyAttendReq) Reset() {
 	*x = DailyAttendReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[11]
+		mi := &file_essay_show_common_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -712,7 +840,7 @@ func (x *DailyAttendReq) String() string {
 func (*DailyAttendReq) ProtoMessage() {}
 
 func (x *DailyAttendReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[11]
+	mi := &file_essay_show_common_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -725,7 +853,7 @@ func (x *DailyAttendReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DailyAttendReq.ProtoReflect.Descriptor instead.
 func (*DailyAttendReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{11}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{13}
 }
 
 // 获取每日签到状态
@@ -734,14 +862,14 @@ type GetDailyAttendReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Year  int32 `protobuf:"varint,1,opt,name=year,proto3" form:"year" json:"year,omitempty" query:"year"`     // 年
-	Month int32 `protobuf:"varint,2,opt,name=month,proto3" form:"month" json:"month,omitempty" query:"month"` // 月
+	Year  int32 `protobuf:"varint,1,opt,name=year,proto3" form:"year" json:"year" query:"year"`     // 年
+	Month int32 `protobuf:"varint,2,opt,name=month,proto3" form:"month" json:"month" query:"month"` // 月
 }
 
 func (x *GetDailyAttendReq) Reset() {
 	*x = GetDailyAttendReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[12]
+		mi := &file_essay_show_common_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -754,7 +882,7 @@ func (x *GetDailyAttendReq) String() string {
 func (*GetDailyAttendReq) ProtoMessage() {}
 
 func (x *GetDailyAttendReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[12]
+	mi := &file_essay_show_common_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -767,7 +895,7 @@ func (x *GetDailyAttendReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDailyAttendReq.ProtoReflect.Descriptor instead.
 func (*GetDailyAttendReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{12}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *GetDailyAttendReq) GetYear() int32 {
@@ -789,17 +917,17 @@ type GetDailyAttendResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code    int64   `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg     string  `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Attend  int64   `protobuf:"varint,3,opt,name=attend,proto3" form:"attend" json:"attend,omitempty" query:"attend"`            // 今日是否签到
-	Total   int64   `protobuf:"varint,4,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`                // 打卡总天数
-	History []int64 `protobuf:"varint,5,rep,packed,name=history,proto3" form:"history" json:"history,omitempty" query:"history"` // 指定月份的签到历史
+	Code    int64   `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg     string  `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Attend  int64   `protobuf:"varint,3,opt,name=attend,proto3" form:"attend" json:"attend" query:"attend"`            // 今日是否签到
+	Total   int64   `protobuf:"varint,4,opt,name=total,proto3" form:"total" json:"total" query:"total"`                // 打卡总天数
+	History []int64 `protobuf:"varint,5,rep,packed,name=history,proto3" form:"history" json:"history" query:"history"` // 指定月份的签到历史
 }
 
 func (x *GetDailyAttendResp) Reset() {
 	*x = GetDailyAttendResp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[13]
+		mi := &file_essay_show_common_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -812,7 +940,7 @@ func (x *GetDailyAttendResp) String() string {
 func (*GetDailyAttendResp) ProtoMessage() {}
 
 func (x *GetDailyAttendResp) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[13]
+	mi := &file_essay_show_common_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -825,7 +953,7 @@ func (x *GetDailyAttendResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetDailyAttendResp.ProtoReflect.Descriptor instead.
 func (*GetDailyAttendResp) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{13}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetDailyAttendResp) GetCode() int64 {
@@ -873,7 +1001,7 @@ type GetInvitationCodeReq struct {
 func (x *GetInvitationCodeReq) Reset() {
 	*x = GetInvitationCodeReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[14]
+		mi := &file_essay_show_common_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -886,7 +1014,7 @@ func (x *GetInvitationCodeReq) String() string {
 func (*GetInvitationCodeReq) ProtoMessage() {}
 
 func (x *GetInvitationCodeReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[14]
+	mi := &file_essay_show_common_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -899,7 +1027,7 @@ func (x *GetInvitationCodeReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetInvitationCodeReq.ProtoReflect.Descriptor instead.
 func (*GetInvitationCodeReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{14}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{16}
 }
 
 type GetInvitationCodeResp struct {
@@ -907,15 +1035,15 @@ type GetInvitationCodeResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code           int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg            string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	InvitationCode string `protobuf:"bytes,3,opt,name=invitationCode,proto3" form:"invitationCode" json:"invitationCode,omitempty" query:"invitationCode"`
+	Code           int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg            string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	InvitationCode string `protobuf:"bytes,3,opt,name=invitationCode,proto3" form:"invitationCode" json:"invitationCode" query:"invitationCode"`
 }
 
 func (x *GetInvitationCodeResp) Reset() {
 	*x = GetInvitationCodeResp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[15]
+		mi := &file_essay_show_common_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -928,7 +1056,7 @@ func (x *GetInvitationCodeResp) String() string {
 func (*GetInvitationCodeResp) ProtoMessage() {}
 
 func (x *GetInvitationCodeResp) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[15]
+	mi := &file_essay_show_common_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -941,7 +1069,7 @@ func (x *GetInvitationCodeResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetInvitationCodeResp.ProtoReflect.Descriptor instead.
 func (*GetInvitationCodeResp) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{15}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GetInvitationCodeResp) GetCode() int64 {
@@ -971,13 +1099,13 @@ type FillInvitationCodeReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	InvitationCode string `protobuf:"bytes,1,opt,name=invitationCode,proto3" form:"invitationCode" json:"invitationCode,omitempty" query:"invitationCode"`
+	InvitationCode string `protobuf:"bytes,1,opt,name=invitationCode,proto3" form:"invitationCode" json:"invitationCode" query:"invitationCode"`
 }
 
 func (x *FillInvitationCodeReq) Reset() {
 	*x = FillInvitationCodeReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[16]
+		mi := &file_essay_show_common_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -990,7 +1118,7 @@ func (x *FillInvitationCodeReq) String() string {
 func (*FillInvitationCodeReq) ProtoMessage() {}
 
 func (x *FillInvitationCodeReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[16]
+	mi := &file_essay_show_common_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1003,7 +1131,7 @@ func (x *FillInvitationCodeReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FillInvitationCodeReq.ProtoReflect.Descriptor instead.
 func (*FillInvitationCodeReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{16}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *FillInvitationCodeReq) GetInvitationCode() string {
@@ -1019,17 +1147,17 @@ type EssayEvaluateReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Title     string   `protobuf:"bytes,1,opt,name=title,proto3" form:"title" json:"title,omitempty" query:"title"`
-	Text      string   `protobuf:"bytes,2,opt,name=text,proto3" form:"text" json:"text,omitempty" query:"text"`
-	Grade     *int64   `protobuf:"varint,3,opt,name=grade,proto3,oneof" form:"grade" json:"grade,omitempty" query:"grade"`
-	EssayType *string  `protobuf:"bytes,4,opt,name=essayType,proto3,oneof" form:"essayType" json:"essayType,omitempty" query:"essayType"`
-	Ocr       []string `protobuf:"bytes,5,rep,name=ocr,proto3" form:"ocr" json:"ocr,omitempty" query:"ocr"`
+	Title     string   `protobuf:"bytes,1,opt,name=title,proto3" form:"title" json:"title" query:"title"`
+	Text      string   `protobuf:"bytes,2,opt,name=text,proto3" form:"text" json:"text" query:"text"`
+	Grade     *int64   `protobuf:"varint,3,opt,name=grade,proto3,oneof" form:"grade" json:"grade" query:"grade"`
+	EssayType *string  `protobuf:"bytes,4,opt,name=essayType,proto3,oneof" form:"essayType" json:"essayType" query:"essayType"`
+	Ocr       []string `protobuf:"bytes,5,rep,name=ocr,proto3" form:"ocr" json:"ocr" query:"ocr"`
 }
 
 func (x *EssayEvaluateReq) Reset() {
 	*x = EssayEvaluateReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[17]
+		mi := &file_essay_show_common_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1042,7 +1170,7 @@ func (x *EssayEvaluateReq) String() string {
 func (*EssayEvaluateReq) ProtoMessage() {}
 
 func (x *EssayEvaluateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[17]
+	mi := &file_essay_show_common_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1055,7 +1183,7 @@ func (x *EssayEvaluateReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EssayEvaluateReq.ProtoReflect.Descriptor instead.
 func (*EssayEvaluateReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{17}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *EssayEvaluateReq) GetTitle() string {
@@ -1099,16 +1227,16 @@ type EssayEvaluateResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code     int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg      string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Response string `protobuf:"bytes,3,opt,name=response,proto3" form:"response" json:"response,omitempty" query:"response"`
-	Id       string `protobuf:"bytes,4,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
+	Code     int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg      string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Response string `protobuf:"bytes,3,opt,name=response,proto3" form:"response" json:"response" query:"response"`
+	Id       string `protobuf:"bytes,4,opt,name=id,proto3" form:"id" json:"id" query:"id"`
 }
 
 func (x *EssayEvaluateResp) Reset() {
 	*x = EssayEvaluateResp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[18]
+		mi := &file_essay_show_common_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1121,7 +1249,7 @@ func (x *EssayEvaluateResp) String() string {
 func (*EssayEvaluateResp) ProtoMessage() {}
 
 func (x *EssayEvaluateResp) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[18]
+	mi := &file_essay_show_common_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1134,7 +1262,7 @@ func (x *EssayEvaluateResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EssayEvaluateResp.ProtoReflect.Descriptor instead.
 func (*EssayEvaluateResp) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{18}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *EssayEvaluateResp) GetCode() int64 {
@@ -1165,20 +1293,124 @@ func (x *EssayEvaluateResp) GetId() string {
 	return ""
 }
 
+// 批改结果下载请求
+type DownloadEvaluateReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+}
+
+func (x *DownloadEvaluateReq) Reset() {
+	*x = DownloadEvaluateReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[21]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DownloadEvaluateReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DownloadEvaluateReq) ProtoMessage() {}
+
+func (x *DownloadEvaluateReq) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[21]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DownloadEvaluateReq.ProtoReflect.Descriptor instead.
+func (*DownloadEvaluateReq) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *DownloadEvaluateReq) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+// 批改结果下载响应
+type DownloadEvaluateResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Url          string `protobuf:"bytes,1,opt,name=url,proto3" form:"url" json:"url" query:"url"`
+	SessionToken string `protobuf:"bytes,2,opt,name=sessionToken,proto3" form:"sessionToken" json:"sessionToken" query:"sessionToken"`
+}
+
+func (x *DownloadEvaluateResp) Reset() {
+	*x = DownloadEvaluateResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[22]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *DownloadEvaluateResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DownloadEvaluateResp) ProtoMessage() {}
+
+func (x *DownloadEvaluateResp) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[22]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DownloadEvaluateResp.ProtoReflect.Descriptor instead.
+func (*DownloadEvaluateResp) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *DownloadEvaluateResp) GetUrl() string {
+	if x != nil {
+		return x.Url
+	}
+	return ""
+}
+
+func (x *DownloadEvaluateResp) GetSessionToken() string {
+	if x != nil {
+		return x.SessionToken
+	}
+	return ""
+}
+
 // 点赞或点踩一个题目
 type LikeEvaluateReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id   string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Like int64  `protobuf:"varint,2,opt,name=like,proto3" form:"like" json:"like,omitempty" query:"like"`
+	Id   string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Like int64  `protobuf:"varint,2,opt,name=like,proto3" form:"like" json:"like" query:"like"`
 }
 
 func (x *LikeEvaluateReq) Reset() {
 	*x = LikeEvaluateReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[19]
+		mi := &file_essay_show_common_proto_msgTypes[23]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1191,7 +1423,7 @@ func (x *LikeEvaluateReq) String() string {
 func (*LikeEvaluateReq) ProtoMessage() {}
 
 func (x *LikeEvaluateReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[19]
+	mi := &file_essay_show_common_proto_msgTypes[23]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1204,7 +1436,7 @@ func (x *LikeEvaluateReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LikeEvaluateReq.ProtoReflect.Descriptor instead.
 func (*LikeEvaluateReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{19}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *LikeEvaluateReq) GetId() string {
@@ -1227,13 +1459,13 @@ type GetEssayEvaluateLogsReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions,omitempty" query:"paginationOptions"`
+	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions" query:"paginationOptions"`
 }
 
 func (x *GetEssayEvaluateLogsReq) Reset() {
 	*x = GetEssayEvaluateLogsReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[20]
+		mi := &file_essay_show_common_proto_msgTypes[24]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1246,7 +1478,7 @@ func (x *GetEssayEvaluateLogsReq) String() string {
 func (*GetEssayEvaluateLogsReq) ProtoMessage() {}
 
 func (x *GetEssayEvaluateLogsReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[20]
+	mi := &file_essay_show_common_proto_msgTypes[24]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1259,7 +1491,7 @@ func (x *GetEssayEvaluateLogsReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEssayEvaluateLogsReq.ProtoReflect.Descriptor instead.
 func (*GetEssayEvaluateLogsReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{20}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *GetEssayEvaluateLogsReq) GetPaginationOptions() *basic.PaginationOptions {
@@ -1275,14 +1507,14 @@ type GetEssayEvaluateLogsResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Total int64  `protobuf:"varint,1,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`
-	Logs  []*Log `protobuf:"bytes,2,rep,name=logs,proto3" form:"logs" json:"logs,omitempty" query:"logs"`
+	Total int64  `protobuf:"varint,1,opt,name=total,proto3" form:"total" json:"total" query:"total"`
+	Logs  []*Log `protobuf:"bytes,2,rep,name=logs,proto3" form:"logs" json:"logs" query:"logs"`
 }
 
 func (x *GetEssayEvaluateLogsResp) Reset() {
 	*x = GetEssayEvaluateLogsResp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[21]
+		mi := &file_essay_show_common_proto_msgTypes[25]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1295,7 +1527,7 @@ func (x *GetEssayEvaluateLogsResp) String() string {
 func (*GetEssayEvaluateLogsResp) ProtoMessage() {}
 
 func (x *GetEssayEvaluateLogsResp) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[21]
+	mi := &file_essay_show_common_proto_msgTypes[25]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1308,7 +1540,7 @@ func (x *GetEssayEvaluateLogsResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetEssayEvaluateLogsResp.ProtoReflect.Descriptor instead.
 func (*GetEssayEvaluateLogsResp) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{21}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *GetEssayEvaluateLogsResp) GetTotal() int64 {
@@ -1330,18 +1562,18 @@ type Log struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id         string   `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Grade      int64    `protobuf:"varint,2,opt,name=grade,proto3" form:"grade" json:"grade,omitempty" query:"grade"`
-	Ocr        []string `protobuf:"bytes,3,rep,name=ocr,proto3" form:"ocr" json:"ocr,omitempty" query:"ocr"`
-	Response   string   `protobuf:"bytes,4,opt,name=response,proto3" form:"response" json:"response,omitempty" query:"response"`
-	Like       int64    `protobuf:"varint,6,opt,name=like,proto3" form:"like" json:"like,omitempty" query:"like"`
-	CreateTime int64    `protobuf:"varint,5,opt,name=createTime,proto3" form:"createTime" json:"createTime,omitempty" query:"createTime"`
+	Id         string   `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Grade      int64    `protobuf:"varint,2,opt,name=grade,proto3" form:"grade" json:"grade" query:"grade"`
+	Ocr        []string `protobuf:"bytes,3,rep,name=ocr,proto3" form:"ocr" json:"ocr" query:"ocr"`
+	Response   string   `protobuf:"bytes,4,opt,name=response,proto3" form:"response" json:"response" query:"response"`
+	Like       int64    `protobuf:"varint,6,opt,name=like,proto3" form:"like" json:"like" query:"like"`
+	CreateTime int64    `protobuf:"varint,5,opt,name=createTime,proto3" form:"createTime" json:"createTime" query:"createTime"`
 }
 
 func (x *Log) Reset() {
 	*x = Log{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[22]
+		mi := &file_essay_show_common_proto_msgTypes[26]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1354,7 +1586,7 @@ func (x *Log) String() string {
 func (*Log) ProtoMessage() {}
 
 func (x *Log) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[22]
+	mi := &file_essay_show_common_proto_msgTypes[26]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1367,7 +1599,7 @@ func (x *Log) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Log.ProtoReflect.Descriptor instead.
 func (*Log) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{22}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *Log) GetId() string {
@@ -1418,14 +1650,14 @@ type ApplySignedUrlReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Prefix *string `protobuf:"bytes,1,opt,name=prefix,proto3,oneof" form:"prefix" json:"prefix,omitempty" query:"prefix"`
-	Suffix *string `protobuf:"bytes,2,opt,name=suffix,proto3,oneof" form:"suffix" json:"suffix,omitempty" query:"suffix"`
+	Prefix *string `protobuf:"bytes,1,opt,name=prefix,proto3,oneof" form:"prefix" json:"prefix" query:"prefix"`
+	Suffix *string `protobuf:"bytes,2,opt,name=suffix,proto3,oneof" form:"suffix" json:"suffix" query:"suffix"`
 }
 
 func (x *ApplySignedUrlReq) Reset() {
 	*x = ApplySignedUrlReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[23]
+		mi := &file_essay_show_common_proto_msgTypes[27]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1438,7 +1670,7 @@ func (x *ApplySignedUrlReq) String() string {
 func (*ApplySignedUrlReq) ProtoMessage() {}
 
 func (x *ApplySignedUrlReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[23]
+	mi := &file_essay_show_common_proto_msgTypes[27]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1451,7 +1683,7 @@ func (x *ApplySignedUrlReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ApplySignedUrlReq.ProtoReflect.Descriptor instead.
 func (*ApplySignedUrlReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{23}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *ApplySignedUrlReq) GetPrefix() string {
@@ -1473,14 +1705,14 @@ type ApplySignedUrlResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Url          string `protobuf:"bytes,1,opt,name=url,proto3" form:"url" json:"url,omitempty" query:"url"`
-	SessionToken string `protobuf:"bytes,2,opt,name=sessionToken,proto3" form:"sessionToken" json:"sessionToken,omitempty" query:"sessionToken"`
+	Url          string `protobuf:"bytes,1,opt,name=url,proto3" form:"url" json:"url" query:"url"`
+	SessionToken string `protobuf:"bytes,2,opt,name=sessionToken,proto3" form:"sessionToken" json:"sessionToken" query:"sessionToken"`
 }
 
 func (x *ApplySignedUrlResp) Reset() {
 	*x = ApplySignedUrlResp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[24]
+		mi := &file_essay_show_common_proto_msgTypes[28]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1493,7 +1725,7 @@ func (x *ApplySignedUrlResp) String() string {
 func (*ApplySignedUrlResp) ProtoMessage() {}
 
 func (x *ApplySignedUrlResp) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[24]
+	mi := &file_essay_show_common_proto_msgTypes[28]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1506,7 +1738,7 @@ func (x *ApplySignedUrlResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ApplySignedUrlResp.ProtoReflect.Descriptor instead.
 func (*ApplySignedUrlResp) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{24}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *ApplySignedUrlResp) GetUrl() string {
@@ -1529,14 +1761,14 @@ type OCRReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Ocr      []string `protobuf:"bytes,1,rep,name=ocr,proto3" form:"ocr" json:"ocr,omitempty" query:"ocr"`
-	LeftType *string  `protobuf:"bytes,2,opt,name=leftType,proto3,oneof" form:"leftType" json:"leftType,omitempty" query:"leftType"`
+	Ocr      []string `protobuf:"bytes,1,rep,name=ocr,proto3" form:"ocr" json:"ocr" query:"ocr"`
+	LeftType *string  `protobuf:"bytes,2,opt,name=leftType,proto3,oneof" form:"leftType" json:"leftType" query:"leftType"`
 }
 
 func (x *OCRReq) Reset() {
 	*x = OCRReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[25]
+		mi := &file_essay_show_common_proto_msgTypes[29]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1549,7 +1781,7 @@ func (x *OCRReq) String() string {
 func (*OCRReq) ProtoMessage() {}
 
 func (x *OCRReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[25]
+	mi := &file_essay_show_common_proto_msgTypes[29]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1562,7 +1794,7 @@ func (x *OCRReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OCRReq.ProtoReflect.Descriptor instead.
 func (*OCRReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{25}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *OCRReq) GetOcr() []string {
@@ -1584,14 +1816,14 @@ type OCRResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Title string `protobuf:"bytes,1,opt,name=title,proto3" form:"title" json:"title,omitempty" query:"title"`
-	Text  string `protobuf:"bytes,2,opt,name=text,proto3" form:"text" json:"text,omitempty" query:"text"`
+	Title string `protobuf:"bytes,1,opt,name=title,proto3" form:"title" json:"title" query:"title"`
+	Text  string `protobuf:"bytes,2,opt,name=text,proto3" form:"text" json:"text" query:"text"`
 }
 
 func (x *OCRResp) Reset() {
 	*x = OCRResp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[26]
+		mi := &file_essay_show_common_proto_msgTypes[30]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1604,7 +1836,7 @@ func (x *OCRResp) String() string {
 func (*OCRResp) ProtoMessage() {}
 
 func (x *OCRResp) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[26]
+	mi := &file_essay_show_common_proto_msgTypes[30]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1617,7 +1849,7 @@ func (x *OCRResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OCRResp.ProtoReflect.Descriptor instead.
 func (*OCRResp) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{26}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *OCRResp) GetTitle() string {
@@ -1634,19 +1866,20 @@ func (x *OCRResp) GetText() string {
 	return ""
 }
 
+// 公共响应
 type Response struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
+	Code int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
 }
 
 func (x *Response) Reset() {
 	*x = Response{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[27]
+		mi := &file_essay_show_common_proto_msgTypes[31]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1659,7 +1892,7 @@ func (x *Response) String() string {
 func (*Response) ProtoMessage() {}
 
 func (x *Response) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[27]
+	mi := &file_essay_show_common_proto_msgTypes[31]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1672,7 +1905,7 @@ func (x *Response) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Response.ProtoReflect.Descriptor instead.
 func (*Response) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{27}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *Response) GetCode() int64 {
@@ -1695,15 +1928,15 @@ type SendVerifyCodeReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	AuthType string `protobuf:"bytes,1,opt,name=authType,proto3" form:"authType" json:"authType,omitempty" query:"authType"`
-	AuthId   string `protobuf:"bytes,2,opt,name=authId,proto3" form:"authId" json:"authId,omitempty" query:"authId"`
-	Type     int64  `protobuf:"varint,3,opt,name=type,proto3" form:"type" json:"type,omitempty" query:"type"`
+	AuthType string `protobuf:"bytes,1,opt,name=authType,proto3" form:"authType" json:"authType" query:"authType"`
+	AuthId   string `protobuf:"bytes,2,opt,name=authId,proto3" form:"authId" json:"authId" query:"authId"`
+	Type     int64  `protobuf:"varint,3,opt,name=type,proto3" form:"type" json:"type" query:"type"`
 }
 
 func (x *SendVerifyCodeReq) Reset() {
 	*x = SendVerifyCodeReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[28]
+		mi := &file_essay_show_common_proto_msgTypes[32]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1716,7 +1949,7 @@ func (x *SendVerifyCodeReq) String() string {
 func (*SendVerifyCodeReq) ProtoMessage() {}
 
 func (x *SendVerifyCodeReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[28]
+	mi := &file_essay_show_common_proto_msgTypes[32]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1729,7 +1962,7 @@ func (x *SendVerifyCodeReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SendVerifyCodeReq.ProtoReflect.Descriptor instead.
 func (*SendVerifyCodeReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{28}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *SendVerifyCodeReq) GetAuthType() string {
@@ -1759,13 +1992,13 @@ type CreateExerciseReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	LogId string `protobuf:"bytes,1,opt,name=logId,proto3" form:"logId" json:"logId,omitempty" query:"logId"`
+	LogId string `protobuf:"bytes,1,opt,name=logId,proto3" form:"logId" json:"logId" query:"logId"`
 }
 
 func (x *CreateExerciseReq) Reset() {
 	*x = CreateExerciseReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[29]
+		mi := &file_essay_show_common_proto_msgTypes[33]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1778,7 +2011,7 @@ func (x *CreateExerciseReq) String() string {
 func (*CreateExerciseReq) ProtoMessage() {}
 
 func (x *CreateExerciseReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[29]
+	mi := &file_essay_show_common_proto_msgTypes[33]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1791,7 +2024,7 @@ func (x *CreateExerciseReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateExerciseReq.ProtoReflect.Descriptor instead.
 func (*CreateExerciseReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{29}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *CreateExerciseReq) GetLogId() string {
@@ -1806,15 +2039,15 @@ type CreateExerciseResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code     int64     `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg      string    `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Exercise *Exercise `protobuf:"bytes,3,opt,name=exercise,proto3" form:"exercise" json:"exercise,omitempty" query:"exercise"`
+	Code     int64     `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg      string    `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Exercise *Exercise `protobuf:"bytes,3,opt,name=exercise,proto3" form:"exercise" json:"exercise" query:"exercise"`
 }
 
 func (x *CreateExerciseResp) Reset() {
 	*x = CreateExerciseResp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[30]
+		mi := &file_essay_show_common_proto_msgTypes[34]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1827,7 +2060,7 @@ func (x *CreateExerciseResp) String() string {
 func (*CreateExerciseResp) ProtoMessage() {}
 
 func (x *CreateExerciseResp) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[30]
+	mi := &file_essay_show_common_proto_msgTypes[34]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1840,7 +2073,7 @@ func (x *CreateExerciseResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateExerciseResp.ProtoReflect.Descriptor instead.
 func (*CreateExerciseResp) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{30}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *CreateExerciseResp) GetCode() int64 {
@@ -1870,14 +2103,14 @@ type ListSimpleExercisesReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	LogId             string                   `protobuf:"bytes,1,opt,name=logId,proto3" form:"logId" json:"logId,omitempty" query:"logId"`
-	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,2,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions,omitempty" query:"paginationOptions"`
+	LogId             string                   `protobuf:"bytes,1,opt,name=logId,proto3" form:"logId" json:"logId" query:"logId"`
+	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,2,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions" query:"paginationOptions"`
 }
 
 func (x *ListSimpleExercisesReq) Reset() {
 	*x = ListSimpleExercisesReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[31]
+		mi := &file_essay_show_common_proto_msgTypes[35]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1890,7 +2123,7 @@ func (x *ListSimpleExercisesReq) String() string {
 func (*ListSimpleExercisesReq) ProtoMessage() {}
 
 func (x *ListSimpleExercisesReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[31]
+	mi := &file_essay_show_common_proto_msgTypes[35]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1903,7 +2136,7 @@ func (x *ListSimpleExercisesReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSimpleExercisesReq.ProtoReflect.Descriptor instead.
 func (*ListSimpleExercisesReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{31}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *ListSimpleExercisesReq) GetLogId() string {
@@ -1925,16 +2158,16 @@ type ListSimpleExercisesResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code      int64                                     `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg       string                                    `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Exercises []*ListSimpleExercisesResp_SimpleExercise `protobuf:"bytes,3,rep,name=exercises,proto3" form:"exercises" json:"exercises,omitempty" query:"exercises"`
-	Total     int64                                     `protobuf:"varint,4,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`
+	Code      int64                                     `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg       string                                    `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Exercises []*ListSimpleExercisesResp_SimpleExercise `protobuf:"bytes,3,rep,name=exercises,proto3" form:"exercises" json:"exercises" query:"exercises"`
+	Total     int64                                     `protobuf:"varint,4,opt,name=total,proto3" form:"total" json:"total" query:"total"`
 }
 
 func (x *ListSimpleExercisesResp) Reset() {
 	*x = ListSimpleExercisesResp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[32]
+		mi := &file_essay_show_common_proto_msgTypes[36]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1947,7 +2180,7 @@ func (x *ListSimpleExercisesResp) String() string {
 func (*ListSimpleExercisesResp) ProtoMessage() {}
 
 func (x *ListSimpleExercisesResp) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[32]
+	mi := &file_essay_show_common_proto_msgTypes[36]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1960,7 +2193,7 @@ func (x *ListSimpleExercisesResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSimpleExercisesResp.ProtoReflect.Descriptor instead.
 func (*ListSimpleExercisesResp) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{32}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *ListSimpleExercisesResp) GetCode() int64 {
@@ -1997,13 +2230,13 @@ type GetExerciseReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
 }
 
 func (x *GetExerciseReq) Reset() {
 	*x = GetExerciseReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[33]
+		mi := &file_essay_show_common_proto_msgTypes[37]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2016,7 +2249,7 @@ func (x *GetExerciseReq) String() string {
 func (*GetExerciseReq) ProtoMessage() {}
 
 func (x *GetExerciseReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[33]
+	mi := &file_essay_show_common_proto_msgTypes[37]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2029,7 +2262,7 @@ func (x *GetExerciseReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetExerciseReq.ProtoReflect.Descriptor instead.
 func (*GetExerciseReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{33}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *GetExerciseReq) GetId() string {
@@ -2044,15 +2277,15 @@ type GetExerciseResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code     int64     `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg      string    `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Exercise *Exercise `protobuf:"bytes,3,opt,name=exercise,proto3" form:"exercise" json:"exercise,omitempty" query:"exercise"`
+	Code     int64     `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg      string    `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Exercise *Exercise `protobuf:"bytes,3,opt,name=exercise,proto3" form:"exercise" json:"exercise" query:"exercise"`
 }
 
 func (x *GetExerciseResp) Reset() {
 	*x = GetExerciseResp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[34]
+		mi := &file_essay_show_common_proto_msgTypes[38]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2065,7 +2298,7 @@ func (x *GetExerciseResp) String() string {
 func (*GetExerciseResp) ProtoMessage() {}
 
 func (x *GetExerciseResp) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[34]
+	mi := &file_essay_show_common_proto_msgTypes[38]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2078,7 +2311,7 @@ func (x *GetExerciseResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetExerciseResp.ProtoReflect.Descriptor instead.
 func (*GetExerciseResp) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{34}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *GetExerciseResp) GetCode() int64 {
@@ -2108,14 +2341,14 @@ type DoExerciseReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id      string                  `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Records []*DoExerciseReq_Record `protobuf:"bytes,2,rep,name=records,proto3" form:"records" json:"records,omitempty" query:"records"`
+	Id      string                  `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Records []*DoExerciseReq_Record `protobuf:"bytes,2,rep,name=records,proto3" form:"records" json:"records" query:"records"`
 }
 
 func (x *DoExerciseReq) Reset() {
 	*x = DoExerciseReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[35]
+		mi := &file_essay_show_common_proto_msgTypes[39]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2128,7 +2361,7 @@ func (x *DoExerciseReq) String() string {
 func (*DoExerciseReq) ProtoMessage() {}
 
 func (x *DoExerciseReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[35]
+	mi := &file_essay_show_common_proto_msgTypes[39]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2141,7 +2374,7 @@ func (x *DoExerciseReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DoExerciseReq.ProtoReflect.Descriptor instead.
 func (*DoExerciseReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{35}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *DoExerciseReq) GetId() string {
@@ -2163,15 +2396,15 @@ type DoExerciseResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code    int64    `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg     string   `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Records *Records `protobuf:"bytes,3,opt,name=records,proto3" form:"records" json:"records,omitempty" query:"records"`
+	Code    int64    `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg     string   `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Records *Records `protobuf:"bytes,3,opt,name=records,proto3" form:"records" json:"records" query:"records"`
 }
 
 func (x *DoExerciseResp) Reset() {
 	*x = DoExerciseResp{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[36]
+		mi := &file_essay_show_common_proto_msgTypes[40]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2184,7 +2417,7 @@ func (x *DoExerciseResp) String() string {
 func (*DoExerciseResp) ProtoMessage() {}
 
 func (x *DoExerciseResp) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[36]
+	mi := &file_essay_show_common_proto_msgTypes[40]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2197,7 +2430,7 @@ func (x *DoExerciseResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DoExerciseResp.ProtoReflect.Descriptor instead.
 func (*DoExerciseResp) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{36}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *DoExerciseResp) GetCode() int64 {
@@ -2227,14 +2460,14 @@ type LikeExerciseReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id   string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Like int64  `protobuf:"varint,2,opt,name=like,proto3" form:"like" json:"like,omitempty" query:"like"`
+	Id   string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Like int64  `protobuf:"varint,2,opt,name=like,proto3" form:"like" json:"like" query:"like"`
 }
 
 func (x *LikeExerciseReq) Reset() {
 	*x = LikeExerciseReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[37]
+		mi := &file_essay_show_common_proto_msgTypes[41]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2247,7 +2480,7 @@ func (x *LikeExerciseReq) String() string {
 func (*LikeExerciseReq) ProtoMessage() {}
 
 func (x *LikeExerciseReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[37]
+	mi := &file_essay_show_common_proto_msgTypes[41]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2260,7 +2493,7 @@ func (x *LikeExerciseReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LikeExerciseReq.ProtoReflect.Descriptor instead.
 func (*LikeExerciseReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{37}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *LikeExerciseReq) GetId() string {
@@ -2283,21 +2516,21 @@ type Exercise struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id         string    `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`                                  // 练习 ID
-	UserId     string    `protobuf:"bytes,2,opt,name=userId,proto3" form:"userId" json:"userId,omitempty" query:"userId"`                  // 归属用户 ID
-	LogId      string    `protobuf:"bytes,3,opt,name=logId,proto3" form:"logId" json:"logId,omitempty" query:"logId"`                      // 批改记录 ID
-	Question   *Question `protobuf:"bytes,4,opt,name=question,proto3" form:"question" json:"question,omitempty" query:"question"`          // 题目内容
-	History    *History  `protobuf:"bytes,5,opt,name=history,proto3" form:"history" json:"history,omitempty" query:"history"`              // 用户做题记录
-	Like       int64     `protobuf:"varint,6,opt,name=like,proto3" form:"like" json:"like,omitempty" query:"like"`                         // 点赞状态，-1: 不喜欢, 1: 喜欢
-	CreateTime int64     `protobuf:"varint,7,opt,name=createTime,proto3" form:"createTime" json:"createTime,omitempty" query:"createTime"` // 创建时间
-	UpdateTime int64     `protobuf:"varint,8,opt,name=updateTime,proto3" form:"updateTime" json:"updateTime,omitempty" query:"updateTime"` // 更新时间
-	Status     int64     `protobuf:"varint,10,opt,name=status,proto3" form:"status" json:"status,omitempty" query:"status"`                // 练习状态
+	Id         string    `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`                                  // 练习 ID
+	UserId     string    `protobuf:"bytes,2,opt,name=userId,proto3" form:"userId" json:"userId" query:"userId"`                  // 归属用户 ID
+	LogId      string    `protobuf:"bytes,3,opt,name=logId,proto3" form:"logId" json:"logId" query:"logId"`                      // 批改记录 ID
+	Question   *Question `protobuf:"bytes,4,opt,name=question,proto3" form:"question" json:"question" query:"question"`          // 题目内容
+	History    *History  `protobuf:"bytes,5,opt,name=history,proto3" form:"history" json:"history" query:"history"`              // 用户做题记录
+	Like       int64     `protobuf:"varint,6,opt,name=like,proto3" form:"like" json:"like" query:"like"`                         // 点赞状态，-1: 不喜欢, 1: 喜欢
+	CreateTime int64     `protobuf:"varint,7,opt,name=createTime,proto3" form:"createTime" json:"createTime" query:"createTime"` // 创建时间
+	UpdateTime int64     `protobuf:"varint,8,opt,name=updateTime,proto3" form:"updateTime" json:"updateTime" query:"updateTime"` // 更新时间
+	Status     int64     `protobuf:"varint,10,opt,name=status,proto3" form:"status" json:"status" query:"status"`                // 练习状态
 }
 
 func (x *Exercise) Reset() {
 	*x = Exercise{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[38]
+		mi := &file_essay_show_common_proto_msgTypes[42]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2310,7 +2543,7 @@ func (x *Exercise) String() string {
 func (*Exercise) ProtoMessage() {}
 
 func (x *Exercise) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[38]
+	mi := &file_essay_show_common_proto_msgTypes[42]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2323,7 +2556,7 @@ func (x *Exercise) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Exercise.ProtoReflect.Descriptor instead.
 func (*Exercise) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{38}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *Exercise) GetId() string {
@@ -2395,13 +2628,13 @@ type Question struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ChoiceQuestions []*ChoiceQuestion `protobuf:"bytes,1,rep,name=choiceQuestions,proto3" form:"choiceQuestions" json:"choiceQuestions,omitempty" query:"choiceQuestions"` // 选择题列表
+	ChoiceQuestions []*ChoiceQuestion `protobuf:"bytes,1,rep,name=choiceQuestions,proto3" form:"choiceQuestions" json:"choiceQuestions" query:"choiceQuestions"` // 选择题列表
 }
 
 func (x *Question) Reset() {
 	*x = Question{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[39]
+		mi := &file_essay_show_common_proto_msgTypes[43]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2414,7 +2647,7 @@ func (x *Question) String() string {
 func (*Question) ProtoMessage() {}
 
 func (x *Question) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[39]
+	mi := &file_essay_show_common_proto_msgTypes[43]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2427,7 +2660,7 @@ func (x *Question) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Question.ProtoReflect.Descriptor instead.
 func (*Question) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{39}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *Question) GetChoiceQuestions() []*ChoiceQuestion {
@@ -2443,16 +2676,16 @@ type ChoiceQuestion struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id          string    `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`                                     // 题目 ID
-	Question    string    `protobuf:"bytes,2,opt,name=question,proto3" form:"question" json:"question,omitempty" query:"question"`             // 问题描述
-	Explanation string    `protobuf:"bytes,3,opt,name=explanation,proto3" form:"explanation" json:"explanation,omitempty" query:"explanation"` // 题目解答
-	Options     []*Option `protobuf:"bytes,4,rep,name=options,proto3" form:"options" json:"options,omitempty" query:"options"`                 // 题目选项
+	Id          string    `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`                                     // 题目 ID
+	Question    string    `protobuf:"bytes,2,opt,name=question,proto3" form:"question" json:"question" query:"question"`             // 问题描述
+	Explanation string    `protobuf:"bytes,3,opt,name=explanation,proto3" form:"explanation" json:"explanation" query:"explanation"` // 题目解答
+	Options     []*Option `protobuf:"bytes,4,rep,name=options,proto3" form:"options" json:"options" query:"options"`                 // 题目选项
 }
 
 func (x *ChoiceQuestion) Reset() {
 	*x = ChoiceQuestion{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[40]
+		mi := &file_essay_show_common_proto_msgTypes[44]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2465,7 +2698,7 @@ func (x *ChoiceQuestion) String() string {
 func (*ChoiceQuestion) ProtoMessage() {}
 
 func (x *ChoiceQuestion) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[40]
+	mi := &file_essay_show_common_proto_msgTypes[44]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2478,7 +2711,7 @@ func (x *ChoiceQuestion) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChoiceQuestion.ProtoReflect.Descriptor instead.
 func (*ChoiceQuestion) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{40}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *ChoiceQuestion) GetId() string {
@@ -2515,15 +2748,15 @@ type Option struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Option  string `protobuf:"bytes,1,opt,name=option,proto3" form:"option" json:"option,omitempty" query:"option"`     // 选项，如 'A'
-	Content string `protobuf:"bytes,2,opt,name=content,proto3" form:"content" json:"content,omitempty" query:"content"` // 选项内容
-	Score   int64  `protobuf:"varint,3,opt,name=score,proto3" form:"score" json:"score,omitempty" query:"score"`        // 选项得分
+	Option  string `protobuf:"bytes,1,opt,name=option,proto3" form:"option" json:"option" query:"option"`     // 选项，如 'A'
+	Content string `protobuf:"bytes,2,opt,name=content,proto3" form:"content" json:"content" query:"content"` // 选项内容
+	Score   int64  `protobuf:"varint,3,opt,name=score,proto3" form:"score" json:"score" query:"score"`        // 选项得分
 }
 
 func (x *Option) Reset() {
 	*x = Option{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[41]
+		mi := &file_essay_show_common_proto_msgTypes[45]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2536,7 +2769,7 @@ func (x *Option) String() string {
 func (*Option) ProtoMessage() {}
 
 func (x *Option) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[41]
+	mi := &file_essay_show_common_proto_msgTypes[45]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2549,7 +2782,7 @@ func (x *Option) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Option.ProtoReflect.Descriptor instead.
 func (*Option) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{41}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *Option) GetOption() string {
@@ -2579,13 +2812,13 @@ type History struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Records []*Records `protobuf:"bytes,1,rep,name=records,proto3" form:"records" json:"records,omitempty" query:"records"` // 记录列表
+	Records []*Records `protobuf:"bytes,1,rep,name=records,proto3" form:"records" json:"records" query:"records"` // 记录列表
 }
 
 func (x *History) Reset() {
 	*x = History{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[42]
+		mi := &file_essay_show_common_proto_msgTypes[46]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2598,7 +2831,7 @@ func (x *History) String() string {
 func (*History) ProtoMessage() {}
 
 func (x *History) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[42]
+	mi := &file_essay_show_common_proto_msgTypes[46]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2611,7 +2844,7 @@ func (x *History) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use History.ProtoReflect.Descriptor instead.
 func (*History) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{42}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *History) GetRecords() []*Records {
@@ -2627,15 +2860,15 @@ type Records struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Records    []*Record `protobuf:"bytes,1,rep,name=records,proto3" form:"records" json:"records,omitempty" query:"records"`              // 作答记录
-	Score      int64     `protobuf:"varint,2,opt,name=score,proto3" form:"score" json:"score,omitempty" query:"score"`                     // 总得分
-	CreateTime int64     `protobuf:"varint,3,opt,name=createTime,proto3" form:"createTime" json:"createTime,omitempty" query:"createTime"` // 提交时间
+	Records    []*Record `protobuf:"bytes,1,rep,name=records,proto3" form:"records" json:"records" query:"records"`              // 作答记录
+	Score      int64     `protobuf:"varint,2,opt,name=score,proto3" form:"score" json:"score" query:"score"`                     // 总得分
+	CreateTime int64     `protobuf:"varint,3,opt,name=createTime,proto3" form:"createTime" json:"createTime" query:"createTime"` // 提交时间
 }
 
 func (x *Records) Reset() {
 	*x = Records{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[43]
+		mi := &file_essay_show_common_proto_msgTypes[47]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2648,7 +2881,7 @@ func (x *Records) String() string {
 func (*Records) ProtoMessage() {}
 
 func (x *Records) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[43]
+	mi := &file_essay_show_common_proto_msgTypes[47]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2661,7 +2894,7 @@ func (x *Records) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Records.ProtoReflect.Descriptor instead.
 func (*Records) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{43}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *Records) GetRecords() []*Record {
@@ -2691,15 +2924,15 @@ type Record struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id     string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`                 // 题目 ID
-	Option string `protobuf:"bytes,2,opt,name=option,proto3" form:"option" json:"option,omitempty" query:"option"` // 用户选择的选项
-	Score  int64  `protobuf:"varint,3,opt,name=score,proto3" form:"score" json:"score,omitempty" query:"score"`    // 得分
+	Id     string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`                 // 题目 ID
+	Option string `protobuf:"bytes,2,opt,name=option,proto3" form:"option" json:"option" query:"option"` // 用户选择的选项
+	Score  int64  `protobuf:"varint,3,opt,name=score,proto3" form:"score" json:"score" query:"score"`    // 得分
 }
 
 func (x *Record) Reset() {
 	*x = Record{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[44]
+		mi := &file_essay_show_common_proto_msgTypes[48]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2712,7 +2945,7 @@ func (x *Record) String() string {
 func (*Record) ProtoMessage() {}
 
 func (x *Record) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[44]
+	mi := &file_essay_show_common_proto_msgTypes[48]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2725,7 +2958,7 @@ func (x *Record) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Record.ProtoReflect.Descriptor instead.
 func (*Record) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{44}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *Record) GetId() string {
@@ -2755,15 +2988,15 @@ type SubmitFeedbackReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type    int64    `protobuf:"varint,1,opt,name=type,proto3" form:"type" json:"type,omitempty" query:"type"`            // 反馈类型：1系统功能，2功能建议，3界面建议，4批改信度，5题目内容，6素材内容
-	Content string   `protobuf:"bytes,2,opt,name=content,proto3" form:"content" json:"content,omitempty" query:"content"` // 反馈内容
-	Images  []string `protobuf:"bytes,4,rep,name=images,proto3" form:"images" json:"images,omitempty" query:"images"`     // 图片URL列表（可选）
+	Type    int64    `protobuf:"varint,1,opt,name=type,proto3" form:"type" json:"type" query:"type"`            // 反馈类型：1系统功能，2功能建议，3界面建议，4批改信度，5题目内容，6素材内容
+	Content string   `protobuf:"bytes,2,opt,name=content,proto3" form:"content" json:"content" query:"content"` // 反馈内容
+	Images  []string `protobuf:"bytes,4,rep,name=images,proto3" form:"images" json:"images" query:"images"`     // 图片URL列表（可选）
 }
 
 func (x *SubmitFeedbackReq) Reset() {
 	*x = SubmitFeedbackReq{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[45]
+		mi := &file_essay_show_common_proto_msgTypes[49]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2776,7 +3009,7 @@ func (x *SubmitFeedbackReq) String() string {
 func (*SubmitFeedbackReq) ProtoMessage() {}
 
 func (x *SubmitFeedbackReq) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[45]
+	mi := &file_essay_show_common_proto_msgTypes[49]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2789,7 +3022,7 @@ func (x *SubmitFeedbackReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubmitFeedbackReq.ProtoReflect.Descriptor instead.
 func (*SubmitFeedbackReq) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{45}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *SubmitFeedbackReq) GetType() int64 {
@@ -2818,15 +3051,15 @@ type GetUserInfoResp_Payload struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name  string `protobuf:"bytes,1,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`
-	Count int64  `protobuf:"varint,2,opt,name=count,proto3" form:"count" json:"count,omitempty" query:"count"`
-	Phone string `protobuf:"bytes,3,opt,name=phone,proto3" form:"phone" json:"phone,omitempty" query:"phone"`
+	Name  string `protobuf:"bytes,1,opt,name=name,proto3" form:"name" json:"name" query:"name"`
+	Count int64  `protobuf:"varint,2,opt,name=count,proto3" form:"count" json:"count" query:"count"`
+	Phone string `protobuf:"bytes,3,opt,name=phone,proto3" form:"phone" json:"phone" query:"phone"`
 }
 
 func (x *GetUserInfoResp_Payload) Reset() {
 	*x = GetUserInfoResp_Payload{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[46]
+		mi := &file_essay_show_common_proto_msgTypes[50]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2839,7 +3072,7 @@ func (x *GetUserInfoResp_Payload) String() string {
 func (*GetUserInfoResp_Payload) ProtoMessage() {}
 
 func (x *GetUserInfoResp_Payload) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[46]
+	mi := &file_essay_show_common_proto_msgTypes[50]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2852,7 +3085,7 @@ func (x *GetUserInfoResp_Payload) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserInfoResp_Payload.ProtoReflect.Descriptor instead.
 func (*GetUserInfoResp_Payload) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{7, 0}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{9, 0}
 }
 
 func (x *GetUserInfoResp_Payload) GetName() string {
@@ -2881,14 +3114,14 @@ type ListSimpleExercisesResp_Record struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id    string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`              // 题目id
-	Score int64  `protobuf:"varint,2,opt,name=score,proto3" form:"score" json:"score,omitempty" query:"score"` // 得分
+	Id    string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`              // 题目id
+	Score int64  `protobuf:"varint,2,opt,name=score,proto3" form:"score" json:"score" query:"score"` // 得分
 }
 
 func (x *ListSimpleExercisesResp_Record) Reset() {
 	*x = ListSimpleExercisesResp_Record{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[47]
+		mi := &file_essay_show_common_proto_msgTypes[51]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2901,7 +3134,7 @@ func (x *ListSimpleExercisesResp_Record) String() string {
 func (*ListSimpleExercisesResp_Record) ProtoMessage() {}
 
 func (x *ListSimpleExercisesResp_Record) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[47]
+	mi := &file_essay_show_common_proto_msgTypes[51]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2914,7 +3147,7 @@ func (x *ListSimpleExercisesResp_Record) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSimpleExercisesResp_Record.ProtoReflect.Descriptor instead.
 func (*ListSimpleExercisesResp_Record) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{32, 0}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{36, 0}
 }
 
 func (x *ListSimpleExercisesResp_Record) GetId() string {
@@ -2936,17 +3169,17 @@ type ListSimpleExercisesResp_SimpleExercise struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id         string                            `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`                                  // 练习id
-	TotalScore int64                             `protobuf:"varint,2,opt,name=totalScore,proto3" form:"totalScore" json:"totalScore,omitempty" query:"totalScore"` // 总得分
-	Records    []*ListSimpleExercisesResp_Record `protobuf:"bytes,3,rep,name=records,proto3" form:"records" json:"records,omitempty" query:"records"`              // 题目id及其对应得分
-	FinishTime int64                             `protobuf:"varint,4,opt,name=finishTime,proto3" form:"finishTime" json:"finishTime,omitempty" query:"finishTime"` // 完成时间
-	Like       int64                             `protobuf:"varint,5,opt,name=like,proto3" form:"like" json:"like,omitempty" query:"like"`                         // 是否评价
+	Id         string                            `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`                                  // 练习id
+	TotalScore int64                             `protobuf:"varint,2,opt,name=totalScore,proto3" form:"totalScore" json:"totalScore" query:"totalScore"` // 总得分
+	Records    []*ListSimpleExercisesResp_Record `protobuf:"bytes,3,rep,name=records,proto3" form:"records" json:"records" query:"records"`              // 题目id及其对应得分
+	FinishTime int64                             `protobuf:"varint,4,opt,name=finishTime,proto3" form:"finishTime" json:"finishTime" query:"finishTime"` // 完成时间
+	Like       int64                             `protobuf:"varint,5,opt,name=like,proto3" form:"like" json:"like" query:"like"`                         // 是否评价
 }
 
 func (x *ListSimpleExercisesResp_SimpleExercise) Reset() {
 	*x = ListSimpleExercisesResp_SimpleExercise{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[48]
+		mi := &file_essay_show_common_proto_msgTypes[52]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2959,7 +3192,7 @@ func (x *ListSimpleExercisesResp_SimpleExercise) String() string {
 func (*ListSimpleExercisesResp_SimpleExercise) ProtoMessage() {}
 
 func (x *ListSimpleExercisesResp_SimpleExercise) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[48]
+	mi := &file_essay_show_common_proto_msgTypes[52]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2972,7 +3205,7 @@ func (x *ListSimpleExercisesResp_SimpleExercise) ProtoReflect() protoreflect.Mes
 
 // Deprecated: Use ListSimpleExercisesResp_SimpleExercise.ProtoReflect.Descriptor instead.
 func (*ListSimpleExercisesResp_SimpleExercise) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{32, 1}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{36, 1}
 }
 
 func (x *ListSimpleExercisesResp_SimpleExercise) GetId() string {
@@ -3015,14 +3248,14 @@ type DoExerciseReq_Record struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id     string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Option string `protobuf:"bytes,2,opt,name=option,proto3" form:"option" json:"option,omitempty" query:"option"`
+	Id     string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Option string `protobuf:"bytes,2,opt,name=option,proto3" form:"option" json:"option" query:"option"`
 }
 
 func (x *DoExerciseReq_Record) Reset() {
 	*x = DoExerciseReq_Record{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[49]
+		mi := &file_essay_show_common_proto_msgTypes[53]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -3035,7 +3268,7 @@ func (x *DoExerciseReq_Record) String() string {
 func (*DoExerciseReq_Record) ProtoMessage() {}
 
 func (x *DoExerciseReq_Record) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[49]
+	mi := &file_essay_show_common_proto_msgTypes[53]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3048,7 +3281,7 @@ func (x *DoExerciseReq_Record) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DoExerciseReq_Record.ProtoReflect.Descriptor instead.
 func (*DoExerciseReq_Record) Descriptor() ([]byte, []int) {
-	return file_essay_show_common_proto_rawDescGZIP(), []int{35, 0}
+	return file_essay_show_common_proto_rawDescGZIP(), []int{39, 0}
 }
 
 func (x *DoExerciseReq_Record) GetId() string {
@@ -3107,267 +3340,288 @@ var file_essay_show_common_proto_rawDesc = []byte{
 	0x65, 0x6e, 0x12, 0x22, 0x0a, 0x0c, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x45, 0x78, 0x70, 0x69,
 	0x72, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0c, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73,
 	0x45, 0x78, 0x70, 0x69, 0x72, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x10, 0x0a, 0x0e, 0x47, 0x65,
-	0x74, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x71, 0x22, 0xc1, 0x01, 0x0a,
-	0x0f, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0xa3, 0x01, 0x0a, 0x0b, 0x42,
+	0x69, 0x6e, 0x64, 0x41, 0x75, 0x74, 0x68, 0x52, 0x65, 0x71, 0x12, 0x16, 0x0a, 0x06, 0x61, 0x75,
+	0x74, 0x68, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x61, 0x75, 0x74, 0x68,
+	0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x61, 0x75, 0x74, 0x68, 0x54, 0x79, 0x70, 0x65, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x61, 0x75, 0x74, 0x68, 0x54, 0x79, 0x70, 0x65, 0x12, 0x23,
+	0x0a, 0x0a, 0x76, 0x65, 0x72, 0x69, 0x66, 0x79, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x09, 0x48, 0x00, 0x52, 0x0a, 0x76, 0x65, 0x72, 0x69, 0x66, 0x79, 0x43, 0x6f, 0x64, 0x65,
+	0x88, 0x01, 0x01, 0x12, 0x1f, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18,
+	0x04, 0x20, 0x01, 0x28, 0x09, 0x48, 0x01, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72,
+	0x64, 0x88, 0x01, 0x01, 0x42, 0x0d, 0x0a, 0x0b, 0x5f, 0x76, 0x65, 0x72, 0x69, 0x66, 0x79, 0x43,
+	0x6f, 0x64, 0x65, 0x42, 0x0b, 0x0a, 0x09, 0x5f, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64,
+	0x22, 0x34, 0x0a, 0x0c, 0x42, 0x69, 0x6e, 0x64, 0x41, 0x75, 0x74, 0x68, 0x52, 0x65, 0x73, 0x70,
 	0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04,
 	0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12, 0x3d, 0x0a, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61,
-	0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x23, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e,
-	0x73, 0x68, 0x6f, 0x77, 0x2e, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f,
-	0x52, 0x65, 0x73, 0x70, 0x2e, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x52, 0x07, 0x70, 0x61,
-	0x79, 0x6c, 0x6f, 0x61, 0x64, 0x1a, 0x49, 0x0a, 0x07, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64,
-	0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04,
-	0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x03, 0x52, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x68,
-	0x6f, 0x6e, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x70, 0x68, 0x6f, 0x6e, 0x65,
-	0x22, 0x55, 0x0a, 0x11, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e,
-	0x66, 0x6f, 0x52, 0x65, 0x71, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x63, 0x68,
-	0x6f, 0x6f, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x63, 0x68, 0x6f, 0x6f,
-	0x6c, 0x12, 0x14, 0x0a, 0x05, 0x67, 0x72, 0x61, 0x64, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03,
-	0x52, 0x05, 0x67, 0x72, 0x61, 0x64, 0x65, 0x22, 0x4f, 0x0a, 0x11, 0x55, 0x70, 0x64, 0x61, 0x74,
-	0x65, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x71, 0x12, 0x1e, 0x0a, 0x0a,
-	0x76, 0x65, 0x72, 0x69, 0x66, 0x79, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x0a, 0x76, 0x65, 0x72, 0x69, 0x66, 0x79, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x1a, 0x0a, 0x08,
-	0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
-	0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x7e, 0x0a, 0x12, 0x55, 0x70, 0x64, 0x61,
-	0x74, 0x65, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x12, 0x0e,
-	0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x20,
-	0x0a, 0x0b, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x0b, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
-	0x12, 0x22, 0x0a, 0x0c, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x45, 0x78, 0x70, 0x69, 0x72, 0x65,
-	0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0c, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x45, 0x78,
-	0x70, 0x69, 0x72, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x10, 0x0a, 0x0e, 0x44, 0x61, 0x69, 0x6c,
-	0x79, 0x41, 0x74, 0x74, 0x65, 0x6e, 0x64, 0x52, 0x65, 0x71, 0x22, 0x3d, 0x0a, 0x11, 0x47, 0x65,
-	0x74, 0x44, 0x61, 0x69, 0x6c, 0x79, 0x41, 0x74, 0x74, 0x65, 0x6e, 0x64, 0x52, 0x65, 0x71, 0x12,
-	0x12, 0x0a, 0x04, 0x79, 0x65, 0x61, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x79,
-	0x65, 0x61, 0x72, 0x12, 0x14, 0x0a, 0x05, 0x6d, 0x6f, 0x6e, 0x74, 0x68, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x05, 0x52, 0x05, 0x6d, 0x6f, 0x6e, 0x74, 0x68, 0x22, 0x82, 0x01, 0x0a, 0x12, 0x47, 0x65,
-	0x74, 0x44, 0x61, 0x69, 0x6c, 0x79, 0x41, 0x74, 0x74, 0x65, 0x6e, 0x64, 0x52, 0x65, 0x73, 0x70,
-	0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04,
-	0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12, 0x16, 0x0a, 0x06, 0x61, 0x74, 0x74, 0x65, 0x6e, 0x64,
-	0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x61, 0x74, 0x74, 0x65, 0x6e, 0x64, 0x12, 0x14,
-	0x0a, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x74,
-	0x6f, 0x74, 0x61, 0x6c, 0x12, 0x18, 0x0a, 0x07, 0x68, 0x69, 0x73, 0x74, 0x6f, 0x72, 0x79, 0x18,
-	0x05, 0x20, 0x03, 0x28, 0x03, 0x52, 0x07, 0x68, 0x69, 0x73, 0x74, 0x6f, 0x72, 0x79, 0x22, 0x16,
-	0x0a, 0x14, 0x47, 0x65, 0x74, 0x49, 0x6e, 0x76, 0x69, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43,
-	0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x22, 0x65, 0x0a, 0x15, 0x47, 0x65, 0x74, 0x49, 0x6e, 0x76,
-	0x69, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12,
-	0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63,
-	0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x03, 0x6d, 0x73, 0x67, 0x12, 0x26, 0x0a, 0x0e, 0x69, 0x6e, 0x76, 0x69, 0x74, 0x61, 0x74,
-	0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x69,
-	0x6e, 0x76, 0x69, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x64, 0x65, 0x22, 0x3f, 0x0a,
-	0x15, 0x46, 0x69, 0x6c, 0x6c, 0x49, 0x6e, 0x76, 0x69, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43,
-	0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x12, 0x26, 0x0a, 0x0e, 0x69, 0x6e, 0x76, 0x69, 0x74, 0x61,
-	0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e,
-	0x69, 0x6e, 0x76, 0x69, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x64, 0x65, 0x22, 0xa4,
-	0x01, 0x0a, 0x10, 0x45, 0x73, 0x73, 0x61, 0x79, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x65,
-	0x52, 0x65, 0x71, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x65, 0x78,
-	0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x65, 0x78, 0x74, 0x12, 0x19, 0x0a,
-	0x05, 0x67, 0x72, 0x61, 0x64, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x48, 0x00, 0x52, 0x05,
-	0x67, 0x72, 0x61, 0x64, 0x65, 0x88, 0x01, 0x01, 0x12, 0x21, 0x0a, 0x09, 0x65, 0x73, 0x73, 0x61,
-	0x79, 0x54, 0x79, 0x70, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x48, 0x01, 0x52, 0x09, 0x65,
-	0x73, 0x73, 0x61, 0x79, 0x54, 0x79, 0x70, 0x65, 0x88, 0x01, 0x01, 0x12, 0x10, 0x0a, 0x03, 0x6f,
-	0x63, 0x72, 0x18, 0x05, 0x20, 0x03, 0x28, 0x09, 0x52, 0x03, 0x6f, 0x63, 0x72, 0x42, 0x08, 0x0a,
-	0x06, 0x5f, 0x67, 0x72, 0x61, 0x64, 0x65, 0x42, 0x0c, 0x0a, 0x0a, 0x5f, 0x65, 0x73, 0x73, 0x61,
-	0x79, 0x54, 0x79, 0x70, 0x65, 0x22, 0x65, 0x0a, 0x11, 0x45, 0x73, 0x73, 0x61, 0x79, 0x45, 0x76,
-	0x61, 0x6c, 0x75, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f,
+	0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x22, 0x10, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65,
+	0x72, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x71, 0x22, 0xc1, 0x01, 0x0a, 0x0f, 0x47, 0x65, 0x74,
+	0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04,
+	0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65,
+	0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d,
+	0x73, 0x67, 0x12, 0x3d, 0x0a, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x23, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77,
+	0x2e, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70,
+	0x2e, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x52, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61,
+	0x64, 0x1a, 0x49, 0x0a, 0x07, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x12, 0x12, 0x0a, 0x04,
+	0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x12, 0x14, 0x0a, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x68, 0x6f, 0x6e, 0x65, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x70, 0x68, 0x6f, 0x6e, 0x65, 0x22, 0x55, 0x0a, 0x11,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65,
+	0x71, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x63, 0x68, 0x6f, 0x6f, 0x6c, 0x12, 0x14, 0x0a,
+	0x05, 0x67, 0x72, 0x61, 0x64, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x67, 0x72,
+	0x61, 0x64, 0x65, 0x22, 0x4f, 0x0a, 0x11, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x61, 0x73,
+	0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x71, 0x12, 0x1e, 0x0a, 0x0a, 0x76, 0x65, 0x72, 0x69,
+	0x66, 0x79, 0x43, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x76, 0x65,
+	0x72, 0x69, 0x66, 0x79, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73,
+	0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73,
+	0x77, 0x6f, 0x72, 0x64, 0x22, 0x7e, 0x0a, 0x12, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x61,
+	0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x52, 0x65, 0x73, 0x70, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x20, 0x0a, 0x0b, 0x61, 0x63,
+	0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x0b, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x22, 0x0a, 0x0c,
+	0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x45, 0x78, 0x70, 0x69, 0x72, 0x65, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x03, 0x52, 0x0c, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x45, 0x78, 0x70, 0x69, 0x72, 0x65,
+	0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04,
+	0x6e, 0x61, 0x6d, 0x65, 0x22, 0x10, 0x0a, 0x0e, 0x44, 0x61, 0x69, 0x6c, 0x79, 0x41, 0x74, 0x74,
+	0x65, 0x6e, 0x64, 0x52, 0x65, 0x71, 0x22, 0x3d, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x44, 0x61, 0x69,
+	0x6c, 0x79, 0x41, 0x74, 0x74, 0x65, 0x6e, 0x64, 0x52, 0x65, 0x71, 0x12, 0x12, 0x0a, 0x04, 0x79,
+	0x65, 0x61, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x79, 0x65, 0x61, 0x72, 0x12,
+	0x14, 0x0a, 0x05, 0x6d, 0x6f, 0x6e, 0x74, 0x68, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05,
+	0x6d, 0x6f, 0x6e, 0x74, 0x68, 0x22, 0x82, 0x01, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x44, 0x61, 0x69,
+	0x6c, 0x79, 0x41, 0x74, 0x74, 0x65, 0x6e, 0x64, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04,
+	0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65,
+	0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d,
+	0x73, 0x67, 0x12, 0x16, 0x0a, 0x06, 0x61, 0x74, 0x74, 0x65, 0x6e, 0x64, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x03, 0x52, 0x06, 0x61, 0x74, 0x74, 0x65, 0x6e, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f,
+	0x74, 0x61, 0x6c, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c,
+	0x12, 0x18, 0x0a, 0x07, 0x68, 0x69, 0x73, 0x74, 0x6f, 0x72, 0x79, 0x18, 0x05, 0x20, 0x03, 0x28,
+	0x03, 0x52, 0x07, 0x68, 0x69, 0x73, 0x74, 0x6f, 0x72, 0x79, 0x22, 0x16, 0x0a, 0x14, 0x47, 0x65,
+	0x74, 0x49, 0x6e, 0x76, 0x69, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x64, 0x65, 0x52,
+	0x65, 0x71, 0x22, 0x65, 0x0a, 0x15, 0x47, 0x65, 0x74, 0x49, 0x6e, 0x76, 0x69, 0x74, 0x61, 0x74,
+	0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63,
+	0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12,
+	0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73,
+	0x67, 0x12, 0x26, 0x0a, 0x0e, 0x69, 0x6e, 0x76, 0x69, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43,
+	0x6f, 0x64, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x69, 0x6e, 0x76, 0x69, 0x74,
+	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x64, 0x65, 0x22, 0x3f, 0x0a, 0x15, 0x46, 0x69, 0x6c,
+	0x6c, 0x49, 0x6e, 0x76, 0x69, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x64, 0x65, 0x52,
+	0x65, 0x71, 0x12, 0x26, 0x0a, 0x0e, 0x69, 0x6e, 0x76, 0x69, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x43, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x69, 0x6e, 0x76, 0x69,
+	0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6f, 0x64, 0x65, 0x22, 0xa4, 0x01, 0x0a, 0x10, 0x45,
+	0x73, 0x73, 0x61, 0x79, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x12,
+	0x14, 0x0a, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05,
+	0x74, 0x69, 0x74, 0x6c, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x65, 0x78, 0x74, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x65, 0x78, 0x74, 0x12, 0x19, 0x0a, 0x05, 0x67, 0x72, 0x61,
+	0x64, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x48, 0x00, 0x52, 0x05, 0x67, 0x72, 0x61, 0x64,
+	0x65, 0x88, 0x01, 0x01, 0x12, 0x21, 0x0a, 0x09, 0x65, 0x73, 0x73, 0x61, 0x79, 0x54, 0x79, 0x70,
+	0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x48, 0x01, 0x52, 0x09, 0x65, 0x73, 0x73, 0x61, 0x79,
+	0x54, 0x79, 0x70, 0x65, 0x88, 0x01, 0x01, 0x12, 0x10, 0x0a, 0x03, 0x6f, 0x63, 0x72, 0x18, 0x05,
+	0x20, 0x03, 0x28, 0x09, 0x52, 0x03, 0x6f, 0x63, 0x72, 0x42, 0x08, 0x0a, 0x06, 0x5f, 0x67, 0x72,
+	0x61, 0x64, 0x65, 0x42, 0x0c, 0x0a, 0x0a, 0x5f, 0x65, 0x73, 0x73, 0x61, 0x79, 0x54, 0x79, 0x70,
+	0x65, 0x22, 0x65, 0x0a, 0x11, 0x45, 0x73, 0x73, 0x61, 0x79, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61,
+	0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73,
+	0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12, 0x1a, 0x0a, 0x08,
+	0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
+	0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x04,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x25, 0x0a, 0x13, 0x44, 0x6f, 0x77, 0x6e,
+	0x6c, 0x6f, 0x61, 0x64, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x12,
+	0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22,
+	0x4c, 0x0a, 0x14, 0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x45, 0x76, 0x61, 0x6c, 0x75,
+	0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x72, 0x6c, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x12, 0x22, 0x0a, 0x0c, 0x73, 0x65, 0x73,
+	0x73, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x0c, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x35, 0x0a,
+	0x0f, 0x4c, 0x69, 0x6b, 0x65, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71,
+	0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64,
+	0x12, 0x12, 0x0a, 0x04, 0x6c, 0x69, 0x6b, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04,
+	0x6c, 0x69, 0x6b, 0x65, 0x22, 0x61, 0x0a, 0x17, 0x47, 0x65, 0x74, 0x45, 0x73, 0x73, 0x61, 0x79,
+	0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x65, 0x4c, 0x6f, 0x67, 0x73, 0x52, 0x65, 0x71, 0x12,
+	0x46, 0x0a, 0x11, 0x70, 0x61, 0x67, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x4f, 0x70, 0x74,
+	0x69, 0x6f, 0x6e, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x62, 0x61, 0x73,
+	0x69, 0x63, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x4f, 0x70, 0x74,
+	0x69, 0x6f, 0x6e, 0x73, 0x52, 0x11, 0x70, 0x61, 0x67, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x22, 0x55, 0x0a, 0x18, 0x47, 0x65, 0x74, 0x45, 0x73,
+	0x73, 0x61, 0x79, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x65, 0x4c, 0x6f, 0x67, 0x73, 0x52,
+	0x65, 0x73, 0x70, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x03, 0x52, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x12, 0x23, 0x0a, 0x04, 0x6c, 0x6f, 0x67,
+	0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e,
+	0x73, 0x68, 0x6f, 0x77, 0x2e, 0x4c, 0x6f, 0x67, 0x52, 0x04, 0x6c, 0x6f, 0x67, 0x73, 0x22, 0x8d,
+	0x01, 0x0a, 0x03, 0x4c, 0x6f, 0x67, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x67, 0x72, 0x61, 0x64, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x67, 0x72, 0x61, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03,
+	0x6f, 0x63, 0x72, 0x18, 0x03, 0x20, 0x03, 0x28, 0x09, 0x52, 0x03, 0x6f, 0x63, 0x72, 0x12, 0x1a,
+	0x0a, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6c, 0x69,
+	0x6b, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x6c, 0x69, 0x6b, 0x65, 0x12, 0x1e,
+	0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x18, 0x05, 0x20, 0x01,
+	0x28, 0x03, 0x52, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x22, 0x63,
+	0x0a, 0x11, 0x41, 0x70, 0x70, 0x6c, 0x79, 0x53, 0x69, 0x67, 0x6e, 0x65, 0x64, 0x55, 0x72, 0x6c,
+	0x52, 0x65, 0x71, 0x12, 0x1b, 0x0a, 0x06, 0x70, 0x72, 0x65, 0x66, 0x69, 0x78, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x06, 0x70, 0x72, 0x65, 0x66, 0x69, 0x78, 0x88, 0x01, 0x01,
+	0x12, 0x1b, 0x0a, 0x06, 0x73, 0x75, 0x66, 0x66, 0x69, 0x78, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x48, 0x01, 0x52, 0x06, 0x73, 0x75, 0x66, 0x66, 0x69, 0x78, 0x88, 0x01, 0x01, 0x42, 0x09, 0x0a,
+	0x07, 0x5f, 0x70, 0x72, 0x65, 0x66, 0x69, 0x78, 0x42, 0x09, 0x0a, 0x07, 0x5f, 0x73, 0x75, 0x66,
+	0x66, 0x69, 0x78, 0x22, 0x4a, 0x0a, 0x12, 0x41, 0x70, 0x70, 0x6c, 0x79, 0x53, 0x69, 0x67, 0x6e,
+	0x65, 0x64, 0x55, 0x72, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x72, 0x6c,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x12, 0x22, 0x0a, 0x0c, 0x73,
+	0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x0c, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22,
+	0x48, 0x0a, 0x06, 0x4f, 0x43, 0x52, 0x52, 0x65, 0x71, 0x12, 0x10, 0x0a, 0x03, 0x6f, 0x63, 0x72,
+	0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x03, 0x6f, 0x63, 0x72, 0x12, 0x1f, 0x0a, 0x08, 0x6c,
+	0x65, 0x66, 0x74, 0x54, 0x79, 0x70, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52,
+	0x08, 0x6c, 0x65, 0x66, 0x74, 0x54, 0x79, 0x70, 0x65, 0x88, 0x01, 0x01, 0x42, 0x0b, 0x0a, 0x09,
+	0x5f, 0x6c, 0x65, 0x66, 0x74, 0x54, 0x79, 0x70, 0x65, 0x22, 0x33, 0x0a, 0x07, 0x4f, 0x43, 0x52,
+	0x52, 0x65, 0x73, 0x70, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x65,
+	0x78, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x65, 0x78, 0x74, 0x22, 0x30,
+	0x0a, 0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f,
 	0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10,
 	0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67,
-	0x12, 0x1a, 0x0a, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18, 0x03, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02,
-	0x69, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x35, 0x0a, 0x0f,
-	0x4c, 0x69, 0x6b, 0x65, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x65, 0x52, 0x65, 0x71, 0x12,
-	0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12,
-	0x12, 0x0a, 0x04, 0x6c, 0x69, 0x6b, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x6c,
-	0x69, 0x6b, 0x65, 0x22, 0x61, 0x0a, 0x17, 0x47, 0x65, 0x74, 0x45, 0x73, 0x73, 0x61, 0x79, 0x45,
-	0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x65, 0x4c, 0x6f, 0x67, 0x73, 0x52, 0x65, 0x71, 0x12, 0x46,
-	0x0a, 0x11, 0x70, 0x61, 0x67, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x4f, 0x70, 0x74, 0x69,
-	0x6f, 0x6e, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x62, 0x61, 0x73, 0x69,
-	0x63, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x4f, 0x70, 0x74, 0x69,
-	0x6f, 0x6e, 0x73, 0x52, 0x11, 0x70, 0x61, 0x67, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x4f,
-	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x22, 0x55, 0x0a, 0x18, 0x47, 0x65, 0x74, 0x45, 0x73, 0x73,
-	0x61, 0x79, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x65, 0x4c, 0x6f, 0x67, 0x73, 0x52, 0x65,
-	0x73, 0x70, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x03, 0x52, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x12, 0x23, 0x0a, 0x04, 0x6c, 0x6f, 0x67, 0x73,
-	0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73,
-	0x68, 0x6f, 0x77, 0x2e, 0x4c, 0x6f, 0x67, 0x52, 0x04, 0x6c, 0x6f, 0x67, 0x73, 0x22, 0x8d, 0x01,
-	0x0a, 0x03, 0x4c, 0x6f, 0x67, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x67, 0x72, 0x61, 0x64, 0x65, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x67, 0x72, 0x61, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6f,
-	0x63, 0x72, 0x18, 0x03, 0x20, 0x03, 0x28, 0x09, 0x52, 0x03, 0x6f, 0x63, 0x72, 0x12, 0x1a, 0x0a,
-	0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x08, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6c, 0x69, 0x6b,
-	0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x6c, 0x69, 0x6b, 0x65, 0x12, 0x1e, 0x0a,
-	0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28,
-	0x03, 0x52, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x22, 0x63, 0x0a,
-	0x11, 0x41, 0x70, 0x70, 0x6c, 0x79, 0x53, 0x69, 0x67, 0x6e, 0x65, 0x64, 0x55, 0x72, 0x6c, 0x52,
-	0x65, 0x71, 0x12, 0x1b, 0x0a, 0x06, 0x70, 0x72, 0x65, 0x66, 0x69, 0x78, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x48, 0x00, 0x52, 0x06, 0x70, 0x72, 0x65, 0x66, 0x69, 0x78, 0x88, 0x01, 0x01, 0x12,
-	0x1b, 0x0a, 0x06, 0x73, 0x75, 0x66, 0x66, 0x69, 0x78, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x48,
-	0x01, 0x52, 0x06, 0x73, 0x75, 0x66, 0x66, 0x69, 0x78, 0x88, 0x01, 0x01, 0x42, 0x09, 0x0a, 0x07,
-	0x5f, 0x70, 0x72, 0x65, 0x66, 0x69, 0x78, 0x42, 0x09, 0x0a, 0x07, 0x5f, 0x73, 0x75, 0x66, 0x66,
-	0x69, 0x78, 0x22, 0x4a, 0x0a, 0x12, 0x41, 0x70, 0x70, 0x6c, 0x79, 0x53, 0x69, 0x67, 0x6e, 0x65,
-	0x64, 0x55, 0x72, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x12, 0x10, 0x0a, 0x03, 0x75, 0x72, 0x6c, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x75, 0x72, 0x6c, 0x12, 0x22, 0x0a, 0x0c, 0x73, 0x65,
-	0x73, 0x73, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x0c, 0x73, 0x65, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x48,
-	0x0a, 0x06, 0x4f, 0x43, 0x52, 0x52, 0x65, 0x71, 0x12, 0x10, 0x0a, 0x03, 0x6f, 0x63, 0x72, 0x18,
-	0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x03, 0x6f, 0x63, 0x72, 0x12, 0x1f, 0x0a, 0x08, 0x6c, 0x65,
-	0x66, 0x74, 0x54, 0x79, 0x70, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x08,
-	0x6c, 0x65, 0x66, 0x74, 0x54, 0x79, 0x70, 0x65, 0x88, 0x01, 0x01, 0x42, 0x0b, 0x0a, 0x09, 0x5f,
-	0x6c, 0x65, 0x66, 0x74, 0x54, 0x79, 0x70, 0x65, 0x22, 0x33, 0x0a, 0x07, 0x4f, 0x43, 0x52, 0x52,
-	0x65, 0x73, 0x70, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x65, 0x78,
-	0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x65, 0x78, 0x74, 0x22, 0x30, 0x0a,
-	0x08, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64,
-	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a,
-	0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x22,
-	0x5b, 0x0a, 0x11, 0x53, 0x65, 0x6e, 0x64, 0x56, 0x65, 0x72, 0x69, 0x66, 0x79, 0x43, 0x6f, 0x64,
-	0x65, 0x52, 0x65, 0x71, 0x12, 0x1a, 0x0a, 0x08, 0x61, 0x75, 0x74, 0x68, 0x54, 0x79, 0x70, 0x65,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x61, 0x75, 0x74, 0x68, 0x54, 0x79, 0x70, 0x65,
-	0x12, 0x16, 0x0a, 0x06, 0x61, 0x75, 0x74, 0x68, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x06, 0x61, 0x75, 0x74, 0x68, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65,
-	0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x22, 0x29, 0x0a, 0x11,
-	0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x65,
-	0x71, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x05, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x22, 0x6c, 0x0a, 0x12, 0x43, 0x72, 0x65, 0x61, 0x74,
-	0x65, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a,
-	0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64,
-	0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03,
-	0x6d, 0x73, 0x67, 0x12, 0x30, 0x0a, 0x08, 0x65, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x18,
-	0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68,
-	0x6f, 0x77, 0x2e, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x08, 0x65, 0x78, 0x65,
-	0x72, 0x63, 0x69, 0x73, 0x65, 0x22, 0x76, 0x0a, 0x16, 0x4c, 0x69, 0x73, 0x74, 0x53, 0x69, 0x6d,
-	0x70, 0x6c, 0x65, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x73, 0x52, 0x65, 0x71, 0x12,
-	0x14, 0x0a, 0x05, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05,
-	0x6c, 0x6f, 0x67, 0x49, 0x64, 0x12, 0x46, 0x0a, 0x11, 0x70, 0x61, 0x67, 0x69, 0x6e, 0x61, 0x74,
-	0x69, 0x6f, 0x6e, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b,
-	0x32, 0x18, 0x2e, 0x62, 0x61, 0x73, 0x69, 0x63, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x61, 0x74,
-	0x69, 0x6f, 0x6e, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x11, 0x70, 0x61, 0x67, 0x69,
-	0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x22, 0x94, 0x03,
-	0x0a, 0x17, 0x4c, 0x69, 0x73, 0x74, 0x53, 0x69, 0x6d, 0x70, 0x6c, 0x65, 0x45, 0x78, 0x65, 0x72,
-	0x63, 0x69, 0x73, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64,
-	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a,
-	0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12,
-	0x50, 0x0a, 0x09, 0x65, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x73, 0x18, 0x03, 0x20, 0x03,
-	0x28, 0x0b, 0x32, 0x32, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e,
-	0x4c, 0x69, 0x73, 0x74, 0x53, 0x69, 0x6d, 0x70, 0x6c, 0x65, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69,
-	0x73, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x2e, 0x53, 0x69, 0x6d, 0x70, 0x6c, 0x65, 0x45, 0x78,
-	0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x09, 0x65, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65,
-	0x73, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03,
-	0x52, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x1a, 0x2e, 0x0a, 0x06, 0x52, 0x65, 0x63, 0x6f, 0x72,
-	0x64, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69,
-	0x64, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03,
-	0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x1a, 0xba, 0x01, 0x0a, 0x0e, 0x53, 0x69, 0x6d, 0x70,
-	0x6c, 0x65, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1e, 0x0a, 0x0a, 0x74, 0x6f,
-	0x74, 0x61, 0x6c, 0x53, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0a,
-	0x74, 0x6f, 0x74, 0x61, 0x6c, 0x53, 0x63, 0x6f, 0x72, 0x65, 0x12, 0x44, 0x0a, 0x07, 0x72, 0x65,
-	0x63, 0x6f, 0x72, 0x64, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x2a, 0x2e, 0x65, 0x73,
-	0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x53, 0x69, 0x6d,
-	0x70, 0x6c, 0x65, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70,
+	0x22, 0x5b, 0x0a, 0x11, 0x53, 0x65, 0x6e, 0x64, 0x56, 0x65, 0x72, 0x69, 0x66, 0x79, 0x43, 0x6f,
+	0x64, 0x65, 0x52, 0x65, 0x71, 0x12, 0x1a, 0x0a, 0x08, 0x61, 0x75, 0x74, 0x68, 0x54, 0x79, 0x70,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x61, 0x75, 0x74, 0x68, 0x54, 0x79, 0x70,
+	0x65, 0x12, 0x16, 0x0a, 0x06, 0x61, 0x75, 0x74, 0x68, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x06, 0x61, 0x75, 0x74, 0x68, 0x49, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70,
+	0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x22, 0x29, 0x0a,
+	0x11, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52,
+	0x65, 0x71, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x05, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x22, 0x6c, 0x0a, 0x12, 0x43, 0x72, 0x65, 0x61,
+	0x74, 0x65, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12,
+	0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f,
+	0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x03, 0x6d, 0x73, 0x67, 0x12, 0x30, 0x0a, 0x08, 0x65, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73,
+	0x68, 0x6f, 0x77, 0x2e, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x08, 0x65, 0x78,
+	0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x22, 0x76, 0x0a, 0x16, 0x4c, 0x69, 0x73, 0x74, 0x53, 0x69,
+	0x6d, 0x70, 0x6c, 0x65, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x73, 0x52, 0x65, 0x71,
+	0x12, 0x14, 0x0a, 0x05, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x05, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x12, 0x46, 0x0a, 0x11, 0x70, 0x61, 0x67, 0x69, 0x6e, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x18, 0x2e, 0x62, 0x61, 0x73, 0x69, 0x63, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x61,
+	0x74, 0x69, 0x6f, 0x6e, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x11, 0x70, 0x61, 0x67,
+	0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x22, 0x94,
+	0x03, 0x0a, 0x17, 0x4c, 0x69, 0x73, 0x74, 0x53, 0x69, 0x6d, 0x70, 0x6c, 0x65, 0x45, 0x78, 0x65,
+	0x72, 0x63, 0x69, 0x73, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f,
+	0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10,
+	0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67,
+	0x12, 0x50, 0x0a, 0x09, 0x65, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x73, 0x18, 0x03, 0x20,
+	0x03, 0x28, 0x0b, 0x32, 0x32, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77,
+	0x2e, 0x4c, 0x69, 0x73, 0x74, 0x53, 0x69, 0x6d, 0x70, 0x6c, 0x65, 0x45, 0x78, 0x65, 0x72, 0x63,
+	0x69, 0x73, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x2e, 0x53, 0x69, 0x6d, 0x70, 0x6c, 0x65, 0x45,
+	0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x09, 0x65, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73,
+	0x65, 0x73, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x18, 0x04, 0x20, 0x01, 0x28,
+	0x03, 0x52, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x1a, 0x2e, 0x0a, 0x06, 0x52, 0x65, 0x63, 0x6f,
+	0x72, 0x64, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02,
+	0x69, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x03, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x1a, 0xba, 0x01, 0x0a, 0x0e, 0x53, 0x69, 0x6d,
+	0x70, 0x6c, 0x65, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1e, 0x0a, 0x0a, 0x74,
+	0x6f, 0x74, 0x61, 0x6c, 0x53, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x0a, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x53, 0x63, 0x6f, 0x72, 0x65, 0x12, 0x44, 0x0a, 0x07, 0x72,
+	0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x2a, 0x2e, 0x65,
+	0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x53, 0x69,
+	0x6d, 0x70, 0x6c, 0x65, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x73, 0x52, 0x65, 0x73,
+	0x70, 0x2e, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x52, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64,
+	0x73, 0x12, 0x1e, 0x0a, 0x0a, 0x66, 0x69, 0x6e, 0x69, 0x73, 0x68, 0x54, 0x69, 0x6d, 0x65, 0x18,
+	0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x66, 0x69, 0x6e, 0x69, 0x73, 0x68, 0x54, 0x69, 0x6d,
+	0x65, 0x12, 0x12, 0x0a, 0x04, 0x6c, 0x69, 0x6b, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x04, 0x6c, 0x69, 0x6b, 0x65, 0x22, 0x20, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x45, 0x78, 0x65, 0x72,
+	0x63, 0x69, 0x73, 0x65, 0x52, 0x65, 0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x69, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x45, 0x78,
+	0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f,
+	0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10,
+	0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67,
+	0x12, 0x30, 0x0a, 0x08, 0x65, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x14, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e,
+	0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x08, 0x65, 0x78, 0x65, 0x72, 0x63, 0x69,
+	0x73, 0x65, 0x22, 0x8d, 0x01, 0x0a, 0x0d, 0x44, 0x6f, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73,
+	0x65, 0x52, 0x65, 0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x02, 0x69, 0x64, 0x12, 0x3a, 0x0a, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x18,
+	0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x20, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68,
+	0x6f, 0x77, 0x2e, 0x44, 0x6f, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x65, 0x71,
 	0x2e, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x52, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73,
-	0x12, 0x1e, 0x0a, 0x0a, 0x66, 0x69, 0x6e, 0x69, 0x73, 0x68, 0x54, 0x69, 0x6d, 0x65, 0x18, 0x04,
-	0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x66, 0x69, 0x6e, 0x69, 0x73, 0x68, 0x54, 0x69, 0x6d, 0x65,
-	0x12, 0x12, 0x0a, 0x04, 0x6c, 0x69, 0x6b, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04,
-	0x6c, 0x69, 0x6b, 0x65, 0x22, 0x20, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x45, 0x78, 0x65, 0x72, 0x63,
-	0x69, 0x73, 0x65, 0x52, 0x65, 0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x69, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x45, 0x78, 0x65,
-	0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64,
-	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a,
-	0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12,
-	0x30, 0x0a, 0x08, 0x65, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28,
-	0x0b, 0x32, 0x14, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x45,
-	0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x08, 0x65, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73,
-	0x65, 0x22, 0x8d, 0x01, 0x0a, 0x0d, 0x44, 0x6f, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65,
-	0x52, 0x65, 0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x02, 0x69, 0x64, 0x12, 0x3a, 0x0a, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x18, 0x02,
-	0x20, 0x03, 0x28, 0x0b, 0x32, 0x20, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f,
-	0x77, 0x2e, 0x44, 0x6f, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x65, 0x71, 0x2e,
-	0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x52, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x1a,
-	0x30, 0x0a, 0x06, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x6f, 0x70, 0x74,
-	0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x6f, 0x70, 0x74, 0x69, 0x6f,
-	0x6e, 0x22, 0x65, 0x0a, 0x0e, 0x44, 0x6f, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52,
-	0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02,
-	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12, 0x2d, 0x0a, 0x07, 0x72, 0x65, 0x63,
-	0x6f, 0x72, 0x64, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x65, 0x73, 0x73,
-	0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x52,
-	0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x22, 0x35, 0x0a, 0x0f, 0x4c, 0x69, 0x6b, 0x65,
-	0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x65, 0x71, 0x12, 0x0e, 0x0a, 0x02, 0x69,
-	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6c,
-	0x69, 0x6b, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x6c, 0x69, 0x6b, 0x65, 0x22,
-	0x95, 0x02, 0x0a, 0x08, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02,
-	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x16, 0x0a, 0x06,
-	0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75, 0x73,
-	0x65, 0x72, 0x49, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x18, 0x03, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x05, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x12, 0x30, 0x0a, 0x08, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e, 0x65,
-	0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x51, 0x75, 0x65, 0x73, 0x74, 0x69,
-	0x6f, 0x6e, 0x52, 0x08, 0x71, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x2d, 0x0a, 0x07,
-	0x68, 0x69, 0x73, 0x74, 0x6f, 0x72, 0x79, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e,
-	0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x48, 0x69, 0x73, 0x74, 0x6f,
-	0x72, 0x79, 0x52, 0x07, 0x68, 0x69, 0x73, 0x74, 0x6f, 0x72, 0x79, 0x12, 0x12, 0x0a, 0x04, 0x6c,
-	0x69, 0x6b, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x6c, 0x69, 0x6b, 0x65, 0x12,
-	0x1e, 0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x18, 0x07, 0x20,
-	0x01, 0x28, 0x03, 0x52, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x12,
-	0x1e, 0x0a, 0x0a, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x18, 0x08, 0x20,
-	0x01, 0x28, 0x03, 0x52, 0x0a, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x12,
-	0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x03, 0x52,
-	0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x50, 0x0a, 0x08, 0x51, 0x75, 0x65, 0x73, 0x74,
-	0x69, 0x6f, 0x6e, 0x12, 0x44, 0x0a, 0x0f, 0x63, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x51, 0x75, 0x65,
-	0x73, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x65,
-	0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x43, 0x68, 0x6f, 0x69, 0x63, 0x65,
-	0x51, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x0f, 0x63, 0x68, 0x6f, 0x69, 0x63, 0x65,
-	0x51, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x22, 0x8c, 0x01, 0x0a, 0x0e, 0x43, 0x68,
-	0x6f, 0x69, 0x63, 0x65, 0x51, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x0e, 0x0a, 0x02,
-	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1a, 0x0a, 0x08,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x20, 0x0a, 0x0b, 0x65, 0x78, 0x70, 0x6c,
-	0x61, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x65,
-	0x78, 0x70, 0x6c, 0x61, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x2c, 0x0a, 0x07, 0x6f, 0x70,
-	0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x65, 0x73,
-	0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x52,
-	0x07, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x22, 0x50, 0x0a, 0x06, 0x4f, 0x70, 0x74, 0x69,
-	0x6f, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x06, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x6f,
-	0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6f, 0x6e,
-	0x74, 0x65, 0x6e, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x03, 0x20,
-	0x01, 0x28, 0x03, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x22, 0x38, 0x0a, 0x07, 0x48, 0x69,
-	0x73, 0x74, 0x6f, 0x72, 0x79, 0x12, 0x2d, 0x0a, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73,
-	0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73,
-	0x68, 0x6f, 0x77, 0x2e, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x52, 0x07, 0x72, 0x65, 0x63,
-	0x6f, 0x72, 0x64, 0x73, 0x22, 0x6d, 0x0a, 0x07, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x12,
-	0x2c, 0x0a, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b,
-	0x32, 0x12, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x52, 0x65,
-	0x63, 0x6f, 0x72, 0x64, 0x52, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x12, 0x14, 0x0a,
-	0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x73, 0x63,
-	0x6f, 0x72, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d,
-	0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54,
-	0x69, 0x6d, 0x65, 0x22, 0x46, 0x0a, 0x06, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x12, 0x0e, 0x0a,
+	0x1a, 0x30, 0x0a, 0x06, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x6f, 0x70,
+	0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x6f, 0x70, 0x74, 0x69,
+	0x6f, 0x6e, 0x22, 0x65, 0x0a, 0x0e, 0x44, 0x6f, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65,
+	0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12, 0x2d, 0x0a, 0x07, 0x72, 0x65,
+	0x63, 0x6f, 0x72, 0x64, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x65, 0x73,
+	0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73,
+	0x52, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x22, 0x35, 0x0a, 0x0f, 0x4c, 0x69, 0x6b,
+	0x65, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x52, 0x65, 0x71, 0x12, 0x0e, 0x0a, 0x02,
+	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04,
+	0x6c, 0x69, 0x6b, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x6c, 0x69, 0x6b, 0x65,
+	0x22, 0x95, 0x02, 0x0a, 0x08, 0x45, 0x78, 0x65, 0x72, 0x63, 0x69, 0x73, 0x65, 0x12, 0x0e, 0x0a,
 	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x16, 0x0a,
-	0x06, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x6f,
-	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x22, 0x59, 0x0a, 0x11, 0x53,
-	0x75, 0x62, 0x6d, 0x69, 0x74, 0x46, 0x65, 0x65, 0x64, 0x62, 0x61, 0x63, 0x6b, 0x52, 0x65, 0x71,
-	0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04,
-	0x74, 0x79, 0x70, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18,
-	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x12, 0x16,
-	0x0a, 0x06, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x18, 0x04, 0x20, 0x03, 0x28, 0x09, 0x52, 0x06,
-	0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x42, 0x5b, 0x0a, 0x1f, 0x63, 0x6f, 0x6d, 0x2e, 0x78, 0x68,
-	0x70, 0x6f, 0x6c, 0x61, 0x72, 0x69, 0x73, 0x2e, 0x69, 0x64, 0x6c, 0x67, 0x65, 0x6e, 0x2e, 0x65,
-	0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x42, 0x0b, 0x43, 0x6f, 0x6d, 0x6d, 0x6f,
-	0x6e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x29, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2d,
-	0x73, 0x68, 0x6f, 0x77, 0x2f, 0x62, 0x69, 0x7a, 0x2f, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61,
-	0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x64, 0x74, 0x6f, 0x2f, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2f, 0x73,
-	0x68, 0x6f, 0x77, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75,
+	0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6c, 0x6f, 0x67, 0x49, 0x64, 0x12, 0x30, 0x0a, 0x08, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x14, 0x2e,
+	0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x51, 0x75, 0x65, 0x73, 0x74,
+	0x69, 0x6f, 0x6e, 0x52, 0x08, 0x71, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x2d, 0x0a,
+	0x07, 0x68, 0x69, 0x73, 0x74, 0x6f, 0x72, 0x79, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x13,
+	0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x48, 0x69, 0x73, 0x74,
+	0x6f, 0x72, 0x79, 0x52, 0x07, 0x68, 0x69, 0x73, 0x74, 0x6f, 0x72, 0x79, 0x12, 0x12, 0x0a, 0x04,
+	0x6c, 0x69, 0x6b, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x6c, 0x69, 0x6b, 0x65,
+	0x12, 0x1e, 0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x18, 0x07,
+	0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65,
+	0x12, 0x1e, 0x0a, 0x0a, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x18, 0x08,
+	0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x54, 0x69, 0x6d, 0x65,
+	0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x03,
+	0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x50, 0x0a, 0x08, 0x51, 0x75, 0x65, 0x73,
+	0x74, 0x69, 0x6f, 0x6e, 0x12, 0x44, 0x0a, 0x0f, 0x63, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x51, 0x75,
+	0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1a, 0x2e,
+	0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x43, 0x68, 0x6f, 0x69, 0x63,
+	0x65, 0x51, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x0f, 0x63, 0x68, 0x6f, 0x69, 0x63,
+	0x65, 0x51, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x22, 0x8c, 0x01, 0x0a, 0x0e, 0x43,
+	0x68, 0x6f, 0x69, 0x63, 0x65, 0x51, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x0e, 0x0a,
+	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1a, 0x0a,
+	0x08, 0x71, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x08, 0x71, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x20, 0x0a, 0x0b, 0x65, 0x78, 0x70,
+	0x6c, 0x61, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b,
+	0x65, 0x78, 0x70, 0x6c, 0x61, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x2c, 0x0a, 0x07, 0x6f,
+	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x65,
+	0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e,
+	0x52, 0x07, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x22, 0x50, 0x0a, 0x06, 0x4f, 0x70, 0x74,
+	0x69, 0x6f, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x06, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x18, 0x0a, 0x07, 0x63,
+	0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6f,
+	0x6e, 0x74, 0x65, 0x6e, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x22, 0x38, 0x0a, 0x07, 0x48,
+	0x69, 0x73, 0x74, 0x6f, 0x72, 0x79, 0x12, 0x2d, 0x0a, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64,
+	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e,
+	0x73, 0x68, 0x6f, 0x77, 0x2e, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x52, 0x07, 0x72, 0x65,
+	0x63, 0x6f, 0x72, 0x64, 0x73, 0x22, 0x6d, 0x0a, 0x07, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73,
+	0x12, 0x2c, 0x0a, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x12, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x52,
+	0x65, 0x63, 0x6f, 0x72, 0x64, 0x52, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x12, 0x14,
+	0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x73,
+	0x63, 0x6f, 0x72, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x54, 0x69,
+	0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65,
+	0x54, 0x69, 0x6d, 0x65, 0x22, 0x46, 0x0a, 0x06, 0x52, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x12, 0x0e,
+	0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x16,
+	0x0a, 0x06, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06,
+	0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x22, 0x59, 0x0a, 0x11,
+	0x53, 0x75, 0x62, 0x6d, 0x69, 0x74, 0x46, 0x65, 0x65, 0x64, 0x62, 0x61, 0x63, 0x6b, 0x52, 0x65,
+	0x71, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x12,
+	0x16, 0x0a, 0x06, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x18, 0x04, 0x20, 0x03, 0x28, 0x09, 0x52,
+	0x06, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x42, 0x5b, 0x0a, 0x1f, 0x63, 0x6f, 0x6d, 0x2e, 0x78,
+	0x68, 0x70, 0x6f, 0x6c, 0x61, 0x72, 0x69, 0x73, 0x2e, 0x69, 0x64, 0x6c, 0x67, 0x65, 0x6e, 0x2e,
+	0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x42, 0x0b, 0x43, 0x6f, 0x6d, 0x6d,
+	0x6f, 0x6e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x29, 0x65, 0x73, 0x73, 0x61, 0x79,
+	0x2d, 0x73, 0x68, 0x6f, 0x77, 0x2f, 0x62, 0x69, 0x7a, 0x2f, 0x61, 0x70, 0x70, 0x6c, 0x69, 0x63,
+	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x64, 0x74, 0x6f, 0x2f, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2f,
+	0x73, 0x68, 0x6f, 0x77, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -3382,7 +3636,7 @@ func file_essay_show_common_proto_rawDescGZIP() []byte {
 	return file_essay_show_common_proto_rawDescData
 }
 
-var file_essay_show_common_proto_msgTypes = make([]protoimpl.MessageInfo, 50)
+var file_essay_show_common_proto_msgTypes = make([]protoimpl.MessageInfo, 54)
 var file_essay_show_common_proto_goTypes = []interface{}{
 	(*TestReq)(nil),                                // 0: essay.show.TestReq
 	(*TestResp)(nil),                               // 1: essay.show.TestResp
@@ -3390,69 +3644,73 @@ var file_essay_show_common_proto_goTypes = []interface{}{
 	(*SignUpResp)(nil),                             // 3: essay.show.SignUpResp
 	(*SignInReq)(nil),                              // 4: essay.show.SignInReq
 	(*SignInResp)(nil),                             // 5: essay.show.SignInResp
-	(*GetUserInfoReq)(nil),                         // 6: essay.show.GetUserInfoReq
-	(*GetUserInfoResp)(nil),                        // 7: essay.show.GetUserInfoResp
-	(*UpdateUserInfoReq)(nil),                      // 8: essay.show.UpdateUserInfoReq
-	(*UpdatePasswordReq)(nil),                      // 9: essay.show.UpdatePasswordReq
-	(*UpdatePasswordResp)(nil),                     // 10: essay.show.UpdatePasswordResp
-	(*DailyAttendReq)(nil),                         // 11: essay.show.DailyAttendReq
-	(*GetDailyAttendReq)(nil),                      // 12: essay.show.GetDailyAttendReq
-	(*GetDailyAttendResp)(nil),                     // 13: essay.show.GetDailyAttendResp
-	(*GetInvitationCodeReq)(nil),                   // 14: essay.show.GetInvitationCodeReq
-	(*GetInvitationCodeResp)(nil),                  // 15: essay.show.GetInvitationCodeResp
-	(*FillInvitationCodeReq)(nil),                  // 16: essay.show.FillInvitationCodeReq
-	(*EssayEvaluateReq)(nil),                       // 17: essay.show.EssayEvaluateReq
-	(*EssayEvaluateResp)(nil),                      // 18: essay.show.EssayEvaluateResp
-	(*LikeEvaluateReq)(nil),                        // 19: essay.show.LikeEvaluateReq
-	(*GetEssayEvaluateLogsReq)(nil),                // 20: essay.show.GetEssayEvaluateLogsReq
-	(*GetEssayEvaluateLogsResp)(nil),               // 21: essay.show.GetEssayEvaluateLogsResp
-	(*Log)(nil),                                    // 22: essay.show.Log
-	(*ApplySignedUrlReq)(nil),                      // 23: essay.show.ApplySignedUrlReq
-	(*ApplySignedUrlResp)(nil),                     // 24: essay.show.ApplySignedUrlResp
-	(*OCRReq)(nil),                                 // 25: essay.show.OCRReq
-	(*OCRResp)(nil),                                // 26: essay.show.OCRResp
-	(*Response)(nil),                               // 27: essay.show.Response
-	(*SendVerifyCodeReq)(nil),                      // 28: essay.show.SendVerifyCodeReq
-	(*CreateExerciseReq)(nil),                      // 29: essay.show.CreateExerciseReq
-	(*CreateExerciseResp)(nil),                     // 30: essay.show.CreateExerciseResp
-	(*ListSimpleExercisesReq)(nil),                 // 31: essay.show.ListSimpleExercisesReq
-	(*ListSimpleExercisesResp)(nil),                // 32: essay.show.ListSimpleExercisesResp
-	(*GetExerciseReq)(nil),                         // 33: essay.show.GetExerciseReq
-	(*GetExerciseResp)(nil),                        // 34: essay.show.GetExerciseResp
-	(*DoExerciseReq)(nil),                          // 35: essay.show.DoExerciseReq
-	(*DoExerciseResp)(nil),                         // 36: essay.show.DoExerciseResp
-	(*LikeExerciseReq)(nil),                        // 37: essay.show.LikeExerciseReq
-	(*Exercise)(nil),                               // 38: essay.show.Exercise
-	(*Question)(nil),                               // 39: essay.show.Question
-	(*ChoiceQuestion)(nil),                         // 40: essay.show.ChoiceQuestion
-	(*Option)(nil),                                 // 41: essay.show.Option
-	(*History)(nil),                                // 42: essay.show.History
-	(*Records)(nil),                                // 43: essay.show.Records
-	(*Record)(nil),                                 // 44: essay.show.Record
-	(*SubmitFeedbackReq)(nil),                      // 45: essay.show.SubmitFeedbackReq
-	(*GetUserInfoResp_Payload)(nil),                // 46: essay.show.GetUserInfoResp.Payload
-	(*ListSimpleExercisesResp_Record)(nil),         // 47: essay.show.ListSimpleExercisesResp.Record
-	(*ListSimpleExercisesResp_SimpleExercise)(nil), // 48: essay.show.ListSimpleExercisesResp.SimpleExercise
-	(*DoExerciseReq_Record)(nil),                   // 49: essay.show.DoExerciseReq.Record
-	(*basic.PaginationOptions)(nil),                // 50: basic.PaginationOptions
+	(*BindAuthReq)(nil),                            // 6: essay.show.BindAuthReq
+	(*BindAuthResp)(nil),                           // 7: essay.show.BindAuthResp
+	(*GetUserInfoReq)(nil),                         // 8: essay.show.GetUserInfoReq
+	(*GetUserInfoResp)(nil),                        // 9: essay.show.GetUserInfoResp
+	(*UpdateUserInfoReq)(nil),                      // 10: essay.show.UpdateUserInfoReq
+	(*UpdatePasswordReq)(nil),                      // 11: essay.show.UpdatePasswordReq
+	(*UpdatePasswordResp)(nil),                     // 12: essay.show.UpdatePasswordResp
+	(*DailyAttendReq)(nil),                         // 13: essay.show.DailyAttendReq
+	(*GetDailyAttendReq)(nil),                      // 14: essay.show.GetDailyAttendReq
+	(*GetDailyAttendResp)(nil),                     // 15: essay.show.GetDailyAttendResp
+	(*GetInvitationCodeReq)(nil),                   // 16: essay.show.GetInvitationCodeReq
+	(*GetInvitationCodeResp)(nil),                  // 17: essay.show.GetInvitationCodeResp
+	(*FillInvitationCodeReq)(nil),                  // 18: essay.show.FillInvitationCodeReq
+	(*EssayEvaluateReq)(nil),                       // 19: essay.show.EssayEvaluateReq
+	(*EssayEvaluateResp)(nil),                      // 20: essay.show.EssayEvaluateResp
+	(*DownloadEvaluateReq)(nil),                    // 21: essay.show.DownloadEvaluateReq
+	(*DownloadEvaluateResp)(nil),                   // 22: essay.show.DownloadEvaluateResp
+	(*LikeEvaluateReq)(nil),                        // 23: essay.show.LikeEvaluateReq
+	(*GetEssayEvaluateLogsReq)(nil),                // 24: essay.show.GetEssayEvaluateLogsReq
+	(*GetEssayEvaluateLogsResp)(nil),               // 25: essay.show.GetEssayEvaluateLogsResp
+	(*Log)(nil),                                    // 26: essay.show.Log
+	(*ApplySignedUrlReq)(nil),                      // 27: essay.show.ApplySignedUrlReq
+	(*ApplySignedUrlResp)(nil),                     // 28: essay.show.ApplySignedUrlResp
+	(*OCRReq)(nil),                                 // 29: essay.show.OCRReq
+	(*OCRResp)(nil),                                // 30: essay.show.OCRResp
+	(*Response)(nil),                               // 31: essay.show.Response
+	(*SendVerifyCodeReq)(nil),                      // 32: essay.show.SendVerifyCodeReq
+	(*CreateExerciseReq)(nil),                      // 33: essay.show.CreateExerciseReq
+	(*CreateExerciseResp)(nil),                     // 34: essay.show.CreateExerciseResp
+	(*ListSimpleExercisesReq)(nil),                 // 35: essay.show.ListSimpleExercisesReq
+	(*ListSimpleExercisesResp)(nil),                // 36: essay.show.ListSimpleExercisesResp
+	(*GetExerciseReq)(nil),                         // 37: essay.show.GetExerciseReq
+	(*GetExerciseResp)(nil),                        // 38: essay.show.GetExerciseResp
+	(*DoExerciseReq)(nil),                          // 39: essay.show.DoExerciseReq
+	(*DoExerciseResp)(nil),                         // 40: essay.show.DoExerciseResp
+	(*LikeExerciseReq)(nil),                        // 41: essay.show.LikeExerciseReq
+	(*Exercise)(nil),                               // 42: essay.show.Exercise
+	(*Question)(nil),                               // 43: essay.show.Question
+	(*ChoiceQuestion)(nil),                         // 44: essay.show.ChoiceQuestion
+	(*Option)(nil),                                 // 45: essay.show.Option
+	(*History)(nil),                                // 46: essay.show.History
+	(*Records)(nil),                                // 47: essay.show.Records
+	(*Record)(nil),                                 // 48: essay.show.Record
+	(*SubmitFeedbackReq)(nil),                      // 49: essay.show.SubmitFeedbackReq
+	(*GetUserInfoResp_Payload)(nil),                // 50: essay.show.GetUserInfoResp.Payload
+	(*ListSimpleExercisesResp_Record)(nil),         // 51: essay.show.ListSimpleExercisesResp.Record
+	(*ListSimpleExercisesResp_SimpleExercise)(nil), // 52: essay.show.ListSimpleExercisesResp.SimpleExercise
+	(*DoExerciseReq_Record)(nil),                   // 53: essay.show.DoExerciseReq.Record
+	(*basic.PaginationOptions)(nil),                // 54: basic.PaginationOptions
 }
 var file_essay_show_common_proto_depIdxs = []int32{
-	46, // 0: essay.show.GetUserInfoResp.payload:type_name -> essay.show.GetUserInfoResp.Payload
-	50, // 1: essay.show.GetEssayEvaluateLogsReq.paginationOptions:type_name -> basic.PaginationOptions
-	22, // 2: essay.show.GetEssayEvaluateLogsResp.logs:type_name -> essay.show.Log
-	38, // 3: essay.show.CreateExerciseResp.exercise:type_name -> essay.show.Exercise
-	50, // 4: essay.show.ListSimpleExercisesReq.paginationOptions:type_name -> basic.PaginationOptions
-	48, // 5: essay.show.ListSimpleExercisesResp.exercises:type_name -> essay.show.ListSimpleExercisesResp.SimpleExercise
-	38, // 6: essay.show.GetExerciseResp.exercise:type_name -> essay.show.Exercise
-	49, // 7: essay.show.DoExerciseReq.records:type_name -> essay.show.DoExerciseReq.Record
-	43, // 8: essay.show.DoExerciseResp.records:type_name -> essay.show.Records
-	39, // 9: essay.show.Exercise.question:type_name -> essay.show.Question
-	42, // 10: essay.show.Exercise.history:type_name -> essay.show.History
-	40, // 11: essay.show.Question.choiceQuestions:type_name -> essay.show.ChoiceQuestion
-	41, // 12: essay.show.ChoiceQuestion.options:type_name -> essay.show.Option
-	43, // 13: essay.show.History.records:type_name -> essay.show.Records
-	44, // 14: essay.show.Records.records:type_name -> essay.show.Record
-	47, // 15: essay.show.ListSimpleExercisesResp.SimpleExercise.records:type_name -> essay.show.ListSimpleExercisesResp.Record
+	50, // 0: essay.show.GetUserInfoResp.payload:type_name -> essay.show.GetUserInfoResp.Payload
+	54, // 1: essay.show.GetEssayEvaluateLogsReq.paginationOptions:type_name -> basic.PaginationOptions
+	26, // 2: essay.show.GetEssayEvaluateLogsResp.logs:type_name -> essay.show.Log
+	42, // 3: essay.show.CreateExerciseResp.exercise:type_name -> essay.show.Exercise
+	54, // 4: essay.show.ListSimpleExercisesReq.paginationOptions:type_name -> basic.PaginationOptions
+	52, // 5: essay.show.ListSimpleExercisesResp.exercises:type_name -> essay.show.ListSimpleExercisesResp.SimpleExercise
+	42, // 6: essay.show.GetExerciseResp.exercise:type_name -> essay.show.Exercise
+	53, // 7: essay.show.DoExerciseReq.records:type_name -> essay.show.DoExerciseReq.Record
+	47, // 8: essay.show.DoExerciseResp.records:type_name -> essay.show.Records
+	43, // 9: essay.show.Exercise.question:type_name -> essay.show.Question
+	46, // 10: essay.show.Exercise.history:type_name -> essay.show.History
+	44, // 11: essay.show.Question.choiceQuestions:type_name -> essay.show.ChoiceQuestion
+	45, // 12: essay.show.ChoiceQuestion.options:type_name -> essay.show.Option
+	47, // 13: essay.show.History.records:type_name -> essay.show.Records
+	48, // 14: essay.show.Records.records:type_name -> essay.show.Record
+	51, // 15: essay.show.ListSimpleExercisesResp.SimpleExercise.records:type_name -> essay.show.ListSimpleExercisesResp.Record
 	16, // [16:16] is the sub-list for method output_type
 	16, // [16:16] is the sub-list for method input_type
 	16, // [16:16] is the sub-list for extension type_name
@@ -3539,7 +3797,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserInfoReq); i {
+			switch v := v.(*BindAuthReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3551,7 +3809,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserInfoResp); i {
+			switch v := v.(*BindAuthResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3563,7 +3821,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateUserInfoReq); i {
+			switch v := v.(*GetUserInfoReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3575,7 +3833,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdatePasswordReq); i {
+			switch v := v.(*GetUserInfoResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3587,7 +3845,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdatePasswordResp); i {
+			switch v := v.(*UpdateUserInfoReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3599,7 +3857,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DailyAttendReq); i {
+			switch v := v.(*UpdatePasswordReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3611,7 +3869,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetDailyAttendReq); i {
+			switch v := v.(*UpdatePasswordResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3623,7 +3881,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetDailyAttendResp); i {
+			switch v := v.(*DailyAttendReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3635,7 +3893,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetInvitationCodeReq); i {
+			switch v := v.(*GetDailyAttendReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3647,7 +3905,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetInvitationCodeResp); i {
+			switch v := v.(*GetDailyAttendResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3659,7 +3917,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FillInvitationCodeReq); i {
+			switch v := v.(*GetInvitationCodeReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3671,7 +3929,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EssayEvaluateReq); i {
+			switch v := v.(*GetInvitationCodeResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3683,7 +3941,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*EssayEvaluateResp); i {
+			switch v := v.(*FillInvitationCodeReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3695,7 +3953,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LikeEvaluateReq); i {
+			switch v := v.(*EssayEvaluateReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3707,7 +3965,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetEssayEvaluateLogsReq); i {
+			switch v := v.(*EssayEvaluateResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3719,7 +3977,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetEssayEvaluateLogsResp); i {
+			switch v := v.(*DownloadEvaluateReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3731,7 +3989,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Log); i {
+			switch v := v.(*DownloadEvaluateResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3743,7 +4001,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ApplySignedUrlReq); i {
+			switch v := v.(*LikeEvaluateReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3755,7 +4013,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ApplySignedUrlResp); i {
+			switch v := v.(*GetEssayEvaluateLogsReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3767,7 +4025,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*OCRReq); i {
+			switch v := v.(*GetEssayEvaluateLogsResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3779,7 +4037,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*OCRResp); i {
+			switch v := v.(*Log); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3791,7 +4049,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Response); i {
+			switch v := v.(*ApplySignedUrlReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3803,7 +4061,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[28].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SendVerifyCodeReq); i {
+			switch v := v.(*ApplySignedUrlResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3815,7 +4073,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateExerciseReq); i {
+			switch v := v.(*OCRReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3827,7 +4085,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[30].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateExerciseResp); i {
+			switch v := v.(*OCRResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3839,7 +4097,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[31].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListSimpleExercisesReq); i {
+			switch v := v.(*Response); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3851,7 +4109,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[32].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListSimpleExercisesResp); i {
+			switch v := v.(*SendVerifyCodeReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3863,7 +4121,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[33].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetExerciseReq); i {
+			switch v := v.(*CreateExerciseReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3875,7 +4133,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[34].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetExerciseResp); i {
+			switch v := v.(*CreateExerciseResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3887,7 +4145,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DoExerciseReq); i {
+			switch v := v.(*ListSimpleExercisesReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3899,7 +4157,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DoExerciseResp); i {
+			switch v := v.(*ListSimpleExercisesResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3911,7 +4169,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[37].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*LikeExerciseReq); i {
+			switch v := v.(*GetExerciseReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3923,7 +4181,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[38].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Exercise); i {
+			switch v := v.(*GetExerciseResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3935,7 +4193,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Question); i {
+			switch v := v.(*DoExerciseReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3947,7 +4205,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[40].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ChoiceQuestion); i {
+			switch v := v.(*DoExerciseResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3959,7 +4217,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[41].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Option); i {
+			switch v := v.(*LikeExerciseReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3971,7 +4229,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[42].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*History); i {
+			switch v := v.(*Exercise); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3983,7 +4241,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[43].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Records); i {
+			switch v := v.(*Question); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -3995,7 +4253,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[44].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Record); i {
+			switch v := v.(*ChoiceQuestion); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4007,7 +4265,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[45].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SubmitFeedbackReq); i {
+			switch v := v.(*Option); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4019,7 +4277,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[46].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserInfoResp_Payload); i {
+			switch v := v.(*History); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4031,7 +4289,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[47].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListSimpleExercisesResp_Record); i {
+			switch v := v.(*Records); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4043,7 +4301,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[48].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListSimpleExercisesResp_SimpleExercise); i {
+			switch v := v.(*Record); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4055,6 +4313,54 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[49].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SubmitFeedbackReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[50].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetUserInfoResp_Payload); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[51].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListSimpleExercisesResp_Record); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[52].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListSimpleExercisesResp_SimpleExercise); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[53].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DoExerciseReq_Record); i {
 			case 0:
 				return &v.state
@@ -4068,16 +4374,17 @@ func file_essay_show_common_proto_init() {
 		}
 	}
 	file_essay_show_common_proto_msgTypes[4].OneofWrappers = []interface{}{}
-	file_essay_show_common_proto_msgTypes[17].OneofWrappers = []interface{}{}
-	file_essay_show_common_proto_msgTypes[23].OneofWrappers = []interface{}{}
-	file_essay_show_common_proto_msgTypes[25].OneofWrappers = []interface{}{}
+	file_essay_show_common_proto_msgTypes[6].OneofWrappers = []interface{}{}
+	file_essay_show_common_proto_msgTypes[19].OneofWrappers = []interface{}{}
+	file_essay_show_common_proto_msgTypes[27].OneofWrappers = []interface{}{}
+	file_essay_show_common_proto_msgTypes[29].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_essay_show_common_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   50,
+			NumMessages:   54,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

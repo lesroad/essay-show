@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"essay-show/biz/application/dto/basic"
+	"essay-show/biz/application/dto/essay/sts"
 	"essay-show/biz/infrastructure/config"
 	"essay-show/biz/infrastructure/consts"
 	"essay-show/biz/infrastructure/util"
@@ -34,7 +35,7 @@ func ExtractUserMeta(ctx context.Context) (user *basic.UserMeta) {
 	var err error
 	defer func() {
 		if err != nil {
-			log.CtxInfo(ctx, "extract user meta fail, err=%v", err)
+			log.CtxInfo(ctx, "验签失败, err=%v", err)
 		}
 	}()
 	c, err := ExtractContext(ctx)
@@ -78,7 +79,7 @@ func ExtractUserMeta(ctx context.Context) (user *basic.UserMeta) {
 生成 ECDSA 私钥: openssl ecparam -genkey -name prime256v1 -noout -out private_key.pem
 从私钥中提取公钥: openssl ec -in private_key.pem -pubout -out public_key.pem
 */
-func GenerateJwtToken(resp map[string]any) (string, int64, error) {
+func GenerateJwtToken(resp *sts.SignInResp) (string, int64, error) {
 	key, err := jwt.ParseECPrivateKeyFromPEM([]byte(config.GetConfig().Auth.SecretKey))
 	if err != nil {
 		return "", 0, err
@@ -88,14 +89,14 @@ func GenerateJwtToken(resp map[string]any) (string, int64, error) {
 	claims := make(jwt.MapClaims)
 	claims["exp"] = exp
 	claims["iat"] = iat
-	claims["userId"] = resp["userId"].(string)
+	claims["userId"] = resp.UserId
 	claims["appId"] = consts.AppId
 	claims["deviceId"] = "" // 暂时传空
-	// claims["wechatUserMeta"] = &basic.WechatUserMeta{
-	// 	AppId:   resp["appId"].(string),
-	// 	OpenId:  resp["openId"].(string),
-	// 	UnionId: resp["unionId"].(string),
-	// }
+	claims["wechatUserMeta"] = &basic.WechatUserMeta{
+		AppId:   resp.AppId,
+		OpenId:  resp.OpenId,
+		UnionId: resp.UnionId,
+	}
 	token := jwt.New(jwt.SigningMethodES256)
 	token.Claims = claims
 	tokenString, err := token.SignedString(key)

@@ -92,10 +92,11 @@ func (m *MongoMapper) FindOne(ctx context.Context, id string) (l *Log, err error
 		consts.ID: oid,
 	}
 
-	key := prefixKeyCacheKey + id
+	//key := prefixKeyCacheKey + id
 
 	l = &Log{}
-	err = m.conn.FindOne(ctx, key, l, filter)
+	//err = m.conn.FindOne(ctx, key, l, filter)
+	err = m.conn.FindOneNoCache(ctx, l, filter)
 	return l, err
 }
 

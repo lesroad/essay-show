@@ -5,11 +5,12 @@ import (
 	"essay-show/biz/adaptor"
 	"essay-show/biz/application/dto/essay/show"
 	"essay-show/biz/infrastructure/consts"
-	"essay-show/biz/infrastructure/mapper/exercise"
-	"essay-show/biz/infrastructure/mapper/log"
-	"essay-show/biz/infrastructure/mapper/user"
+	"essay-show/biz/infrastructure/repository/exercise"
+	"essay-show/biz/infrastructure/repository/log"
+	"essay-show/biz/infrastructure/repository/user"
 	"essay-show/biz/infrastructure/util"
 	eu "essay-show/biz/infrastructure/util/exercise"
+	logx "essay-show/biz/infrastructure/util/log"
 	"time"
 
 	"github.com/google/wire"
@@ -19,6 +20,7 @@ import (
 
 type IExerciseService interface {
 	CreateExercise(ctx context.Context, req *show.CreateExerciseReq) (resp *show.CreateExerciseResp, err error)
+	CreateExerciseStream(ctx context.Context, req *show.CreateExerciseReq, resultChan chan<- string) error
 	ListSimpleExercises(ctx context.Context, req *show.ListSimpleExercisesReq) (resp *show.ListSimpleExercisesResp, err error)
 	GetExercise(ctx context.Context, req *show.GetExerciseReq) (resp *show.GetExerciseResp, err error)
 	DoExercise(ctx context.Context, req *show.DoExerciseReq) (resp *show.DoExerciseResp, err error)
@@ -41,7 +43,8 @@ func (s ExerciseService) CreateExercise(ctx context.Context, req *show.CreateExe
 	// 获取批改记录
 	l, err := s.LogMapper.FindOne(ctx, req.LogId)
 	if err != nil {
-		return nil, err
+		logx.Error("获取批改记录失败, err:%v", err.Error())
+		return nil, consts.ErrInvalidObjectId
 	}
 
 	// 获取用户信息
@@ -51,13 +54,15 @@ func (s ExerciseService) CreateExercise(ctx context.Context, req *show.CreateExe
 	}
 	u, err := s.UserMapper.FindOne(ctx, userMeta.UserId)
 	if err != nil {
-		return nil, err
+		logx.Error("获取用户信息失败, err:%v", err.Error())
+		return nil, consts.ErrNotAuthentication
 	}
 
 	// 调用生成接口
-	e, err := eu.GenerateExercise(u.Grade, l)
+	e, err := eu.GenerateExercise(ctx, u.Grade, l)
 	if err != nil {
-		return nil, err
+		logx.Error("生成练习失败, err:%v", err.Error())
+		return nil, consts.ErrCreateExercise
 	}
 
 	// 存储练习
@@ -65,7 +70,8 @@ func (s ExerciseService) CreateExercise(ctx context.Context, req *show.CreateExe
 	e.UserId = userMeta.UserId
 	err = s.ExerciseMapper.Insert(ctx, e)
 	if err != nil {
-		return nil, err
+		logx.Error("存储练习失败, err:%v", err.Error())
+		return nil, consts.ErrCreateExercise
 	}
 
 	// dto构造
@@ -87,7 +93,7 @@ func (s ExerciseService) CreateExercise(ctx context.Context, req *show.CreateExe
 }
 
 // ListSimpleExercises 获取简要的练习列表
-func (s ExerciseService) ListSimpleExercises(ctx context.Context, req *show.ListSimpleExercisesReq) (resp *show.ListSimpleExercisesResp, err error) {
+func (s ExerciseService) ListSimpleExercises(ctx context.Context, req *show.ListSimpleExercisesReq) (*show.ListSimpleExercisesResp, error) {
 	// 获取用户信息
 	userMeta := adaptor.ExtractUserMeta(ctx)
 	if userMeta.GetUserId() == "" {
@@ -97,7 +103,7 @@ func (s ExerciseService) ListSimpleExercises(ctx context.Context, req *show.List
 	// 查询批改记录对应的练习
 	data, total, err := s.ExerciseMapper.FindManyByLogId(ctx, req.LogId, req.PaginationOptions)
 	if err != nil && !errors.Is(err, consts.ErrNotFound) {
-		return nil, err
+		return nil, consts.ErrNotFound
 	}
 
 	// 构造dto切片
@@ -138,24 +144,21 @@ func (s ExerciseService) ListSimpleExercises(ctx context.Context, req *show.List
 		dtos = append(dtos, dto)
 	}
 
-	// 构造响应
-	resp = &show.ListSimpleExercisesResp{
+	return &show.ListSimpleExercisesResp{
 		Code:      0,
 		Msg:       "success",
 		Exercises: dtos,
 		Total:     total,
-	}
-
-	return
+	}, nil
 
 }
 
 // GetExercise 获取一次练习的详细记录
-func (s ExerciseService) GetExercise(ctx context.Context, req *show.GetExerciseReq) (resp *show.GetExerciseResp, err error) {
+func (s ExerciseService) GetExercise(ctx context.Context, req *show.GetExerciseReq) (*show.GetExerciseResp, error) {
 	// 查询练习
 	e, err := s.ExerciseMapper.FindOneById(ctx, req.Id)
 	if err != nil {
-		return nil, err
+		return nil, consts.ErrNotFound
 	}
 	// 处理选择题切片
 	cqs := make([]*show.ChoiceQuestion, 0)
@@ -208,21 +211,18 @@ func (s ExerciseService) GetExercise(ctx context.Context, req *show.GetExerciseR
 		Status:     e.Status,
 	}
 
-	// 构造响应
-	resp = &show.GetExerciseResp{
+	return &show.GetExerciseResp{
 		Code:     0,
 		Msg:      "success",
 		Exercise: dto,
-	}
-
-	return
+	}, nil
 }
 
 // DoExercise 提交一次练习作答，目前是没有暂时记录的，需要完成所有的题目然后结算
 func (s ExerciseService) DoExercise(ctx context.Context, req *show.DoExerciseReq) (resp *show.DoExerciseResp, err error) {
 	e, err := s.ExerciseMapper.FindOneById(ctx, req.Id)
 	if err != nil {
-		return nil, err
+		return nil, consts.ErrNotFound
 	}
 
 	// 初始化
@@ -271,7 +271,8 @@ func (s ExerciseService) DoExercise(ctx context.Context, req *show.DoExerciseReq
 	e.History.Records = append(e.History.Records, rds)
 	err = s.ExerciseMapper.Update(ctx, e)
 	if err != nil {
-		return nil, err
+		logx.Error("更新练习记录失败")
+		return nil, consts.ErrDoExercise
 	}
 
 	// 将最新的记录返回
@@ -301,7 +302,7 @@ func (s ExerciseService) LikeExercise(ctx context.Context, req *show.LikeExercis
 	// 查询练习
 	e, err := s.ExerciseMapper.FindOneById(ctx, req.Id)
 	if err != nil {
-		return nil, err
+		return nil, consts.ErrNotFound
 	}
 	// 校验参数
 	if req.Like > 1 || req.Like < -1 {
@@ -318,4 +319,59 @@ func (s ExerciseService) LikeExercise(ctx context.Context, req *show.LikeExercis
 	}
 
 	return util.Succeed("标记成功")
+}
+
+// CreateExerciseStream 流式创建练习
+func (s ExerciseService) CreateExerciseStream(ctx context.Context, req *show.CreateExerciseReq, resultChan chan<- string) error {
+	// 获取批改记录
+	l, err := s.LogMapper.FindOne(ctx, req.LogId)
+	if err != nil {
+		logx.Error("获取批改记录失败, err:%v", err.Error())
+		util.SendStreamMessage(resultChan, util.STError, "获取批改记录失败", nil)
+		return consts.ErrInvalidObjectId
+	}
+
+	// 获取用户信息
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		util.SendStreamMessage(resultChan, util.STError, "用户未认证", nil)
+		return consts.ErrNotAuthentication
+	}
+
+	u, err := s.UserMapper.FindOne(ctx, userMeta.UserId)
+	if err != nil {
+		logx.Error("获取用户信息失败, err:%v", err.Error())
+		util.SendStreamMessage(resultChan, util.STError, "获取用户信息失败", nil)
+		return consts.ErrNotAuthentication
+	}
+
+	e, err := eu.GenerateExerciseStream(ctx, u.Grade, l, resultChan)
+	if err != nil {
+		logx.Error("生成练习失败, err:%v", err.Error())
+		util.SendStreamMessage(resultChan, util.STError, "生成练习失败", nil)
+		return err
+	}
+
+	// 存储练习
+	e.LogId = req.LogId
+	e.UserId = userMeta.UserId
+	err = s.ExerciseMapper.Insert(ctx, e)
+	if err != nil {
+		logx.Error("存储练习失败, err:%v", err.Error())
+		util.SendStreamMessage(resultChan, util.STError, "存储练习失败", nil)
+		return consts.ErrCreateExercise
+	}
+
+	// dto构造
+	dto := &show.Exercise{}
+	err = copier.Copy(dto, e)
+	if err != nil {
+		return err
+	}
+	dto.Id = e.ID.Hex()
+	dto.CreateTime = e.CreateTime.Unix()
+	dto.UpdateTime = e.CreateTime.Unix()
+
+	util.SendStreamMessage(resultChan, util.STComplete, "练习生成完成", dto)
+	return nil
 }

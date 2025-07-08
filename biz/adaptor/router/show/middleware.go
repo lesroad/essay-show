@@ -160,3 +160,33 @@ func _fillinvitationcodeMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _evaluateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _downloadevaluateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _createMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _createexercisestreamMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _essayevaluatestreamMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _bindauthMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

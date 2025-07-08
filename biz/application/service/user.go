@@ -5,21 +5,24 @@ import (
 	"errors"
 	"essay-show/biz/adaptor"
 	"essay-show/biz/application/dto/essay/show"
+	"essay-show/biz/application/dto/essay/sts"
 	"essay-show/biz/infrastructure/consts"
-	"essay-show/biz/infrastructure/mapper/attend"
-	"essay-show/biz/infrastructure/mapper/invitation"
-	"essay-show/biz/infrastructure/mapper/user"
+	"essay-show/biz/infrastructure/repository/attend"
+	"essay-show/biz/infrastructure/repository/invitation"
+	"essay-show/biz/infrastructure/repository/user"
 	"essay-show/biz/infrastructure/util"
 	"essay-show/biz/infrastructure/util/log"
 	"time"
 
 	"github.com/google/wire"
+	"github.com/mitchellh/mapstructure"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type IUserService interface {
 	SignUp(ctx context.Context, req *show.SignUpReq) (*show.SignUpResp, error)
 	SignIn(ctx context.Context, req *show.SignInReq) (*show.SignInResp, error)
+	BindAuth(ctx context.Context, req *show.BindAuthReq) (*show.BindAuthResp, error)
 	GetUserInfo(ctx context.Context, req *show.GetUserInfoReq) (*show.GetUserInfoResp, error)
 	UpdateUserInfo(ctx context.Context, req *show.UpdateUserInfoReq) (*show.Response, error)
 	UpdatePassword(ctx context.Context, req *show.UpdatePasswordReq) (*show.UpdatePasswordResp, error)
@@ -40,7 +43,7 @@ var UserServiceSet = wire.NewSet(
 	wire.Bind(new(IUserService), new(*UserService)),
 )
 
-// SignUp 注册用户
+// SignUp 注册用户 已废弃
 func (s *UserService) SignUp(ctx context.Context, req *show.SignUpReq) (*show.SignUpResp, error) {
 	var oldUser *user.User
 	var err error
@@ -58,14 +61,23 @@ func (s *UserService) SignUp(ctx context.Context, req *show.SignUpReq) (*show.Si
 
 	// 在中台注册账户
 	httpClient := util.GetHttpClient()
-	signUpResponse, err := httpClient.SignUp(req.AuthType, req.AuthId, &req.VerifyCode)
-	if err != nil || signUpResponse["userId"] == nil {
+	signUpResponse, err := httpClient.SignUp(ctx, req.AuthType, req.AuthId, &req.VerifyCode)
+	if err != nil || signUpResponse["code"].(float64) != 0 {
 		log.Error("注册失败:%v, signUpResponse:%v", err, signUpResponse)
 		return nil, consts.ErrSignUp
 	}
-	userId := signUpResponse["userId"].(string)
+	resp := new(sts.SignInResp)
+	if dataMap, ok := signUpResponse["data"].(map[string]any); ok {
+		if err := mapstructure.Decode(dataMap, resp); err != nil {
+			return nil, consts.ErrSignUp
+		}
+	} else {
+		return nil, consts.ErrSignUp
+	}
 
-	authorization, accessExpire, err := adaptor.GenerateJwtToken(signUpResponse)
+	userId := resp.UserId
+
+	authorization, accessExpire, err := adaptor.GenerateJwtToken(resp)
 	if err != nil {
 		log.Error("获取jwt失败, err:%v", err)
 		return nil, consts.ErrSignUp
@@ -73,8 +85,8 @@ func (s *UserService) SignUp(ctx context.Context, req *show.SignUpReq) (*show.Si
 
 	// 设置密码
 	if req.Password != "" {
-		_, err = httpClient.SetPassword(userId, req.Password)
-		if err != nil {
+		ret, err := httpClient.SetPassword(ctx, userId, req.Password)
+		if err != nil || ret["code"].(float64) != 0 {
 			log.Error("设置密码失败:%v", err)
 			return nil, consts.ErrSignUp
 		}
@@ -119,37 +131,31 @@ func (s *UserService) SignUp(ctx context.Context, req *show.SignUpReq) (*show.Si
 func (s *UserService) SignIn(ctx context.Context, req *show.SignInReq) (*show.SignInResp, error) {
 	var u *user.User
 	var err error
-	if req.AuthType == "phone" {
-		// 查找数据库判断手机号是否注册过
-		u, err = s.UserMapper.FindOneByPhone(ctx, req.AuthId)
-		if errors.Is(err, consts.ErrNotFound) || u == nil { // 未找到，说明没有注册
-			return nil, consts.ErrNotSignUp
-		} else if err != nil {
-			return nil, consts.ErrSignUp
-		}
-	}
 
-	// 通过中台登录
 	httpClient := util.GetHttpClient()
-	signInResponse, err := httpClient.SignIn(req.AuthType, req.AuthId, req.VerifyCode, req.Password)
+	signInResponse, err := httpClient.SignIn(ctx, req.AuthType, req.AuthId, req.VerifyCode, req.Password)
+	if err != nil || signInResponse["code"].(float64) != 0 {
+		return nil, consts.ErrSignIn
+	}
+	resp := new(sts.SignInResp)
+	if dataMap, ok := signInResponse["data"].(map[string]any); ok {
+		if err := mapstructure.Decode(dataMap, resp); err != nil {
+			return nil, consts.ErrSignIn
+		}
+	} else {
+		return nil, consts.ErrSignIn
+	}
+
+	accessToken, accessExpire, err := adaptor.GenerateJwtToken(resp)
 	if err != nil {
 		return nil, consts.ErrSignIn
 	}
 
-	accessToken, accessExpire, err := adaptor.GenerateJwtToken(signInResponse)
-	if err != nil {
-		return nil, consts.ErrSignIn
-	}
+	userId := resp.UserId
 
-	userId, ok := signInResponse["userId"].(string)
-	if userId == "" || !ok {
-		return nil, consts.ErrSignIn
-	}
-
-	// 托底逻辑，如果不注册直接登录也行
 	u, err = s.UserMapper.FindOne(ctx, userId)
 	if errors.Is(err, consts.ErrNotFound) || u == nil {
-		// 初始化用户
+		// 注册流程
 		oid, err2 := primitive.ObjectIDFromHex(userId)
 		if err2 != nil {
 			return nil, err2
@@ -158,14 +164,10 @@ func (s *UserService) SignIn(ctx context.Context, req *show.SignInReq) (*show.Si
 		u = &user.User{
 			ID:         oid,
 			Username:   "未设置用户名",
-			Phone:      req.AuthId,
 			Count:      consts.DefaultCount,
 			Status:     0,
 			CreateTime: now,
 			UpdateTime: now,
-		}
-		if req.AuthType == "wechat-phone" {
-			u.Phone = signInResponse["option"].(string)
 		}
 
 		err = s.UserMapper.Insert(ctx, u)
@@ -176,14 +178,49 @@ func (s *UserService) SignIn(ctx context.Context, req *show.SignInReq) (*show.Si
 		return nil, consts.ErrSignIn
 	}
 
-	resp := &show.SignInResp{
+	return &show.SignInResp{
 		Id:           userId,
 		AccessToken:  accessToken,
 		AccessExpire: accessExpire,
 		Name:         u.Username,
+	}, nil
+}
+
+func (s *UserService) BindAuth(ctx context.Context, req *show.BindAuthReq) (*show.BindAuthResp, error) {
+	// 获取用户id
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
 	}
 
-	return resp, nil
+	// 在中台绑定授权
+	httpClient := util.GetHttpClient()
+	bindAuthResponse, err := httpClient.BindAuth(ctx, req.AuthType, req.AuthId, req.VerifyCode, userMeta.GetUserId())
+	if err != nil || bindAuthResponse["code"].(float64) != 0 {
+		return nil, consts.ErrBindAuth
+	}
+	data := bindAuthResponse["data"].(map[string]any)
+
+	u, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
+	if err != nil {
+		return nil, consts.ErrNotFound
+	}
+	switch req.AuthType {
+	case "wechat-phone":
+		u.Phone = data["options"].(string)
+	default:
+		return nil, consts.ErrBindAuth
+	}
+
+	err = s.UserMapper.Update(ctx, u)
+	if err != nil {
+		return nil, consts.ErrBindAuth
+	}
+
+	return &show.BindAuthResp{
+		Code: 0,
+		Msg:  "绑定成功",
+	}, nil
 }
 
 // GetUserInfo 获取用户信息
@@ -262,16 +299,16 @@ func (s *UserService) UpdatePassword(ctx context.Context, req *show.UpdatePasswo
 
 	// 在中台注册账户
 	httpClient := util.NewHttpClient()
-	signInResponse, err := httpClient.SignUp(consts.Phone, u.Phone, &req.VerifyCode)
-	if err != nil {
+	signInResponse, err := httpClient.SignUp(ctx, consts.Phone, u.Phone, &req.VerifyCode)
+	if err != nil || signInResponse["code"].(float64) != 0 {
 		return nil, consts.ErrVerifyCode
 	}
 
 	// 在中台设置密码
 	authorization := signInResponse["accessToken"].(string)
 	user := adaptor.ExtractUserMeta(ctx)
-	_, err = httpClient.SetPassword(user.UserId, req.Password)
-	if err != nil {
+	ret, err := httpClient.SetPassword(ctx, user.UserId, req.Password)
+	if err != nil || ret["code"].(float64) != 0 {
 		return nil, consts.ErrSignUp
 	}
 	return &show.UpdatePasswordResp{
@@ -336,7 +373,8 @@ func (s *UserService) GetDailyAttend(ctx context.Context, req *show.GetDailyAtte
 	// 获取最新的, 确定今天的更新状态
 	a, err := s.findAttend(ctx, meta.GetUserId())
 	if err != nil {
-		return nil, err
+		log.Error("获取签到记录失败, err:%v", err.Error())
+		return nil, consts.ErrNotFound
 	}
 	if !a.Timestamp.IsZero() && time.Unix(a.Timestamp.Unix(), 0).Day() == time.Now().Day() {
 		resp.Attend = 1
@@ -345,7 +383,8 @@ func (s *UserService) GetDailyAttend(ctx context.Context, req *show.GetDailyAtte
 	// 获取所有的指定年月的所有签到记录
 	data, total, err := s.AttendMapper.FindByYearAndMonth(ctx, meta.GetUserId(), int(req.Year), int(req.Month))
 	if err != nil {
-		return nil, err
+		log.Error("获取签到记录失败, err:%v", err.Error())
+		return nil, consts.ErrNotFound
 	}
 
 	dtos := make([]int64, 0, len(data))
@@ -396,7 +435,7 @@ func (s *UserService) FillInvitationCode(ctx context.Context, req *show.FillInvi
 
 	err = s.UserMapper.UpdateCount(ctx, inviter, consts.InvitationReward)
 	if err != nil {
-		return nil, err
+		return nil, consts.ErrUpdate
 	}
 	return util.Succeed("success")
 }
@@ -412,10 +451,12 @@ func (s *UserService) GetInvitationCode(ctx context.Context, req *show.GetInvita
 	if errors.Is(err, consts.ErrNotFound) {
 		c, err = s.CodeMapper.Insert(ctx, userMeta.GetUserId())
 		if err != nil {
-			return nil, err
+			log.Error("获取邀请码失败, err:%v", err.Error())
+			return nil, consts.ErrCall
 		}
 	} else if err != nil {
-		return nil, err
+		log.Error("获取邀请码失败, err:%v", err.Error())
+		return nil, consts.ErrCall
 	}
 
 	return &show.GetInvitationCodeResp{

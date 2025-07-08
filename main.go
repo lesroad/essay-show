@@ -12,6 +12,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/network/standard"
 	prometheus "github.com/hertz-contrib/monitor-prometheus"
 	"github.com/hertz-contrib/obs-opentelemetry/tracing"
 	"github.com/xh-polaris/gopkg/hertz/middleware"
@@ -26,20 +27,23 @@ func Init() {
 	provider.Init()
 	logx.DisableStat()
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(b3.New(), propagation.Baggage{}, propagation.TraceContext{}))
-	http.DefaultTransport = otelhttp.NewTransport(http.DefaultTransport)
+	http.DefaultTransport = otelhttp.NewTransport(http.DefaultTransport) // 为每个出站HTTP请求创建子span
 }
-
 
 func main() {
 	Init()
 	c := provider.Get().Config
 
+	// hertz接入optl: https://www.volcengine.com/docs/6431/1439035
 	tracer, cfg := tracing.NewServerTracer()
 	h := server.New(
 		server.WithHostPorts(c.ListenOn),
+		server.WithTransport(standard.NewTransporter),
 		server.WithTracer(prometheus.NewServerTracer(":9091", "/server/metrics")),
 		tracer,
 	)
+
+	// h.Use(hertztracing.ServerMiddleware(cfg)) 入站的HTTP span, span的名称通常是 HTTP GET /path 或 HTTP POST /path 格式
 	h.Use(tracing.ServerMiddleware(cfg), middleware.EnvironmentMiddleware, recovery.Recovery(), func(ctx context.Context, c *app.RequestContext) {
 		ctx = adaptor.InjectContext(ctx, c)
 		c.Next(ctx)

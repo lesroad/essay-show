@@ -21,12 +21,17 @@ func Register(r *server.Hertz) {
 	{
 		_essay := root.Group("/essay", _essayMw()...)
 		_essay.POST("/evaluate", append(_essayevaluateMw(), show.EssayEvaluate)...)
+		_evaluate := _essay.Group("/evaluate", _evaluateMw()...)
+		_evaluate.POST("/download", append(_downloadevaluateMw(), show.DownloadEvaluate)...)
+		_evaluate.POST("/stream", append(_essayevaluatestreamMw(), show.EssayEvaluateStream)...)
 		_essay.POST("/like", append(_likeevaluateMw(), show.LikeEvaluate)...)
 		_essay.POST("/logs", append(_getevaluatelogsMw(), show.GetEvaluateLogs)...)
 	}
 	{
 		_exercise := root.Group("/exercise", _exerciseMw()...)
 		_exercise.POST("/create", append(_createexerciseMw(), show.CreateExercise)...)
+		_create := _exercise.Group("/create", _createMw()...)
+		_create.POST("/stream", append(_createexercisestreamMw(), show.CreateExerciseStream)...)
 		_exercise.POST("/do", append(_doexerciseMw(), show.DoExercise)...)
 		_exercise.POST("/get", append(_getexerciseMw(), show.GetExercise)...)
 		_exercise.POST("/like", append(_likeexerciseMw(), show.LikeExercise)...)
@@ -47,6 +52,7 @@ func Register(r *server.Hertz) {
 	}
 	{
 		_user := root.Group("/user", _userMw()...)
+		_user.POST("/bind_auth", append(_bindauthMw(), show.BindAuth)...)
 		_user.GET("/daily_attend", append(_dailyattendMw(), show.DailyAttend)...)
 		_daily_attend := _user.Group("/daily_attend", _daily_attendMw()...)
 		_daily_attend.GET("/get", append(_getdailyattendMw(), show.GetDailyAttend)...)

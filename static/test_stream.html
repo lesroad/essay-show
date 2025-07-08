@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>流式作文批改测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 200px;
+            resize: vertical;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .log-container {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 3px;
+            border-left: 4px solid #007bff;
+            background-color: white;
+        }
+        .log-entry.error {
+            border-left-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .log-entry.success {
+            border-left-color: #28a745;
+            background-color: #d4edda;
+        }
+        .log-entry.progress {
+            border-left-color: #ffc107;
+            background-color: #fff3cd;
+        }
+        .timestamp {
+            color: #6c757d;
+            font-size: 12px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #007bff;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>流式作文批改测试</h1>
+        
+        <form id="evaluateForm">
+            <div class="form-group">
+                <label for="title">作文标题:</label>
+                <input type="text" id="title" name="title" value="我的家乡" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="content">作文内容:</label>
+                <textarea id="content" name="content" placeholder="请输入作文内容..." required>我的家乡是一个美丽的小城市，那里有蓝天白云，有清澈的河流，还有热情的人们。
+
+春天的时候，家乡的山上开满了各种各样的花朵，粉色的桃花，白色的梨花，还有金黄的油菜花。微风吹过，花香阵阵，让人心旷神怡。
+
+夏天，家乡的河流是孩子们的天堂。清澈的河水倒映着蓝天白云，小鱼在水中快乐地游来游去。我们经常在河边玩耍，捉小鱼，打水仗，度过了许多快乐的时光。
+
+秋天是收获的季节，家乡的果园里硕果累累。红彤彤的苹果，黄澄澄的梨子，紫色的葡萄，让人垂涎欲滴。农民伯伯们忙着收获，脸上洋溢着丰收的喜悦。
+
+冬天虽然寒冷，但家乡的人们依然热情。大家围坐在火炉旁，谈笑风生，分享着一年的收获和快乐。
+
+我爱我的家乡，爱那里的一草一木，爱那里的父老乡亲。无论我走到哪里，家乡永远是我心中最温暖的地方。</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="grade">年级:</label>
+                <select id="grade" name="grade">
+                    <option value="">请选择年级</option>
+                    <option value="1">一年级</option>
+                    <option value="2">二年级</option>
+                    <option value="3">三年级</option>
+                    <option value="4">四年级</option>
+                    <option value="5">五年级</option>
+                    <option value="6">六年级</option>
+                    <option value="7">七年级</option>
+                    <option value="8">八年级</option>
+                    <option value="9">九年级</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="essayType">作文类型:</label>
+                <select id="essayType" name="essayType">
+                    <option value="">请选择类型</option>
+                    <option value="记叙文">记叙文</option>
+                    <option value="说明文">说明文</option>
+                    <option value="议论文">议论文</option>
+                    <option value="应用文">应用文</option>
+                </select>
+            </div>
+            
+            <button type="submit" id="submitBtn">开始流式批改</button>
+        </form>
+        
+        <div class="progress-bar" style="display: none;">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        
+        <div class="log-container" id="logContainer" style="display: none;">
+            <h3>批改日志:</h3>
+            <div id="logEntries"></div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('evaluateForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const logContainer = document.getElementById('logContainer');
+        const logEntries = document.getElementById('logEntries');
+        const progressBar = document.querySelector('.progress-bar');
+        const progressFill = document.getElementById('progressFill');
+
+        function addLogEntry(type, message, data = null) {
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            
+            let content = `
+                <div class="timestamp">${timestamp}</div>
+                <div><strong>${message}</strong></div>
+            `;
+            
+            if (data) {
+                content += `<div><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+            }
+            
+            entry.innerHTML = content;
+            logEntries.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function updateProgress(progress) {
+            if (typeof progress === 'number') {
+                progressFill.style.width = `${progress}%`;
+            }
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // 重置界面
+            submitBtn.disabled = true;
+            submitBtn.textContent = '批改中...';
+            logEntries.innerHTML = '';
+            logContainer.style.display = 'block';
+            progressBar.style.display = 'block';
+            updateProgress(0);
+            
+            // 收集表单数据
+            const formData = new FormData(form);
+            const requestData = {
+                title: formData.get('title'),
+                text: formData.get('content')
+            };
+            
+            if (formData.get('grade')) {
+                requestData.grade = parseInt(formData.get('grade'));
+            }
+            if (formData.get('essayType')) {
+                requestData.essayType = formData.get('essayType');
+            }
+            
+            addLogEntry('info', '开始连接流式批改服务...', requestData);
+            
+            try {
+                const response = await fetch('/essay/evaluate/stream', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'text/event-stream'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                
+                while (true) {
+                    const { done, value } = await reader.read();
+                    
+                    if (done) {
+                        addLogEntry('info', '流式响应结束');
+                        break;
+                    }
+                    
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop(); // 保留不完整的行
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.substring(6));
+                                
+                                switch (data.type) {
+                                    case 'init':
+                                        addLogEntry('info', data.message || '初始化', data);
+                                        break;
+                                    case 'progress':
+                                        addLogEntry('progress', data.message || '处理中', data);
+                                        if (data.progress !== undefined) {
+                                            updateProgress(data.progress);
+                                        }
+                                        break;
+                                    case 'complete':
+                                        addLogEntry('success', data.message || '批改完成', data);
+                                        updateProgress(100);
+                                        break;
+                                    case 'final':
+                                        addLogEntry('success', data.message || '任务完成', data);
+                                        break;
+                                    case 'error':
+                                        addLogEntry('error', data.message || '发生错误', data);
+                                        break;
+                                    default:
+                                        addLogEntry('info', `收到消息: ${data.type}`, data);
+                                }
+                            } catch (err) {
+                                console.error('解析SSE数据失败:', err, line);
+                            }
+                        }
+                    }
+                }
+                
+            } catch (error) {
+                addLogEntry('error', `请求失败: ${error.message}`);
+                console.error('Stream request failed:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '开始流式批改';
+            }
+        });
+    </script>
+</body>
+</html> 

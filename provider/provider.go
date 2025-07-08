@@ -2,13 +2,14 @@ package provider
 
 import (
 	"essay-show/biz/application/service"
+	"essay-show/biz/infrastructure/cache"
 	"essay-show/biz/infrastructure/config"
-	"essay-show/biz/infrastructure/mapper/attend"
-	"essay-show/biz/infrastructure/mapper/exercise"
-	"essay-show/biz/infrastructure/mapper/feedback"
-	"essay-show/biz/infrastructure/mapper/invitation"
-	"essay-show/biz/infrastructure/mapper/log"
-	"essay-show/biz/infrastructure/mapper/user"
+	"essay-show/biz/infrastructure/repository/attend"
+	"essay-show/biz/infrastructure/repository/exercise"
+	"essay-show/biz/infrastructure/repository/feedback"
+	"essay-show/biz/infrastructure/repository/invitation"
+	"essay-show/biz/infrastructure/repository/log"
+	"essay-show/biz/infrastructure/repository/user"
 
 	"github.com/google/wire"
 )
@@ -50,7 +51,10 @@ var ApplicationSet = wire.NewSet(
 )
 
 var InfrastructureSet = wire.NewSet(
+	// Configuration
 	config.NewConfig,
+
+	// Repository Layer (Data Persistence)
 	user.NewMongoMapper,
 	log.NewMongoMapper,
 	exercise.NewMongoMapper,
@@ -58,6 +62,10 @@ var InfrastructureSet = wire.NewSet(
 	invitation.NewCodeMongoMapper,
 	invitation.NewLogMongoMapper,
 	feedback.NewMongoMapper,
+
+	// Cache Layer
+	cache.NewDownloadCacheMapper,
+
 	//RpcSet,
 )
 

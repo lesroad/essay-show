@@ -4,12 +4,17 @@ package show
 
 import (
 	"context"
+	"encoding/json"
 	"essay-show/biz/adaptor"
-	show "essay-show/biz/application/dto/essay/show"
+	"essay-show/biz/application/dto/essay/show"
+	"essay-show/biz/infrastructure/util"
+	"essay-show/biz/infrastructure/util/log"
 	"essay-show/provider"
+	"net/http"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/cloudwego/hertz/pkg/protocol/sse"
 )
 
 // Test .
@@ -90,6 +95,45 @@ func EssayEvaluate(ctx context.Context, c *app.RequestContext) {
 	p := provider.Get()
 	resp, err := p.EssayService.EssayEvaluate(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// EssayEvaluateStream .
+// @router /essay/evaluate/stream [POST]
+func EssayEvaluateStream(ctx context.Context, c *app.RequestContext) {
+	var req show.EssayEvaluateReq
+	if err := c.BindAndValidate(&req); err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	log.CtxInfo(ctx, "[%s] req=%s", c.Path(), util.JSONF(&req))
+
+	c.SetStatusCode(http.StatusOK)
+	w := sse.NewWriter(c)
+
+	resultChan := make(chan string, 100)
+
+	// 启动批改服务
+	go func(ctx context.Context) {
+		p := provider.Get()
+		defer close(resultChan)
+		p.EssayService.EssayEvaluateStream(ctx, &req, resultChan)
+	}(ctx)
+
+	// 实时转发流式数据
+	for jsonMessage := range resultChan {
+		err := w.WriteEvent("", "", []byte(jsonMessage))
+		if err != nil {
+			log.Error("发送SSE事件失败: %v", err)
+			break
+		}
+
+		var msgData util.StreamMessage
+		json.Unmarshal([]byte(jsonMessage), &msgData)
+		if msgData.Type == util.STComplete || msgData.Type == util.STError {
+			break
+		}
+	}
 }
 
 // GetEvaluateLogs .
@@ -280,5 +324,37 @@ func SubmitFeedback(ctx context.Context, c *app.RequestContext) {
 
 	p := provider.Get()
 	resp, err := p.FeedBackService.Submit(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// DownloadEvaluate .
+// @router /essay/evaluate/download [POST]
+func DownloadEvaluate(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.DownloadEvaluateReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.EssayService.DownloadEvaluate(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// BindAuth .
+// @router /user/bind_auth [POST]
+func BindAuth(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.BindAuthReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.UserService.BindAuth(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }

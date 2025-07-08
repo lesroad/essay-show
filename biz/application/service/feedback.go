@@ -5,8 +5,8 @@ import (
 	"essay-show/biz/adaptor"
 	"essay-show/biz/application/dto/essay/show"
 	"essay-show/biz/infrastructure/consts"
-	"essay-show/biz/infrastructure/mapper/feedback"
-	"essay-show/biz/infrastructure/mapper/user"
+	"essay-show/biz/infrastructure/repository/feedback"
+	"essay-show/biz/infrastructure/repository/user"
 	"essay-show/biz/infrastructure/util"
 
 	"github.com/google/wire"

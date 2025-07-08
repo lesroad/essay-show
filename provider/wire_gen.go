@@ -8,13 +8,14 @@ package provider
 
 import (
 	"essay-show/biz/application/service"
+	"essay-show/biz/infrastructure/cache"
 	"essay-show/biz/infrastructure/config"
-	"essay-show/biz/infrastructure/mapper/attend"
-	"essay-show/biz/infrastructure/mapper/exercise"
-	"essay-show/biz/infrastructure/mapper/feedback"
-	"essay-show/biz/infrastructure/mapper/invitation"
-	"essay-show/biz/infrastructure/mapper/log"
-	"essay-show/biz/infrastructure/mapper/user"
+	"essay-show/biz/infrastructure/repository/attend"
+	"essay-show/biz/infrastructure/repository/exercise"
+	"essay-show/biz/infrastructure/repository/feedback"
+	"essay-show/biz/infrastructure/repository/invitation"
+	"essay-show/biz/infrastructure/repository/log"
+	"essay-show/biz/infrastructure/repository/user"
 )
 
 // Injectors from wire.go:
@@ -35,9 +36,11 @@ func NewProvider() (*Provider, error) {
 		LogMapper:    logMongoMapper,
 	}
 	mongoMapper2 := log.NewMongoMapper(configConfig)
+	downloadCacheMapper := cache.NewDownloadCacheMapper(configConfig)
 	essayService := service.EssayService{
-		LogMapper:  mongoMapper2,
-		UserMapper: mongoMapper,
+		LogMapper:           mongoMapper2,
+		UserMapper:          mongoMapper,
+		DownloadCacheMapper: downloadCacheMapper,
 	}
 	stsService := service.StsService{
 		UserMapper: mongoMapper,

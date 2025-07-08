@@ -5,10 +5,12 @@ import (
 	"errors"
 	"essay-show/biz/adaptor"
 	"essay-show/biz/application/dto/essay/show"
+	"essay-show/biz/infrastructure/config"
 	"essay-show/biz/infrastructure/consts"
-	"essay-show/biz/infrastructure/mapper/user"
+	"essay-show/biz/infrastructure/repository/user"
 	"essay-show/biz/infrastructure/util"
 	"essay-show/biz/infrastructure/util/log"
+	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -42,24 +44,31 @@ func (s *StsService) ApplySignedUrl(ctx context.Context, req *show.ApplySignedUr
 	// 获取cos状态
 	userId := aUser.GetUserId()
 	client := util.GetHttpClient()
-	data, err := client.GenCosSts("essays/" + userId + "/*")
+	data, err := client.GenCosSts(ctx, fmt.Sprintf("essays_%s/%s/*", config.GetConfig().State, userId))
 	if err != nil {
 		return nil, err
 	}
+	if data["code"].(float64) != 0 {
+		return nil, errors.New(data["message"].(string))
+	}
+	data = data["data"].(map[string]any)
+
 	// 生成加签url
 	resp.SessionToken = data["sessionToken"].(string)
 	if req.Prefix != nil {
 		*req.Prefix += "/"
 	}
-	data2, err := client.GenSignedUrl(
+
+	data2, err := client.GenSignedUrl(ctx,
 		data["secretId"].(string),
 		data["secretKey"].(string),
-		http.MethodPost,
-		"essays/"+userId+"/"+req.GetPrefix()+uuid.New().String()+req.GetSuffix(),
+		http.MethodPut,
+		fmt.Sprintf("essays_%s/%s/%s%s%s", config.GetConfig().State, userId, req.GetPrefix(), uuid.New().String(), req.GetSuffix()),
 	)
-	if err != nil {
+	if err != nil || data2["code"].(float64) != 0 {
 		return nil, err
 	}
+	data2 = data2["data"].(map[string]any)
 
 	// 返回响应
 	resp.Url = data2["signedUrl"].(string)
@@ -79,9 +88,12 @@ func (s *StsService) OCR(ctx context.Context, req *show.OCRReq) (*show.OCRResp, 
 	}
 
 	client := util.GetHttpClient()
-	resp, err := client.BeeTitleUrlOCR(images, left)
+	resp, err := client.TitleUrlOCR(ctx, images, left)
 	if err != nil {
 		return nil, err
+	}
+	if resp["code"].(float64) != 0 {
+		return nil, consts.ErrOCR
 	}
 	data := resp["data"].(map[string]any)
 	if data == nil {
@@ -113,9 +125,9 @@ func (s *StsService) SendVerifyCode(ctx context.Context, req *show.SendVerifyCod
 
 	// 通过中台发送验证码
 	httpClient := util.GetHttpClient()
-	_, err = httpClient.SendVerifyCode(req.AuthType, req.AuthId)
-	if err != nil {
-		log.Error("发送验证码失败:%v", err)
+	ret, err := httpClient.SendVerifyCode(ctx, req.AuthType, req.AuthId)
+	if err != nil || ret["code"].(float64) != 0 {
+		log.Error("发送验证码失败:%v, ret:%v", err, ret)
 		return nil, consts.ErrSend
 	}
 

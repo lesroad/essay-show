@@ -5,6 +5,7 @@ import (
 	"errors"
 	"essay-show/biz/infrastructure/config"
 	"essay-show/biz/infrastructure/consts"
+	"essay-show/biz/infrastructure/util/log"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/stores/monc"
@@ -22,6 +23,7 @@ type MongoMapper struct {
 }
 
 func NewMongoMapper(config *config.Config) *MongoMapper {
+	log.Info("NewMongoMapper capnio config: %v, collection: %s", config, CollectionName)
 	conn := monc.MustNewModel(config.Mongo.URL, config.Mongo.DB, CollectionName, config.Cache)
 	return &MongoMapper{
 		conn: conn,

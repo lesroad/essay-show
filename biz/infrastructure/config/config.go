@@ -2,6 +2,7 @@ package config
 
 import (
 	_ "embed"
+	"essay-show/biz/infrastructure/util/log"
 	"os"
 
 	"github.com/zeromicro/go-zero/core/conf"
@@ -38,8 +39,9 @@ type Config struct {
 type API struct {
 	PlatfromURL          string
 	GenerateExercisesURL string
-	BeeTitleUrlOcr       string
-	BetaEvaluateUrl      string
+	TitleUrlOcr          string
+	EvaluateUrl          string
+	DownloadURL          string
 }
 
 func NewConfig() (*Config, error) {
@@ -48,6 +50,7 @@ func NewConfig() (*Config, error) {
 	// 优先使用环境变量指定的配置文件
 	path := os.Getenv("CONFIG_PATH")
 	if path != "" {
+		log.Info("NewConfig load config from path: %s", path)
 		err := conf.Load(path, c)
 		if err != nil {
 			return nil, err

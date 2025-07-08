@@ -1,15 +1,16 @@
 package exercise
 
 import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type (
 	// Exercise  是一次生成的所有题目，暂时只有选择题
 	// 单条记录多次生成题目会有多个Exercises对象
 	Exercise struct {
-		ID         primitive.ObjectID `bson:"_id" json:"id"`
+		ID         primitive.ObjectID `bson:"_id" json:"id,omitempty"`
 		UserId     string             `bson:"user_id" json:"userId"`                             // 归属的用户ID
 		LogId      string             `bson:"log_id" json:"logId"`                               // 批改记录的ID
 		Question   *Question          `bson:"question" json:"question"`                          // 生成的题目

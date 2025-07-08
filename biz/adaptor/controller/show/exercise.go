@@ -4,12 +4,17 @@ package show
 
 import (
 	"context"
+	"encoding/json"
 	"essay-show/biz/adaptor"
 	show "essay-show/biz/application/dto/essay/show"
+	"essay-show/biz/infrastructure/util"
+	"essay-show/biz/infrastructure/util/log"
 	"essay-show/provider"
+	"net/http"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/cloudwego/hertz/pkg/protocol/sse"
 )
 
 // CreateExercise .
@@ -90,4 +95,44 @@ func LikeExercise(ctx context.Context, c *app.RequestContext) {
 	resp := new(show.Response)
 
 	c.JSON(consts.StatusOK, resp)
+}
+
+// CreateExerciseStream .
+// @router /exercise/create/stream [POST]
+func CreateExerciseStream(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.CreateExerciseReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	log.CtxInfo(ctx, "[%s] req=%s", c.Path(), util.JSONF(&req))
+	c.SetStatusCode(http.StatusOK)
+
+	// 创建结果通道 - 现在接收JSON字符串
+	resultChan := make(chan string, 100)
+
+	// 启动练习生成服务
+	go func() {
+		defer close(resultChan)
+		p := provider.Get()
+		err := p.ExerciseService.CreateExerciseStream(ctx, &req, resultChan)
+		if err != nil {
+			util.SendStreamMessage(resultChan, util.STError, err.Error(), nil)
+		}
+	}()
+	w := sse.NewWriter(c)
+
+	// 实时转发流式数据 - 使用官方文档的方式
+	for jsonMessage := range resultChan {
+		w.WriteEvent("", "", []byte(jsonMessage))
+
+		var msgData util.StreamMessage
+		json.Unmarshal([]byte(jsonMessage), &msgData)
+		if msgData.Type == util.STComplete || msgData.Type == util.STError {
+			break
+		}
+	}
 }
