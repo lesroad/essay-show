@@ -88,11 +88,24 @@ type ParagraphEvaluation struct {
 	ParagraphIndex int    `json:"paragraphIndex"`
 	Comment        string `json:"comment"`
 }
-
 type ScoreEvaluation struct {
-	All        int `json:"all"`
-	Appearance int `json:"appearance"`
-	Content    int `json:"content"`
-	Expression int `json:"expression"`
-	Structure  int `json:"structure"`
+	Comment  string   `json:"comment"`
+	Comments Comments `json:"comments"`
+	Scores   Scores   `json:"scores"`
+}
+
+type Comments struct {
+	Appearance  string `json:"appearance"`
+	Content     string `json:"content"`
+	Expression  string `json:"expression"`
+	Structure   string `json:"structure,omitempty"`   // 结构-初中
+	Development string `json:"development,omitempty"` // 发展-高中
+}
+type Scores struct {
+	All         int `json:"all"`
+	Appearance  int `json:"appearance"`
+	Content     int `json:"content"`
+	Expression  int `json:"expression"`
+	Structure   int `json:"structure,omitempty"`
+	Development int `json:"development,omitempty"`
 }

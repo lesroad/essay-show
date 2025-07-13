@@ -207,7 +207,11 @@ func (s *EssayService) EssayEvaluateStream(ctx context.Context, req *show.EssayE
 	}
 
 exitLoop:
-	// 构造日志 - 与非流式保持一致
+	if err != nil || len(finalResult) == 0 {
+		util.SendStreamMessage(resultChan, util.STError, "批改失败", nil)
+		return consts.ErrCall
+	}
+
 	l := &log.Log{
 		UserId:     meta.GetUserId(),
 		Ocr:        req.Ocr,
@@ -219,7 +223,6 @@ exitLoop:
 		l.Grade = *req.Grade
 	}
 
-	// 批改成功记录
 	err = s.LogMapper.Insert(ctx, l)
 	if err != nil {
 		logx.Error("log insert failed %v", err)
@@ -227,7 +230,7 @@ exitLoop:
 		return consts.ErrCall
 	}
 
-	// 扣除用户剩余次数 - 与非流式保持一致
+	// 扣除用户剩余次数
 	err = s.UserMapper.UpdateCount(ctx, meta.GetUserId(), -1)
 	if err != nil {
 		logx.Error("user count update failed %v", err)
