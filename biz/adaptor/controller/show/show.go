@@ -84,17 +84,7 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 // EssayEvaluate .
 // @router /essay/evaluate [POST]
 func EssayEvaluate(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req show.EssayEvaluateReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	p := provider.Get()
-	resp, err := p.EssayService.EssayEvaluate(ctx, &req)
-	adaptor.PostProcess(ctx, c, &req, resp, err)
+	// 废弃
 }
 
 // EssayEvaluateStream .
@@ -130,7 +120,11 @@ func EssayEvaluateStream(ctx context.Context, c *app.RequestContext) {
 
 		var msgData util.StreamMessage
 		json.Unmarshal([]byte(jsonMessage), &msgData)
-		if msgData.Type == util.STComplete || msgData.Type == util.STError {
+		if msgData.Type == util.STComplete {
+			break
+		}
+		if msgData.Type == util.STError {
+			log.CtxInfo(ctx, "resp=%+v", msgData)
 			break
 		}
 	}

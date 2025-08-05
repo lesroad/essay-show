@@ -232,7 +232,6 @@ func (c *HttpClient) SendRequestStream(ctx context.Context, method, url string, 
 			}
 			eventData.WriteString(data)
 		}
-		// 其他SSE字段（event:, id:, retry:）暂时忽略
 	}
 
 	// 检查scanner是否遇到错误

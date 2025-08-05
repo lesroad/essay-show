@@ -19,6 +19,13 @@ func Register(r *server.Hertz) {
 	root := r.Group("/", rootMw()...)
 	root.GET("/test", append(_testMw(), show.Test)...)
 	{
+		_class := root.Group("/class", _classMw()...)
+		_class.POST("/create", append(_createclassMw(), show.CreateClass)...)
+		_class.POST("/join", append(_joinclassMw(), show.JoinClass)...)
+		_class.GET("/list", append(_listclassesMw(), show.ListClasses)...)
+		_class.GET("/members", append(_getclassmembersMw(), show.GetClassMembers)...)
+	}
+	{
 		_essay := root.Group("/essay", _essayMw()...)
 		_essay.POST("/evaluate", append(_essayevaluateMw(), show.EssayEvaluate)...)
 		_evaluate := _essay.Group("/evaluate", _evaluateMw()...)
@@ -43,6 +50,19 @@ func Register(r *server.Hertz) {
 	{
 		_feedback := root.Group("/feedback", _feedbackMw()...)
 		_feedback.POST("/submit", append(_submitfeedbackMw(), show.SubmitFeedback)...)
+	}
+	{
+		_homework := root.Group("/homework", _homeworkMw()...)
+		_homework.POST("/create", append(_createhomeworkMw(), show.CreateHomework)...)
+		_homework.GET("/get", append(_gethomeworkMw(), show.GetHomework)...)
+		_homework.POST("/grade", append(_gradehomeworkMw(), show.GradeHomework)...)
+		_homework.GET("/list", append(_listhomeworksMw(), show.ListHomeworks)...)
+		_homework.GET("/submissions", append(_gethomeworksubmissionsMw(), show.GetHomeworkSubmissions)...)
+		_homework.POST("/submit", append(_submithomeworkMw(), show.SubmitHomework)...)
+	}
+	{
+		_question_bank := root.Group("/question_bank", _question_bankMw()...)
+		_question_bank.GET("/list", append(_listquestionbanksMw(), show.ListQuestionBanks)...)
 	}
 	{
 		_sts := root.Group("/sts", _stsMw()...)

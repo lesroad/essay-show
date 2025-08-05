@@ -81,6 +81,17 @@ func (s *StsService) OCR(ctx context.Context, req *show.OCRReq) (*show.OCRResp, 
 		return nil, consts.ErrNotAuthentication
 	}
 
+	// 查询用户信息
+	u, err := s.UserMapper.FindOne(ctx, aUser.GetUserId())
+	if err != nil {
+		return nil, consts.ErrNotFound
+	}
+
+	// 检查剩余次数
+	if u.Count <= 0 {
+		return nil, consts.ErrInSufficientCount
+	}
+
 	images := req.Ocr
 	left := ""
 	if req.LeftType != nil {

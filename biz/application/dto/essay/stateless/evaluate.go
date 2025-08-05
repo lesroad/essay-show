@@ -39,6 +39,7 @@ type AIEvaluation struct {
 	SuggestionEvaluation   SuggestionEvaluation   `json:"suggestionEvaluation"`   // 建议
 	ParagraphEvaluations   []ParagraphEvaluation  `json:"paragraphEvaluations"`   // 段落点评
 	ScoreEvaluation        ScoreEvaluation        `json:"scoreEvaluations"`       // 分数点评
+	PolishingEvaluation    []PolishingEvaluation  `json:"polishingEvaluations"`   // 润色
 }
 
 type ModelVersion struct {
@@ -108,4 +109,16 @@ type Scores struct {
 	Expression  int `json:"expression"`
 	Structure   int `json:"structure,omitempty"`
 	Development int `json:"development,omitempty"`
+}
+
+type PolishingEvaluation struct {
+	ParagraphIndex int `json:"paragraphIndex"`
+	Edits          []struct {
+		Op            string `json:"op"`
+		Reason        string `json:"reason"`
+		Original      string `json:"original"`
+		Revised       string `json:"revised,omitempty"`
+		SentenceIndex int    `json:"sentenceIndex"`
+		Span          []int  `json:"span"`
+	} `json:"edits"`
 }

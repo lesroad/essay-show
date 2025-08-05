@@ -166,6 +166,7 @@ func (s *UserService) SignIn(ctx context.Context, req *show.SignInReq) (*show.Si
 			Username:   "未设置用户名",
 			Count:      consts.DefaultCount,
 			Status:     0,
+			Role:       consts.RoleStudent,
 			CreateTime: now,
 			UpdateTime: now,
 		}
@@ -241,6 +242,12 @@ func (s *UserService) GetUserInfo(ctx context.Context, req *show.GetUserInfoReq)
 		}, nil
 	}
 
+	// 确定用户角色
+	role := show.UserRole_STUDENT // 默认为学生
+	if u.Role == consts.RoleTeacher {
+		role = show.UserRole_TEACHER
+	}
+
 	return &show.GetUserInfoResp{
 		Code: 0,
 		Msg:  "查询成功",
@@ -248,6 +255,7 @@ func (s *UserService) GetUserInfo(ctx context.Context, req *show.GetUserInfoReq)
 			Name:  u.Username,
 			Count: u.Count,
 			Phone: u.Phone,
+			Role:  role,
 		},
 	}, nil
 }
@@ -270,6 +278,13 @@ func (s *UserService) UpdateUserInfo(ctx context.Context, req *show.UpdateUserIn
 	u.Username = req.Name
 	u.School = req.School
 	u.Grade = req.Grade
+
+	// 更新用户角色
+	if req.Role == show.UserRole_TEACHER {
+		u.Role = consts.RoleTeacher
+	} else {
+		u.Role = consts.RoleStudent
+	}
 
 	// 存入新的用户信息
 	err = s.UserMapper.Update(ctx, u)

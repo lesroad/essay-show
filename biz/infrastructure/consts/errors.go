@@ -49,6 +49,14 @@ var (
 	ErrCreateExercise    = NewErrno(codes.Code(1012), errors.New("创建练习失败"))
 	ErrDoExercise        = NewErrno(codes.Code(1013), errors.New("提交练习失败"))
 	ErrBindAuth          = NewErrno(codes.Code(1014), errors.New("绑定授权失败"))
+	ErrCreateClass       = NewErrno(codes.Code(1015), errors.New("创建班级失败"))
+	ErrGetClassList      = NewErrno(codes.Code(1016), errors.New("获取班级列表失败"))
+	ErrJoinClass         = NewErrno(codes.Code(1017), errors.New("加入班级失败"))
+	ErrGetClassMembers   = NewErrno(codes.Code(1018), errors.New("获取班级成员失败"))
+	ErrCreateHomework    = NewErrno(codes.Code(1019), errors.New("创建作业失败"))
+	ErrGetHomeworkList   = NewErrno(codes.Code(1020), errors.New("获取作业列表失败"))
+	ErrSubmitHomework    = NewErrno(codes.Code(1021), errors.New("提交作业失败"))
+	ErrGradeHomework     = NewErrno(codes.Code(1022), errors.New("批改作业失败"))
 )
 
 // ErrInvalidParams 调用时错误

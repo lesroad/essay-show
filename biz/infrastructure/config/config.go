@@ -11,7 +11,7 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/redis"
 )
 
-// //go:embed config.local.yaml
+// // go:embed config.local.yaml
 var embeddedConfig []byte
 
 var config *Config
@@ -31,9 +31,17 @@ type Config struct {
 		URL string
 		DB  string
 	}
+	MySQL struct {
+		DSN string
+	}
 	Cache cache.CacheConf
 	Redis *redis.RedisConf
 	Api   API
+	Log   LogConfig
+}
+
+type LogConfig struct {
+	NoLogPaths []string
 }
 
 type API struct {
@@ -42,6 +50,8 @@ type API struct {
 	TitleUrlOcr          string
 	EvaluateUrl          string
 	DownloadURL          string
+	ClassJoinURL         string
+	ShareHomeWorkURL     string
 }
 
 func NewConfig() (*Config, error) {

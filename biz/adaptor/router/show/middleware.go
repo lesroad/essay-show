@@ -190,3 +190,78 @@ func _bindauthMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _classMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _createclassMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getclassMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _joinclassMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _listclassesMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getclassmembersMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _homeworkMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _createhomeworkMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _gethomeworkMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _gradehomeworkMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _listhomeworksMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _gethomeworksubmissionsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _submithomeworkMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _question_bankMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _listquestionbanksMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

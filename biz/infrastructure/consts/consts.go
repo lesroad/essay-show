@@ -14,6 +14,8 @@ const (
 	Timestamp    = "timestamp"
 	LogId        = "log_id"
 	NotEqual     = "$ne"
+	RoleStudent  = "student"
+	RoleTeacher  = "teacher"
 )
 
 // http

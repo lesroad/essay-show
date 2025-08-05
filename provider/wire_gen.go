@@ -11,10 +11,13 @@ import (
 	"essay-show/biz/infrastructure/cache"
 	"essay-show/biz/infrastructure/config"
 	"essay-show/biz/infrastructure/repository/attend"
+	"essay-show/biz/infrastructure/repository/class"
 	"essay-show/biz/infrastructure/repository/exercise"
 	"essay-show/biz/infrastructure/repository/feedback"
+	"essay-show/biz/infrastructure/repository/homework"
 	"essay-show/biz/infrastructure/repository/invitation"
 	"essay-show/biz/infrastructure/repository/log"
+	"essay-show/biz/infrastructure/repository/question_bank"
 	"essay-show/biz/infrastructure/repository/user"
 )
 
@@ -56,13 +59,44 @@ func NewProvider() (*Provider, error) {
 		FeedbackMapper: feedbackMongoMapper,
 		UserMapper:     mongoMapper,
 	}
+	classMongoMapper := class.NewMongoMapper(configConfig)
+	memberMongoMapper := class.NewMemberMongoMapper(configConfig)
+	classService := &service.ClassService{
+		ClassMapper:  classMongoMapper,
+		MemberMapper: memberMongoMapper,
+		UserMapper:   mongoMapper,
+	}
+	homeworkMongoMapper := homework.NewMongoMapper(configConfig)
+	submissionMongoMapper := homework.NewSubmissionMongoMapper(configConfig)
+	serviceEssayService := &service.EssayService{
+		LogMapper:           mongoMapper2,
+		UserMapper:          mongoMapper,
+		DownloadCacheMapper: downloadCacheMapper,
+	}
+	homeworkService := &service.HomeworkService{
+		HomeworkMapper:   homeworkMongoMapper,
+		SubmissionMapper: submissionMongoMapper,
+		ClassMapper:      classMongoMapper,
+		UserMapper:       mongoMapper,
+		EssayService:     serviceEssayService,
+	}
+	mySQLMapper, err := question_bank.NewMySQLMapperFromConfig(configConfig)
+	if err != nil {
+		return nil, err
+	}
+	questionBankService := &service.QuestionBankService{
+		QuestionBankMapper: mySQLMapper,
+	}
 	providerProvider := &Provider{
-		Config:          configConfig,
-		UserService:     userService,
-		EssayService:    essayService,
-		StsService:      stsService,
-		ExerciseService: exerciseService,
-		FeedBackService: feedBackService,
+		Config:              configConfig,
+		UserService:         userService,
+		EssayService:        essayService,
+		StsService:          stsService,
+		ExerciseService:     exerciseService,
+		FeedBackService:     feedBackService,
+		ClassService:        classService,
+		HomeworkService:     homeworkService,
+		QuestionBankService: questionBankService,
 	}
 	return providerProvider, nil
 }

@@ -20,7 +20,6 @@ import (
 )
 
 type IEssayService interface {
-	EssayEvaluate(ctx context.Context, req *show.EssayEvaluateReq) (resp *show.EssayEvaluateResp, err error)
 	EssayEvaluateStream(ctx context.Context, req *show.EssayEvaluateReq, resultChan chan<- string) error
 	GetEvaluateLogs(ctx context.Context, req *show.GetEssayEvaluateLogsReq) (resp *show.GetEssayEvaluateLogsResp, err error)
 	LikeEvaluate(ctx context.Context, req *show.LikeEvaluateReq) (resp *show.Response, err error)
@@ -38,101 +37,8 @@ var EssayServiceSet = wire.NewSet(
 	wire.Bind(new(IEssayService), new(*EssayService)),
 )
 
-// EssayEvaluate 根据标题和作文调用批改中台进行批改
-func (s *EssayService) EssayEvaluate(ctx context.Context, req *show.EssayEvaluateReq) (*show.EssayEvaluateResp, error) {
-	// TODO 应该实现一个用户同时只能调用一次批改
-
-	// 获取登录状态信息
-	meta := adaptor.ExtractUserMeta(ctx)
-	if meta.GetUserId() == "" {
-		return nil, consts.ErrNotAuthentication
-	}
-
-	// 判断用户是否存在 (meta在不同应用间是互通的, 而次数等由小程序单独管理)
-	u, err := s.UserMapper.FindOne(ctx, meta.GetUserId())
-	if err != nil {
-		return nil, consts.ErrNotFound
-	}
-
-	// 剩余次数不足
-	if u.Count <= 0 {
-		return nil, consts.ErrInSufficientCount
-	}
-
-	// 获取锁 - 使用lock包的分布式锁，调整TTL适应复杂批改
-	key := "evaluate" + meta.GetUserId()
-	distributedLock := lock.NewEvaMutex(ctx, key, 30, 200)
-	if err = distributedLock.Lock(); err != nil {
-		return nil, consts.ErrOneCall
-	}
-
-	// 调用essay-stateless批改作文
-	client := util.GetHttpClient()
-	_resp, err := client.Evaluate(ctx, req.Title, req.Text, req.Grade, req.EssayType)
-	if err != nil {
-		logx.Error("call error: %v, req.Text:%s", err, req.Text)
-		return nil, consts.ErrCall
-	}
-
-	// 释放锁, 释放锁失败或锁超时不应该记录这一次批改
-	if err = distributedLock.Unlock(); err != nil || distributedLock.Expired() {
-		logx.Error("unlock error: %v, lock expired: %v", err, distributedLock.Expired())
-	}
-
-	// 获取批改的结果
-	code := int64(_resp["code"].(float64))
-	msg := _resp["message"].(string)
-	bytes, err := json.Marshal(_resp["data"].(map[string]any))
-	if err != nil {
-		return nil, err
-	}
-	result := string(bytes)
-
-	// 构造日志
-	l := &log.Log{
-		UserId:     meta.GetUserId(),
-		Ocr:        req.Ocr,
-		Response:   result,
-		Status:     int(code),
-		CreateTime: time.Now(),
-	}
-	if req.Grade != nil {
-		l.Grade = *req.Grade
-	}
-
-	// 批改失败记录
-	if code != 0 {
-		logx.Error("essay evaluate failed: %v", err)
-		l.Response = msg
-		s.LogMapper.InsertErr(ctx, l)
-		return nil, consts.ErrCall
-	}
-
-	// 批改成功记录
-	err = s.LogMapper.Insert(ctx, l)
-	if err != nil {
-		logx.Error("log insert failed %v", err)
-		return nil, consts.ErrCall
-	}
-
-	// 扣除用户剩余次数
-	err = s.UserMapper.UpdateCount(ctx, meta.GetUserId(), -1)
-	if err != nil {
-		logx.Error("user count update failed %v", err)
-		return nil, consts.ErrCall
-	}
-
-	return &show.EssayEvaluateResp{
-		Code:     code,
-		Msg:      msg,
-		Response: result,
-		Id:       l.ID.Hex(),
-	}, nil
-}
-
 // EssayEvaluateStream 流式批改作文
 func (s *EssayService) EssayEvaluateStream(ctx context.Context, req *show.EssayEvaluateReq, resultChan chan<- string) error {
-	// 同步前置检查 - 与非流式保持一致
 	meta := adaptor.ExtractUserMeta(ctx)
 	if meta.GetUserId() == "" {
 		util.SendStreamMessage(resultChan, util.STError, "用户未认证", nil)
@@ -175,7 +81,6 @@ func (s *EssayService) EssayEvaluateStream(ctx context.Context, req *show.EssayE
 	go func() {
 		defer close(downstreamChan) // 确保HTTP请求完成后关闭channel，避免主函数永远阻塞
 		client := util.GetHttpClient()
-		// 使用带context的方法调用下游服务，确保链路追踪信息传递
 		client.EvaluateStream(ctx, req.Title, req.Text, req.Grade, req.EssayType, downstreamChan)
 	}()
 

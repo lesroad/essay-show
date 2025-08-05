@@ -5,6 +5,7 @@ go 1.23.4
 require (
 	github.com/bytedance/gopkg v0.1.1
 	github.com/cloudwego/hertz v0.10.0
+	github.com/go-sql-driver/mysql v1.9.3
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.6.0
@@ -24,6 +25,7 @@ require (
 )
 
 require (
+	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bytedance/sonic v1.13.2 // indirect
 	github.com/bytedance/sonic/loader v0.2.4 // indirect

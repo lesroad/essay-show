@@ -2,6 +2,7 @@ package adaptor
 
 import (
 	"context"
+	"essay-show/biz/infrastructure/config"
 	"essay-show/biz/infrastructure/consts"
 	"essay-show/biz/infrastructure/util"
 	"essay-show/biz/infrastructure/util/log"
@@ -43,7 +44,10 @@ func (m *headerProvider) Keys() []string {
 }
 
 func PostProcess(ctx context.Context, c *app.RequestContext, req, resp any, err error) {
-	log.CtxInfo(ctx, "[%s] req=%s, resp=%s, err=%v", c.Path(), util.JSONF(req), util.JSONF(resp), err)
+	path := string(c.Path())
+	if !shouldSkipLogging(path) {
+		log.CtxInfo(ctx, "[%s] req=%s, resp=%s, err=%v", path, util.JSONF(req), util.JSONF(resp), err)
+	}
 	b3.New().Inject(ctx, &headerProvider{headers: &c.Response.Header})
 
 	switch err {
@@ -68,4 +72,18 @@ func PostProcess(ctx context.Context, c *app.RequestContext, req, resp any, err 
 type BizError struct {
 	Code uint32 `json:"code"`
 	Msg  string `json:"msg"`
+}
+
+func shouldSkipLogging(path string) bool {
+	cfg := config.GetConfig()
+	if cfg == nil || cfg.Log.NoLogPaths == nil {
+		return false
+	}
+
+	for _, noLogPath := range cfg.Log.NoLogPaths {
+		if path == noLogPath {
+			return true
+		}
+	}
+	return false
 }

@@ -5,10 +5,13 @@ import (
 	"essay-show/biz/infrastructure/cache"
 	"essay-show/biz/infrastructure/config"
 	"essay-show/biz/infrastructure/repository/attend"
+	"essay-show/biz/infrastructure/repository/class"
 	"essay-show/biz/infrastructure/repository/exercise"
 	"essay-show/biz/infrastructure/repository/feedback"
+	"essay-show/biz/infrastructure/repository/homework"
 	"essay-show/biz/infrastructure/repository/invitation"
 	"essay-show/biz/infrastructure/repository/log"
+	"essay-show/biz/infrastructure/repository/question_bank"
 	"essay-show/biz/infrastructure/repository/user"
 
 	"github.com/google/wire"
@@ -26,12 +29,15 @@ func Init() {
 
 // Provider 提供controller依赖的对象
 type Provider struct {
-	Config          *config.Config
-	UserService     service.UserService
-	EssayService    service.EssayService
-	StsService      service.StsService
-	ExerciseService service.ExerciseService
-	FeedBackService service.FeedBackService
+	Config              *config.Config
+	UserService         service.UserService
+	EssayService        service.EssayService
+	StsService          service.StsService
+	ExerciseService     service.ExerciseService
+	FeedBackService     service.FeedBackService
+	ClassService        service.IClassService
+	HomeworkService     service.IHomeworkService
+	QuestionBankService service.IQuestionBankService
 }
 
 func Get() *Provider {
@@ -48,6 +54,9 @@ var ApplicationSet = wire.NewSet(
 	service.StsServiceSet,
 	service.ExerciseServiceSet,
 	service.FeedbackServiceSet,
+	service.ClassServiceSet,
+	service.HomeworkServiceSet,
+	service.QuestionBankServiceSet,
 )
 
 var InfrastructureSet = wire.NewSet(
@@ -62,6 +71,11 @@ var InfrastructureSet = wire.NewSet(
 	invitation.NewCodeMongoMapper,
 	invitation.NewLogMongoMapper,
 	feedback.NewMongoMapper,
+	class.NewMongoMapper,
+	class.NewMemberMongoMapper,
+	homework.NewMongoMapper,
+	homework.NewSubmissionMongoMapper,
+	question_bank.NewMySQLMapperFromConfig,
 
 	// Cache Layer
 	cache.NewDownloadCacheMapper,
