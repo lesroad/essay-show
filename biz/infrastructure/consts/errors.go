@@ -57,6 +57,10 @@ var (
 	ErrGetHomeworkList   = NewErrno(codes.Code(1020), errors.New("获取作业列表失败"))
 	ErrSubmitHomework    = NewErrno(codes.Code(1021), errors.New("提交作业失败"))
 	ErrGradeHomework     = NewErrno(codes.Code(1022), errors.New("批改作业失败"))
+	ErrGetSubmission     = NewErrno(codes.Code(1023), errors.New("获取提交详情失败"))
+	ErrGetHomework       = NewErrno(codes.Code(1024), errors.New("获取作业详情失败"))
+	ErrHomeworkNotGrade  = NewErrno(codes.Code(1024), errors.New("作业未批改完成"))
+	ErrNotClassMember    = NewErrno(codes.Code(1025), errors.New("用户不是班级成员"))
 )
 
 // ErrInvalidParams 调用时错误

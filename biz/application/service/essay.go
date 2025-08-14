@@ -81,7 +81,7 @@ func (s *EssayService) EssayEvaluateStream(ctx context.Context, req *show.EssayE
 	go func() {
 		defer close(downstreamChan) // 确保HTTP请求完成后关闭channel，避免主函数永远阻塞
 		client := util.GetHttpClient()
-		client.EvaluateStream(ctx, req.Title, req.Text, req.Grade, req.EssayType, downstreamChan)
+		client.EvaluateStream(ctx, req.Title, req.Text, req.Grade, req.EssayType, nil, downstreamChan)
 	}()
 
 	for jsonMessage := range downstreamChan {

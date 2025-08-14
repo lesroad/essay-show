@@ -33,6 +33,11 @@ func main() {
 	Init()
 	c := provider.Get().Config
 
+	// 启动作业批改定时器
+	p := provider.Get()
+	homeworkService := p.HomeworkService
+	homeworkService.StartGrader(context.Background())
+
 	// hertz接入optl: https://www.volcengine.com/docs/6431/1439035
 	tracer, cfg := tracing.NewServerTracer()
 	h := server.New(

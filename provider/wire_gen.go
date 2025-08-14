@@ -77,6 +77,7 @@ func NewProvider() (*Provider, error) {
 		HomeworkMapper:   homeworkMongoMapper,
 		SubmissionMapper: submissionMongoMapper,
 		ClassMapper:      classMongoMapper,
+		MemberMapper:     memberMongoMapper,
 		UserMapper:       mongoMapper,
 		EssayService:     serviceEssayService,
 	}

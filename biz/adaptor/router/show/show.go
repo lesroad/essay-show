@@ -54,10 +54,11 @@ func Register(r *server.Hertz) {
 	{
 		_homework := root.Group("/homework", _homeworkMw()...)
 		_homework.POST("/create", append(_createhomeworkMw(), show.CreateHomework)...)
-		_homework.GET("/get", append(_gethomeworkMw(), show.GetHomework)...)
-		_homework.POST("/grade", append(_gradehomeworkMw(), show.GradeHomework)...)
 		_homework.GET("/list", append(_listhomeworksMw(), show.ListHomeworks)...)
-		_homework.GET("/submissions", append(_gethomeworksubmissionsMw(), show.GetHomeworkSubmissions)...)
+		_list := _homework.Group("/list", _listMw()...)
+		_list.GET("/student", append(_listhomeworksforstuMw(), show.ListHomeworksForStu)...)
+		_homework.GET("/submission", append(_getsubmissionevaluateMw(), show.GetSubmissionEvaluate)...)
+		_homework.GET("/submissions", append(_getsubmissionsMw(), show.GetSubmissions)...)
 		_homework.POST("/submit", append(_submithomeworkMw(), show.SubmitHomework)...)
 	}
 	{

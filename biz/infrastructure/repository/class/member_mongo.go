@@ -83,11 +83,12 @@ func (m *MemberMongoMapper) FindByUserID(ctx context.Context, userID string) ([]
 	return members, total, nil
 }
 
-func (m *MemberMongoMapper) FindByClassIDAndUserID(ctx context.Context, classID, userID string) (*ClassMember, error) {
+func (m *MemberMongoMapper) FindByClassIDAndStuID(ctx context.Context, classID, userID string) (*ClassMember, error) {
 	var member ClassMember
 	filter := bson.M{
 		"class_id": classID,
 		"user_id":  userID,
+		"role":     consts.RoleStudent,
 	}
 
 	err := m.conn.FindOneNoCache(ctx, &member, filter)

@@ -265,3 +265,28 @@ func _listquestionbanksMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _listMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _listhomeworksforstuMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getsubmissionsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _gethomeworkevaluateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getsubmissionevaluateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

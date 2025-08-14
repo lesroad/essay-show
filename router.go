@@ -4,6 +4,7 @@ package main
 
 import (
 	handler "essay-show/biz/adaptor/controller"
+
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
@@ -15,4 +16,3 @@ func customizedRegister(r *server.Hertz) {
 	r.StaticFile("/static/test_stream.html", "./static/test_stream.html")
 	r.StaticFile("/static/test_exercise_stream.html", "./static/test_exercise_stream.html")
 }
-	

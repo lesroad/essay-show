@@ -1,5 +1,7 @@
 package consts
 
+import "time"
+
 var PageSize int64 = 10
 
 // 数据库相关
@@ -33,4 +35,17 @@ const (
 	DisLike          = -1
 	InvitationReward = 10
 	AttendReward     = 1
+)
+
+const (
+	// 作业状态常量
+	StatusNotSubmission = -1
+	StatusInitialized   = 0 // 初始化
+	StatusGrading       = 1 // 批改中
+	StatusCompleted     = 2 // 批改完成
+	StatusFailed        = 7 // 批改失败
+
+	// 定时器配置常量
+	TimerInterval   = 30 * time.Second // 扫描间隔
+	TimeoutDuration = 20 * time.Minute // 超时时间
 )

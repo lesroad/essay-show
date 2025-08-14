@@ -110,8 +110,20 @@ func (s *StsService) OCR(ctx context.Context, req *show.OCRReq) (*show.OCRResp, 
 	if data == nil {
 		return nil, consts.ErrOCR
 	}
+	essay, title := data["content"].(string), data["title"].(string)
 
-	return &show.OCRResp{Title: data["title"].(string), Text: data["content"].(string)}, nil
+	resp, err = client.GetEssayInfo(ctx, essay, title)
+	if err != nil {
+		return nil, err
+	}
+	if resp["code"] != "200" {
+		return nil, consts.ErrOCR
+	}
+	essayType := resp["essay_type"].(string)
+	grade := resp["grade_int"].(float64)
+	totalScore := resp["score_int"].(float64)
+
+	return &show.OCRResp{Title: title, Text: essay, EssayType: essayType, Grade: int64(grade), TotalScore: int64(totalScore)}, nil
 }
 
 // SendVerifyCode 发送验证码
