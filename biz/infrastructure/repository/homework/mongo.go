@@ -87,7 +87,10 @@ func (m *MongoMapper) FindByCreator(ctx context.Context, creatorID string, page,
 
 func (m *MongoMapper) FindByClassID(ctx context.Context, classID string, page, pageSize int64) ([]*Homework, int64, error) {
 	var homeworks []*Homework
-	filter := bson.M{"class_ids": classID}
+	filter := bson.M{}
+	if classID != "" {
+		filter = bson.M{"class_id": classID}
+	}
 
 	// 获取总数
 	total, err := m.conn.CountDocuments(ctx, filter)

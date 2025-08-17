@@ -21,6 +21,7 @@ import (
 
 type IEssayService interface {
 	EssayEvaluateStream(ctx context.Context, req *show.EssayEvaluateReq, resultChan chan<- string) error
+	APIEssayEvaluateStreamV1(ctx context.Context, req *show.EssayEvaluateReq, resultChan chan<- string) error
 	GetEvaluateLogs(ctx context.Context, req *show.GetEssayEvaluateLogsReq) (resp *show.GetEssayEvaluateLogsResp, err error)
 	LikeEvaluate(ctx context.Context, req *show.LikeEvaluateReq) (resp *show.Response, err error)
 	DownloadEvaluate(ctx context.Context, req *show.DownloadEvaluateReq) (resp *show.DownloadEvaluateResp, err error)
@@ -81,7 +82,7 @@ func (s *EssayService) EssayEvaluateStream(ctx context.Context, req *show.EssayE
 	go func() {
 		defer close(downstreamChan) // 确保HTTP请求完成后关闭channel，避免主函数永远阻塞
 		client := util.GetHttpClient()
-		client.EvaluateStream(ctx, req.Title, req.Text, req.Grade, req.EssayType, downstreamChan)
+		client.EvaluateStream(ctx, req.Title, req.Text, req.Grade, req.EssayType, nil, downstreamChan)
 	}()
 
 	for jsonMessage := range downstreamChan {
@@ -282,4 +283,57 @@ func (s *EssayService) DownloadEvaluate(ctx context.Context, req *show.DownloadE
 	}
 
 	return result, nil
+}
+
+// APIEssayEvaluateStreamV1 API网关专用流式批改作文接口
+func (s *EssayService) APIEssayEvaluateStreamV1(ctx context.Context, req *show.EssayEvaluateReq, resultChan chan<- string) error {
+	downstreamChan := make(chan string, 100)
+	var finalResult string
+
+	go func() {
+		defer close(downstreamChan)
+		client := util.GetHttpClient()
+		client.EvaluateStream(ctx, req.Title, req.Text, req.Grade, req.EssayType, nil, downstreamChan)
+	}()
+
+	for jsonMessage := range downstreamChan {
+		var data map[string]interface{}
+		if parseErr := json.Unmarshal([]byte(jsonMessage), &data); parseErr != nil {
+			logx.Error("解析下游JSON消息失败: %v", parseErr)
+			continue
+		}
+
+		if msgType, ok := data["type"].(string); ok {
+			switch msgType {
+			case "progress":
+				util.SendStreamMessage(resultChan, util.STPart, data["message"].(string), data["data"])
+			case "complete":
+				if result, ok := data["data"].(map[string]interface{}); ok {
+					if resultBytes, err := json.Marshal(result); err == nil {
+						finalResult = string(resultBytes)
+					}
+				}
+				goto exitLoop
+			case "error":
+				util.SendStreamMessage(resultChan, util.STError, "下游服务错误", data["data"])
+				return consts.ErrCall
+			default:
+			}
+		}
+	}
+
+exitLoop:
+	if len(finalResult) == 0 {
+		util.SendStreamMessage(resultChan, util.STError, "批改失败", nil)
+		return consts.ErrCall
+	}
+
+	finalData := map[string]interface{}{
+		"code":     0,
+		"msg":      "批改完成",
+		"response": finalResult,
+	}
+
+	util.SendStreamMessage(resultChan, util.STComplete, "批改已完成", finalData)
+	return nil
 }

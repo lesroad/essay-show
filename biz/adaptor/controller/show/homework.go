@@ -44,22 +44,6 @@ func ListHomeworks(ctx context.Context, c *app.RequestContext) {
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
 
-// GetHomework .
-// @router /homework/get [GET]
-func GetHomework(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req show.GetHomeworkReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	p := provider.Get()
-	resp, err := p.HomeworkService.GetHomework(ctx, &req)
-	adaptor.PostProcess(ctx, c, &req, resp, err)
-}
-
 // SubmitHomework .
 // @router /homework/submit [POST]
 func SubmitHomework(ctx context.Context, c *app.RequestContext) {
@@ -76,11 +60,11 @@ func SubmitHomework(ctx context.Context, c *app.RequestContext) {
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
 
-// GetHomeworkSubmissions .
-// @router /homework/submissions [GET]
-func GetHomeworkSubmissions(ctx context.Context, c *app.RequestContext) {
+// ListHomeworksForStu .
+// @router /homework/list/student [GET]
+func ListHomeworksForStu(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req show.GetHomeworkSubmissionsReq
+	var req show.ListHomeworksForStuReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
@@ -88,15 +72,15 @@ func GetHomeworkSubmissions(ctx context.Context, c *app.RequestContext) {
 	}
 
 	p := provider.Get()
-	resp, err := p.HomeworkService.GetHomeworkSubmissions(ctx, &req)
+	resp, err := p.HomeworkService.ListHomeworksForStu(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
 
-// GradeHomework .
-// @router /homework/grade [POST]
-func GradeHomework(ctx context.Context, c *app.RequestContext) {
+// GetSubmissions .
+// @router /homework/submissions [GET]
+func GetSubmissions(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req show.GradeHomeworkReq
+	var req show.GetSubmissionsReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(consts.StatusBadRequest, err.Error())
@@ -104,6 +88,22 @@ func GradeHomework(ctx context.Context, c *app.RequestContext) {
 	}
 
 	p := provider.Get()
-	resp, err := p.HomeworkService.GradeHomework(ctx, &req)
+	resp, err := p.HomeworkService.GetSubmissions(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// GetSubmissionEvaluate .
+// @router /homework/submission [GET]
+func GetSubmissionEvaluate(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.GetSubmissionEvaluateReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.HomeworkService.GetSubmissionEvaluate(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }

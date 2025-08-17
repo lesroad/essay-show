@@ -92,7 +92,7 @@ func (s *ClassService) CreateClass(ctx context.Context, req *show.CreateClassReq
 	return &show.CreateClassResp{
 		ClassId:    c.ID.Hex(),
 		InviteCode: inviteCode,
-		InviteUrl:  config.GetConfig().Api.ClassJoinURL + "?invite_code=" + inviteCode,
+		InviteUrl:  config.GetConfig().Api.MiniProgramURL + "/class/join?invite_code=" + inviteCode,
 	}, nil
 }
 
@@ -192,7 +192,7 @@ func (s *ClassService) ListClasses(ctx context.Context, req *show.ListClassesReq
 	}, nil
 }
 
-// JoinClass 加入班级
+// JoinClass 学生加入班级
 func (s *ClassService) JoinClass(ctx context.Context, req *show.JoinClassReq) (*show.JoinClassResp, error) {
 	// 获取用户信息
 	meta := adaptor.ExtractUserMeta(ctx)
@@ -200,6 +200,16 @@ func (s *ClassService) JoinClass(ctx context.Context, req *show.JoinClassReq) (*
 		return nil, consts.ErrNotAuthentication
 	}
 	userID := meta.GetUserId()
+
+	// 确认学生身份
+	u, err := s.UserMapper.FindOne(ctx, userID)
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+	if u.Role != consts.RoleStudent {
+		return nil, consts.ErrNotAuthentication
+	}
 
 	// 根据邀请码查找班级
 	c, err := s.ClassMapper.FindOneByInviteCode(ctx, req.InviteCode)
@@ -209,7 +219,7 @@ func (s *ClassService) JoinClass(ctx context.Context, req *show.JoinClassReq) (*
 	}
 
 	// 检查是否已经是班级成员
-	existingMember, err := s.MemberMapper.FindByClassIDAndUserID(ctx, c.ID.Hex(), userID)
+	existingMember, err := s.MemberMapper.FindByClassIDAndStuID(ctx, c.ID.Hex(), userID)
 	if err == nil && existingMember != nil {
 		return &show.JoinClassResp{
 			ClassId:   c.ID.Hex(),
@@ -277,13 +287,18 @@ func (s *ClassService) GetClassMembers(ctx context.Context, req *show.GetClassMe
 			log.Error("获取班级成员信息失败: %v", err)
 			continue
 		}
-		memberInfos = append(memberInfos, &show.ClassMemberInfo{
+
+		memberInfo := &show.ClassMemberInfo{
 			Id:       m.ID.Hex(),
 			UserId:   m.UserID,
 			UserName: user.Username,
-			Role:     m.Role,
+			Role:     show.UserRole_STUDENT,
 			JoinTime: m.JoinTime.Unix(),
-		})
+		}
+		if m.Role == consts.RoleTeacher {
+			memberInfo.Role = show.UserRole_TEACHER
+		}
+		memberInfos = append(memberInfos, memberInfo)
 	}
 
 	return &show.GetClassMembersResp{

@@ -30,7 +30,6 @@ type HttpClient struct {
 func NewHttpClient() *HttpClient {
 	return &HttpClient{
 		Client: &http.Client{
-			// 为流式传输优化的配置
 			Timeout: 0, // 禁用超时，因为流式请求可能持续很长时间
 		},
 	}
@@ -377,30 +376,6 @@ func (c *HttpClient) SendVerifyCode(ctx context.Context, authType string, authId
 	return resp, nil
 }
 
-// Evaluate 批改作文，支持context和链路追踪
-func (c *HttpClient) Evaluate(ctx context.Context, title string, text string, grade *int64, essayType *string) (map[string]interface{}, error) {
-	data := make(map[string]interface{})
-	data["title"] = title
-	data["content"] = text
-	if grade != nil {
-		data["grade"] = *grade
-	}
-	if essayType != nil {
-		data["essayType"] = *essayType
-	}
-
-	header := make(map[string]string)
-	header["Content-Type"] = consts.ContentTypeJson
-	header["Charset"] = consts.CharSetUTF8
-
-	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.EvaluateUrl, header, data)
-	if err != nil {
-		return nil, err
-	}
-
-	return resp, nil
-}
-
 // TitleUrlOCR ocr - 带标题
 func (c *HttpClient) TitleUrlOCR(ctx context.Context, images []string, left string) (map[string]interface{}, error) {
 	body := make(map[string]interface{})
@@ -418,6 +393,21 @@ func (c *HttpClient) TitleUrlOCR(ctx context.Context, images []string, left stri
 	}
 
 	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.TitleUrlOcr, header, body)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *HttpClient) GetEssayInfo(ctx context.Context, essay string, title string) (map[string]interface{}, error) {
+	body := make(map[string]interface{})
+	body["essay"] = essay
+	body["title"] = title
+
+	header := make(map[string]string)
+	header["Content-Type"] = consts.ContentTypeJson
+
+	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.EssayInfoURL, header, body)
 	if err != nil {
 		return nil, err
 	}
@@ -464,7 +454,7 @@ func (c *HttpClient) GenSignedUrl(ctx context.Context, secretId, secretKey strin
 }
 
 // EvaluateStream 流式批改作文，支持context和链路追踪
-func (c *HttpClient) EvaluateStream(ctx context.Context, title string, text string, grade *int64, essayType *string, resultChan chan<- string) error {
+func (c *HttpClient) EvaluateStream(ctx context.Context, title string, text string, grade *int64, essayType *string, prompt *string, resultChan chan<- string) error {
 	// 准备请求参数
 	data := make(map[string]interface{})
 	data["title"] = title
@@ -474,6 +464,9 @@ func (c *HttpClient) EvaluateStream(ctx context.Context, title string, text stri
 	}
 	if essayType != nil {
 		data["essayType"] = *essayType
+	}
+	if prompt != nil {
+		data["prompt"] = *prompt
 	}
 
 	// 准备请求头
