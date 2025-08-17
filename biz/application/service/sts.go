@@ -20,6 +20,7 @@ import (
 type IStsService interface {
 	ApplySignedUrl(ctx context.Context, req *show.ApplySignedUrlReq) (*show.ApplySignedUrlResp, error)
 	OCR(ctx context.Context, req *show.OCRReq) (*show.OCRResp, error)
+	APIOCRV1(ctx context.Context, req *show.OCRReq) (*show.OCRResp, error)
 	SendVerifyCode(ctx context.Context, req *show.SendVerifyCodeReq) (*show.Response, error)
 }
 
@@ -155,4 +156,51 @@ func (s *StsService) SendVerifyCode(ctx context.Context, req *show.SendVerifyCod
 	}
 
 	return util.Succeed("发送验证码成功，请注意查收")
+}
+
+// APIOCRV1 API网关专用OCR接口
+// 简化版本：无需认证、无需校验次数、只返回核心OCR功能
+func (s *StsService) APIOCRV1(ctx context.Context, req *show.OCRReq) (*show.OCRResp, error) {
+	images := req.Ocr
+	left := ""
+	if req.LeftType != nil {
+		left = *req.LeftType
+	}
+
+	// 调用OCR服务
+	client := util.GetHttpClient()
+	resp, err := client.TitleUrlOCR(ctx, images, left)
+	if err != nil {
+		return nil, err
+	}
+	if resp["code"].(float64) != 0 {
+		return nil, consts.ErrOCR
+	}
+
+	data := resp["data"].(map[string]any)
+	if data == nil {
+		return nil, consts.ErrOCR
+	}
+	essay, title := data["content"].(string), data["title"].(string)
+
+	// 获取作文信息
+	resp, err = client.GetEssayInfo(ctx, essay, title)
+	if err != nil {
+		return nil, err
+	}
+	if resp["code"] != "200" {
+		return nil, consts.ErrOCR
+	}
+
+	essayType := resp["essay_type"].(string)
+	grade := resp["grade_int"].(float64)
+	totalScore := resp["score_int"].(float64)
+
+	return &show.OCRResp{
+		Title:      title,
+		Text:       essay,
+		EssayType:  essayType,
+		Grade:      int64(grade),
+		TotalScore: int64(totalScore),
+	}, nil
 }
