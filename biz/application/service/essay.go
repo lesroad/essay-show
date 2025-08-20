@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"essay-show/biz/adaptor"
+	"essay-show/biz/application/dto/essay/apigateway"
 	"essay-show/biz/application/dto/essay/show"
 	"essay-show/biz/application/dto/essay/stateless"
 	"essay-show/biz/infrastructure/cache"
@@ -13,10 +14,12 @@ import (
 	"essay-show/biz/infrastructure/repository/user"
 	"essay-show/biz/infrastructure/util"
 	logx "essay-show/biz/infrastructure/util/log"
+	"fmt"
 	"time"
 
 	"github.com/google/wire"
 	"github.com/jinzhu/copier"
+	"github.com/mitchellh/mapstructure"
 )
 
 type IEssayService interface {
@@ -289,7 +292,6 @@ func (s *EssayService) DownloadEvaluate(ctx context.Context, req *show.DownloadE
 func (s *EssayService) APIEssayEvaluateStreamV1(ctx context.Context, req *show.EssayEvaluateReq, resultChan chan<- string) error {
 	downstreamChan := make(chan string, 100)
 	var finalResult string
-
 	go func() {
 		defer close(downstreamChan)
 		client := util.GetHttpClient()
@@ -297,12 +299,23 @@ func (s *EssayService) APIEssayEvaluateStreamV1(ctx context.Context, req *show.E
 	}()
 
 	for jsonMessage := range downstreamChan {
-		var data map[string]interface{}
-		if parseErr := json.Unmarshal([]byte(jsonMessage), &data); parseErr != nil {
-			logx.Error("解析下游JSON消息失败: %v", parseErr)
+		// 对每条流式消息进行校验和过滤
+		validatedMessage, jump, err := s.validateAndFilterStreamMessage(jsonMessage)
+		if err != nil {
+			logx.Error("流式消息校验失败: %v, 原始消息: %s", err, jsonMessage)
+			continue
+		}
+		if jump {
 			continue
 		}
 
+		var data map[string]any
+		if parseErr := json.Unmarshal([]byte(validatedMessage), &data); parseErr != nil {
+			logx.Error("解析校验后的JSON消息失败: %v, validatedMessage:%s", parseErr, validatedMessage)
+			continue
+		}
+
+		// 检查消息类型并转发
 		if msgType, ok := data["type"].(string); ok {
 			switch msgType {
 			case "progress":
@@ -336,4 +349,50 @@ exitLoop:
 
 	util.SendStreamMessage(resultChan, util.STComplete, "批改已完成", finalData)
 	return nil
+}
+
+// validateAndFilterStreamMessage 校验并过滤流式消息，确保每条消息都符合API网关的数据结构
+func (s *EssayService) validateAndFilterStreamMessage(messageJSON string) (string, bool, error) {
+	var rawMessage map[string]any
+	if err := json.Unmarshal([]byte(messageJSON), &rawMessage); err != nil {
+		return "", false, fmt.Errorf("无法解析流式消息JSON: %w", err)
+	}
+	if rawMessage["type"].(string) == "error" {
+		return messageJSON, false, nil
+	}
+
+	var result map[string]any
+	switch rawMessage["step"].(string) {
+	case "essay_info":
+		var ei apigateway.EssayContent
+		if err := mapstructure.Decode(rawMessage["data"].(map[string]any), &ei); err != nil {
+			return "", false, fmt.Errorf("解析批改结果失败: %w", err)
+		}
+		mapstructure.Decode(ei, &result)
+	case "finish":
+		var ei apigateway.AllContent
+		if err := mapstructure.Decode(rawMessage["data"].(map[string]any), &ei); err != nil {
+			return "", false, fmt.Errorf("解析批改结果失败: %w", err)
+		}
+		mapstructure.Decode(ei, &result)
+	case "start":
+		result = nil
+	case "word_sentence", "grammar", "suggestion", "score", "paragraph", "polishing":
+		var ei apigateway.AIEvaluation
+		if err := mapstructure.Decode(rawMessage["data"].(map[string]any), &ei); err != nil {
+			return "", false, fmt.Errorf("解析批改结果失败: %w", err)
+		}
+		mapstructure.Decode(ei, &result)
+	default: // 过滤不支持的批改项
+		return "", true, nil
+	}
+
+	validatedMessage := apigateway.StreamMessage{
+		Type:    rawMessage["type"].(string),
+		Message: rawMessage["message"].(string),
+		Data:    result,
+	}
+
+	validatedBytes, _ := json.Marshal(validatedMessage)
+	return string(validatedBytes), false, nil
 }
