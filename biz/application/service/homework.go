@@ -507,7 +507,7 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 	// 调用批改服务
 	go func() {
 		defer close(resultChan)
-		client.EvaluateStream(ctx, title, text, &grade, &essayType, &prompt, resultChan)
+		client.EvaluateStream(ctx, title, text, &grade, nil, &essayType, &prompt, resultChan)
 	}()
 
 	for jsonMessage := range resultChan {

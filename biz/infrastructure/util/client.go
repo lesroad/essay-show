@@ -454,7 +454,7 @@ func (c *HttpClient) GenSignedUrl(ctx context.Context, secretId, secretKey strin
 }
 
 // EvaluateStream 流式批改作文，支持context和链路追踪
-func (c *HttpClient) EvaluateStream(ctx context.Context, title string, text string, grade *int64, essayType *string, prompt *string, resultChan chan<- string) error {
+func (c *HttpClient) EvaluateStream(ctx context.Context, title string, text string, grade, totalScore *int64, essayType *string, prompt *string, resultChan chan<- string) error {
 	// 准备请求参数
 	data := make(map[string]interface{})
 	data["title"] = title
@@ -467,6 +467,9 @@ func (c *HttpClient) EvaluateStream(ctx context.Context, title string, text stri
 	}
 	if prompt != nil {
 		data["prompt"] = *prompt
+	}
+	if totalScore != nil {
+		data["totalScore"] = totalScore
 	}
 
 	// 准备请求头

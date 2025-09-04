@@ -109,6 +109,7 @@ type Scores struct {
 	Expression  int `json:"expression"`
 	Structure   int `json:"structure,omitempty"`
 	Development int `json:"development,omitempty"`
+	ItemTotal   int `json:"itemTotal,omitempty"`
 }
 
 type PolishingEvaluation struct {
