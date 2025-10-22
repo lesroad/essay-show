@@ -26,6 +26,7 @@ type Essay struct {
 	Unit            *int    `db:"unit"`
 	Name            *string `db:"name"`
 	Description     *string `db:"description"`
+	Genre           *string `db:"genre"`
 }
 
 func NewMySQLMapper(dsn string) (*MySQLMapper, error) {
@@ -100,7 +101,7 @@ func (m *MySQLMapper) ListQuestionBanks(ctx context.Context, req *show.ListQuest
 
 	// 查询数据
 	dataQuery := fmt.Sprintf(`
-		SELECT id, type, textbook_version, grade, unit, name, description 
+		SELECT id, type, textbook_version, grade, unit, name, description, genre 
 		FROM Essays %s 
 		ORDER BY grade ASC, unit ASC, id ASC 
 		LIMIT ? OFFSET ?
@@ -126,6 +127,7 @@ func (m *MySQLMapper) ListQuestionBanks(ctx context.Context, req *show.ListQuest
 			&essay.Unit,
 			&essay.Name,
 			&essay.Description,
+			&essay.Genre,
 		)
 		if err != nil {
 			log.Error("Failed to scan essay row: %v", err)
@@ -139,6 +141,7 @@ func (m *MySQLMapper) ListQuestionBanks(ctx context.Context, req *show.ListQuest
 			Description: safeString(essay.Description),
 			Grade:       safeInt64(essay.Grade),
 			Unit:        safeInt64(essay.Unit),
+			EssayType:   safeString(essay.Genre),
 		}
 
 		questionBanks = append(questionBanks, questionBank)

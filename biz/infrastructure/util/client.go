@@ -253,31 +253,6 @@ func (c *HttpClient) SendRequestStream(ctx context.Context, method, url string, 
 	return nil
 }
 
-// SignUp 用于用户初始化
-func (c *HttpClient) SignUp(ctx context.Context, authType string, authId string, verifyCode *string) (map[string]interface{}, error) {
-
-	body := make(map[string]interface{})
-	body["authType"] = authType
-	body["authId"] = authId
-	body["verifyCode"] = *verifyCode
-	body["appId"] = consts.AppId
-
-	header := make(map[string]string)
-	header["Content-Type"] = consts.ContentTypeJson
-	header["Charset"] = consts.CharSetUTF8
-
-	// 如果是测试环境则向测试环境的中台发送请求
-	if config.GetConfig().State == "test" {
-		header["X-Xh-Env"] = "test"
-	}
-
-	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.PlatfromURL+"/sts/sign_in", header, body)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
-}
-
 // SignIn 用于用户登录
 func (c *HttpClient) SignIn(ctx context.Context, authType string, authId string, verifyCode *string, password *string) (map[string]interface{}, error) {
 
@@ -323,30 +298,6 @@ func (c *HttpClient) BindAuth(ctx context.Context, authType string, authId strin
 	header["Charset"] = consts.CharSetUTF8
 
 	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.PlatfromURL+"/sts/add_auth", header, body)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
-}
-
-// SetPassword 用于用户登录
-func (c *HttpClient) SetPassword(ctx context.Context, userId string, password string) (map[string]interface{}, error) {
-
-	body := make(map[string]interface{})
-	body["password"] = password
-	body["appId"] = consts.AppId
-	body["userId"] = userId
-
-	header := make(map[string]string)
-	header["Content-Type"] = consts.ContentTypeJson
-	header["Charset"] = consts.CharSetUTF8
-
-	// 如果是测试环境则向测试环境中台发送请求
-	if config.GetConfig().State == "test" {
-		header["X-Xh-Env"] = "test"
-	}
-
-	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.PlatfromURL+"/sts/set_password", header, body)
 	if err != nil {
 		return nil, err
 	}

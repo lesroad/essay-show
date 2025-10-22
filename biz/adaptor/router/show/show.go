@@ -17,7 +17,6 @@ import (
 func Register(r *server.Hertz) {
 
 	root := r.Group("/", rootMw()...)
-	root.GET("/test", append(_testMw(), show.Test)...)
 	{
 		_class := root.Group("/class", _classMw()...)
 		_class.POST("/create", append(_createclassMw(), show.CreateClass)...)
@@ -55,8 +54,6 @@ func Register(r *server.Hertz) {
 		_homework := root.Group("/homework", _homeworkMw()...)
 		_homework.POST("/create", append(_createhomeworkMw(), show.CreateHomework)...)
 		_homework.GET("/list", append(_listhomeworksMw(), show.ListHomeworks)...)
-		_list := _homework.Group("/list", _listMw()...)
-		_list.GET("/student", append(_listhomeworksforstuMw(), show.ListHomeworksForStu)...)
 		_homework.GET("/submission", append(_getsubmissionevaluateMw(), show.GetSubmissionEvaluate)...)
 		_homework.GET("/submissions", append(_getsubmissionsMw(), show.GetSubmissions)...)
 		_homework.POST("/submit", append(_submithomeworkMw(), show.SubmitHomework)...)
@@ -79,9 +76,7 @@ func Register(r *server.Hertz) {
 		_daily_attend.GET("/get", append(_getdailyattendMw(), show.GetDailyAttend)...)
 		_user.GET("/info", append(_getuserinfoMw(), show.GetUserInfo)...)
 		_user.POST("/sign_in", append(_signinMw(), show.SignIn)...)
-		_user.POST("/sign_up", append(_signupMw(), show.SignUp)...)
 		_user.POST("/update", append(_updateuserinfoMw(), show.UpdateUserInfo)...)
-		_user.POST("/update_password", append(_updatepasswordMw(), show.UpdatePassword)...)
 		{
 			_invitation := _user.Group("/invitation", _invitationMw()...)
 			_invitation.GET("/code", append(_getinvitationcodeMw(), show.GetInvitationCode)...)

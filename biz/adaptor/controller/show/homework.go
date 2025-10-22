@@ -60,22 +60,6 @@ func SubmitHomework(ctx context.Context, c *app.RequestContext) {
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
 
-// ListHomeworksForStu .
-// @router /homework/list/student [GET]
-func ListHomeworksForStu(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req show.ListHomeworksForStuReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	p := provider.Get()
-	resp, err := p.HomeworkService.ListHomeworksForStu(ctx, &req)
-	adaptor.PostProcess(ctx, c, &req, resp, err)
-}
-
 // GetSubmissions .
 // @router /homework/submissions [GET]
 func GetSubmissions(ctx context.Context, c *app.RequestContext) {

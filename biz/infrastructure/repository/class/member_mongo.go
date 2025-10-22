@@ -64,9 +64,9 @@ func (m *MemberMongoMapper) FindByClassID(ctx context.Context, classID string, p
 	return members, total, nil
 }
 
-func (m *MemberMongoMapper) FindByUserID(ctx context.Context, userID string) ([]*ClassMember, int64, error) {
+func (m *MemberMongoMapper) FindByStuID(ctx context.Context, userID string) ([]*ClassMember, int64, error) {
 	var members []*ClassMember
-	filter := bson.M{"user_id": userID}
+	filter := bson.M{"user_id": userID, "role": consts.RoleStudent}
 
 	total, err := m.conn.CountDocuments(ctx, filter)
 	if err != nil {
