@@ -20,12 +20,10 @@ import (
 )
 
 type IUserService interface {
-	SignUp(ctx context.Context, req *show.SignUpReq) (*show.SignUpResp, error)
 	SignIn(ctx context.Context, req *show.SignInReq) (*show.SignInResp, error)
 	BindAuth(ctx context.Context, req *show.BindAuthReq) (*show.BindAuthResp, error)
 	GetUserInfo(ctx context.Context, req *show.GetUserInfoReq) (*show.GetUserInfoResp, error)
 	UpdateUserInfo(ctx context.Context, req *show.UpdateUserInfoReq) (*show.Response, error)
-	UpdatePassword(ctx context.Context, req *show.UpdatePasswordReq) (*show.UpdatePasswordResp, error)
 	DailyAttend(ctx context.Context, req *show.DailyAttendReq) (*show.Response, error)
 	GetDailyAttend(ctx context.Context, req *show.GetDailyAttendReq) (*show.GetDailyAttendResp, error)
 	FillInvitationCode(ctx context.Context, req *show.FillInvitationCodeReq) (*show.Response, error)
@@ -42,90 +40,6 @@ var UserServiceSet = wire.NewSet(
 	wire.Struct(new(UserService), "*"),
 	wire.Bind(new(IUserService), new(*UserService)),
 )
-
-// SignUp 注册用户 已废弃
-func (s *UserService) SignUp(ctx context.Context, req *show.SignUpReq) (*show.SignUpResp, error) {
-	var oldUser *user.User
-	var err error
-	if req.AuthType == "phone" {
-		// 查找数据库判断手机号是否注册过
-		oldUser, err = s.UserMapper.FindOneByPhone(ctx, req.AuthId)
-		if err == nil && oldUser != nil {
-			// 重复注册
-			return nil, consts.ErrRepeatedSignUp
-		} else if err != nil && !errors.Is(err, consts.ErrNotFound) {
-			log.Error("查找用户失败:%v", err)
-			return nil, consts.ErrSignUp
-		}
-	}
-
-	// 在中台注册账户
-	httpClient := util.GetHttpClient()
-	signUpResponse, err := httpClient.SignUp(ctx, req.AuthType, req.AuthId, &req.VerifyCode)
-	if err != nil || signUpResponse["code"].(float64) != 0 {
-		log.Error("注册失败:%v, signUpResponse:%v", err, signUpResponse)
-		return nil, consts.ErrSignUp
-	}
-	resp := new(sts.SignInResp)
-	if dataMap, ok := signUpResponse["data"].(map[string]any); ok {
-		if err := mapstructure.Decode(dataMap, resp); err != nil {
-			return nil, consts.ErrSignUp
-		}
-	} else {
-		return nil, consts.ErrSignUp
-	}
-
-	userId := resp.UserId
-
-	authorization, accessExpire, err := adaptor.GenerateJwtToken(resp)
-	if err != nil {
-		log.Error("获取jwt失败, err:%v", err)
-		return nil, consts.ErrSignUp
-	}
-
-	// 设置密码
-	if req.Password != "" {
-		ret, err := httpClient.SetPassword(ctx, userId, req.Password)
-		if err != nil || ret["code"].(float64) != 0 {
-			log.Error("设置密码失败:%v", err)
-			return nil, consts.ErrSignUp
-		}
-	}
-
-	// 初始化用户
-	oid, err := primitive.ObjectIDFromHex(userId)
-	if err != nil {
-		return nil, err
-	}
-	now := time.Now()
-	u := user.User{
-		ID:         oid,
-		Username:   req.Name,
-		Phone:      req.AuthId,
-		Count:      consts.DefaultCount,
-		Status:     0,
-		CreateTime: now,
-		UpdateTime: now,
-	}
-	if req.AuthType == "wechat-phone" {
-		u.Phone = signUpResponse["option"].(string)
-	}
-
-	// 向数据库中插入数据
-	err = s.UserMapper.Insert(ctx, &u)
-	if err != nil {
-		log.Error("插入数据失败, err:%v", err)
-		return nil, consts.ErrSignUp
-	}
-
-	// 返回响应
-	return &show.SignUpResp{
-		Id:           userId,
-		AccessToken:  authorization,
-		AccessExpire: int64(accessExpire),
-		Name:         u.Username,
-	}, nil
-}
 
 // SignIn 登录用户
 func (s *UserService) SignIn(ctx context.Context, req *show.SignInReq) (*show.SignInResp, error) {
@@ -170,6 +84,11 @@ func (s *UserService) SignIn(ctx context.Context, req *show.SignInReq) (*show.Si
 			CreateTime: now,
 			UpdateTime: now,
 		}
+		if (req.AuthType == consts.AuthTypeWechatPhone || req.AuthType == consts.AuthTypeWebPhone) && resp.Options != nil {
+			u.Phone = *resp.Options
+		} else if req.AuthType == consts.AuthTypePhone {
+			u.Phone = req.AuthId
+		}
 
 		err = s.UserMapper.Insert(ctx, u)
 		if err != nil {
@@ -207,8 +126,9 @@ func (s *UserService) BindAuth(ctx context.Context, req *show.BindAuthReq) (*sho
 		return nil, consts.ErrNotFound
 	}
 	switch req.AuthType {
-	case "wechat-phone":
+	case consts.AuthTypeWechatPhone:
 		u.Phone = data["options"].(string)
+	case consts.AuthTypeWechatOpenId:
 	default:
 		return nil, consts.ErrBindAuth
 	}
@@ -262,75 +182,42 @@ func (s *UserService) GetUserInfo(ctx context.Context, req *show.GetUserInfoReq)
 
 // UpdateUserInfo 更新用户信息
 func (s *UserService) UpdateUserInfo(ctx context.Context, req *show.UpdateUserInfoReq) (*show.Response, error) {
-	// 获取用户id
 	userMeta := adaptor.ExtractUserMeta(ctx)
 	if userMeta.GetUserId() == "" {
 		return nil, consts.ErrNotAuthentication
 	}
 
-	// 根据用户id查询这个用户
 	u, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
 	if err != nil {
 		return nil, consts.ErrNotFound
 	}
 
-	// 更新用户信息
-	u.Username = req.Name
-	u.School = req.School
-	u.Grade = req.Grade
-
-	// 更新用户角色
-	if req.Role == show.UserRole_TEACHER {
-		u.Role = consts.RoleTeacher
-	} else {
-		u.Role = consts.RoleStudent
+	if req.Name != nil {
+		u.Username = *req.Name
+	}
+	if req.School != nil {
+		u.School = *req.School
+	}
+	if req.Grade != nil {
+		u.Grade = *req.Grade
 	}
 
-	// 存入新的用户信息
+	if req.Role != nil {
+		if *req.Role == show.UserRole_TEACHER {
+			u.Role = consts.RoleTeacher
+		} else if *req.Role == show.UserRole_STUDENT {
+			u.Role = consts.RoleStudent
+		}
+	}
+
 	err = s.UserMapper.Update(ctx, u)
 	if err != nil {
 		return nil, consts.ErrUpdate
 	}
 
-	// 返回响应
 	return &show.Response{
 		Code: 0,
 		Msg:  "更新成功",
-	}, nil
-}
-
-func (s *UserService) UpdatePassword(ctx context.Context, req *show.UpdatePasswordReq) (*show.UpdatePasswordResp, error) {
-	// 获取用户id
-	userMeta := adaptor.ExtractUserMeta(ctx)
-	if userMeta.GetUserId() == "" {
-		return nil, consts.ErrNotAuthentication
-	}
-
-	// 根据用户id查询这个用户
-	u, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
-	if err != nil {
-		return nil, consts.ErrNotFound
-	}
-
-	// 在中台注册账户
-	httpClient := util.NewHttpClient()
-	signInResponse, err := httpClient.SignUp(ctx, consts.Phone, u.Phone, &req.VerifyCode)
-	if err != nil || signInResponse["code"].(float64) != 0 {
-		return nil, consts.ErrVerifyCode
-	}
-
-	// 在中台设置密码
-	authorization := signInResponse["accessToken"].(string)
-	user := adaptor.ExtractUserMeta(ctx)
-	ret, err := httpClient.SetPassword(ctx, user.UserId, req.Password)
-	if err != nil || ret["code"].(float64) != 0 {
-		return nil, consts.ErrSignUp
-	}
-	return &show.UpdatePasswordResp{
-		Id:           u.ID.Hex(),
-		AccessToken:  authorization,
-		AccessExpire: int64(signInResponse["accessExpire"].(float64)),
-		Name:         u.Username,
 	}, nil
 }
 

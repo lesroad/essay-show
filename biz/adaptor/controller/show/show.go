@@ -17,38 +17,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/protocol/sse"
 )
 
-// Test .
-// @router /test [GET]
-func Test(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req show.TestReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	resp := new(show.TestResp)
-
-	c.JSON(consts.StatusOK, resp)
-}
-
-// SignUp .
-// @router /user/sign_up [POST]
-func SignUp(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req show.SignUpReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	p := provider.Get()
-	resp, err := p.UserService.SignUp(ctx, &req)
-	adaptor.PostProcess(ctx, c, &req, resp, err)
-}
-
 // SignIn .
 // @router /user/sign_in [POST]
 func SignIn(ctx context.Context, c *app.RequestContext) {
@@ -175,22 +143,6 @@ func UpdateUserInfo(ctx context.Context, c *app.RequestContext) {
 
 	p := provider.Get()
 	resp, err := p.UserService.UpdateUserInfo(ctx, &req)
-	adaptor.PostProcess(ctx, c, &req, resp, err)
-}
-
-// UpdatePassword .
-// @router /user/update_password [POST]
-func UpdatePassword(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req show.UpdatePasswordReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	p := provider.Get()
-	resp, err := p.UserService.UpdatePassword(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
 

@@ -290,3 +290,8 @@ func _getsubmissionevaluateMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _correcthomeworkMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

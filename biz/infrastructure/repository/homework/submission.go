@@ -13,6 +13,7 @@ type HomeworkSubmission struct {
 	TeacherID   string             `bson:"teacher_id" json:"teacherId"`
 	Images      []string           `bson:"images" json:"images"`
 	GradeResult string             `bson:"grade_result" json:"gradeResult"`
+	Title       string             `bson:"title" json:"title"`
 	Response    string             `bson:"response" json:"response"`
 	Message     string             `bson:"message" json:"message"`
 	Status      int                `bson:"status" json:"status"` // 0: 初始化, 1: 批改中, 2: 批改完成, 7:批改失败

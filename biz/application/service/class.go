@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"essay-show/biz/adaptor"
 	"essay-show/biz/application/dto/essay/show"
-	"essay-show/biz/infrastructure/config"
 	"essay-show/biz/infrastructure/consts"
 	"essay-show/biz/infrastructure/repository/class"
 	"essay-show/biz/infrastructure/repository/user"
@@ -45,7 +44,7 @@ func (s *ClassService) CreateClass(ctx context.Context, req *show.CreateClassReq
 	// 获取用户详情
 	user, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
 	if err != nil {
-		log.Error("获取用户信息失败: %v", err)
+		log.Error("获取用户信息失败: %v, userID: %s", err, userMeta.GetUserId())
 		return nil, consts.ErrNotFound
 	}
 	if user.Role != consts.RoleTeacher {
@@ -92,7 +91,6 @@ func (s *ClassService) CreateClass(ctx context.Context, req *show.CreateClassReq
 	return &show.CreateClassResp{
 		ClassId:    c.ID.Hex(),
 		InviteCode: inviteCode,
-		InviteUrl:  config.GetConfig().Api.MiniProgramURL + "/class/join?invite_code=" + inviteCode,
 	}, nil
 }
 
@@ -156,7 +154,7 @@ func (s *ClassService) ListClasses(ctx context.Context, req *show.ListClassesReq
 	}
 
 	// 获取学生班级
-	members, total, err := s.MemberMapper.FindByUserID(ctx, userMeta.GetUserId())
+	members, total, err := s.MemberMapper.FindByStuID(ctx, userMeta.GetUserId())
 	if err != nil {
 		log.Error("获取学生班级失败: %v", err)
 		return nil, consts.ErrGetClassList
@@ -166,12 +164,12 @@ func (s *ClassService) ListClasses(ctx context.Context, req *show.ListClassesReq
 	for _, m := range members {
 		c, err := s.ClassMapper.FindOne(ctx, m.ClassID)
 		if err != nil {
-			log.Error("获取班级信息失败: %v", err)
+			log.Error("获取班级信息失败: %v, classID: %v", err, m.ClassID)
 			continue
 		}
 		user, err := s.UserMapper.FindOne(ctx, c.CreatorID)
 		if err != nil {
-			log.Error("获取用户信息失败: %v", err)
+			log.Error("获取用户信息失败: %v, createID: %v", err, c.CreatorID)
 			continue
 		}
 		classInfos = append(classInfos, &show.ClassInfo{

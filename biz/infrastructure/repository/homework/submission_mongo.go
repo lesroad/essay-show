@@ -63,30 +63,36 @@ func (m *SubmissionMongoMapper) FindOne(ctx context.Context, id string) (*Homewo
 	return &s, nil
 }
 
-func (m *SubmissionMongoMapper) FindByHomeworkID(ctx context.Context, homeworkID string, page, pageSize int64) ([]*HomeworkSubmission, int64, error) {
+// 根据 homework_id 找所有作业列表，但对每个 student_id 只取最新的一条数据
+func (m *SubmissionMongoMapper) FindByHomeworkID(ctx context.Context, homeworkID string) ([]*HomeworkSubmission, error) {
 	var submissions []*HomeworkSubmission
-	filter := bson.M{"homework_id": homeworkID}
 
-	// 获取总数
-	total, err := m.conn.CountDocuments(ctx, filter)
-	if err != nil {
-		return nil, 0, err
+	// 使用聚合管道获取每个学生的最新提交记录
+	pipeline := []bson.M{
+		// 匹配指定作业
+		{"$match": bson.M{"homework_id": homeworkID}},
+		// 按学生ID分组，获取每个学生的最新提交
+		{"$sort": bson.M{"student_id": 1, "create_time": -1}},
+		// 按学生ID分组，取每个组的第一条记录（最新的）
+		{"$group": bson.M{
+			"_id":              "$student_id",
+			"latestSubmission": bson.M{"$first": "$$ROOT"},
+		}},
+		// 替换根文档为最新的提交记录
+		{"$replaceRoot": bson.M{"newRoot": "$latestSubmission"}},
+		// 按提交时间倒序排列
+		{"$sort": bson.M{"create_time": -1}},
 	}
 
-	// 分页查询
-	skip := (page - 1) * pageSize
-	err = m.conn.Find(ctx, &submissions, filter, &options.FindOptions{
-		Skip:  &skip,
-		Limit: &pageSize,
-		Sort:  bson.M{"submit_time": -1},
-	})
+	err := m.conn.Aggregate(ctx, &submissions, pipeline)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 
-	return submissions, total, nil
+	return submissions, nil
 }
 
+// 查询一条最新的提交记录
 func (m *SubmissionMongoMapper) FindByStudentAndHomework(ctx context.Context, studentID, homeworkID string) (*HomeworkSubmission, error) {
 	var submission HomeworkSubmission
 	filter := bson.M{
@@ -94,7 +100,9 @@ func (m *SubmissionMongoMapper) FindByStudentAndHomework(ctx context.Context, st
 		"homework_id": homeworkID,
 	}
 
-	err := m.conn.FindOneNoCache(ctx, &submission, filter)
+	err := m.conn.FindOneNoCache(ctx, &submission, filter, &options.FindOneOptions{
+		Sort: bson.M{"create_time": -1},
+	})
 	switch {
 	case err == nil:
 		return &submission, nil
