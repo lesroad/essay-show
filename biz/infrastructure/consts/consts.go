@@ -49,3 +49,13 @@ const (
 	TimerInterval   = 30 * time.Second // 扫描间隔
 	TimeoutDuration = 20 * time.Minute // 超时时间
 )
+
+const (
+	AuthTypeEmail           = "email"
+	AuthTypePhone           = "phone"
+	AuthTypeAccountPassword = "account-password"
+	AuthTypeWechatOpenId    = "wechat-openid"
+	AuthTypeWechatUnionId   = "wechat-unionid"
+	AuthTypeWechatPhone     = "wechat-phone"
+	AuthTypeWebPhone        = "web-phone"
+)

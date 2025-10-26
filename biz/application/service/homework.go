@@ -69,6 +69,7 @@ func (s *HomeworkService) CreateHomework(ctx context.Context, req *show.CreateHo
 	// 创建作业
 	now := time.Now()
 	h := &homework.Homework{
+		Subject:     int64(req.Subject),
 		Title:       req.Title,
 		Description: req.Description,
 		ClassID:     req.ClassId,
@@ -146,6 +147,7 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 	for _, h := range homeworks {
 		homeworkInfo := &show.HomeworkInfo{
 			Id:          h.ID.Hex(),
+			Subject:     show.Subject(h.Subject),
 			Title:       h.Title,
 			Description: h.Description,
 			TotalScore:  h.TotalScore,

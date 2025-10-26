@@ -84,9 +84,9 @@ func (s *UserService) SignIn(ctx context.Context, req *show.SignInReq) (*show.Si
 			CreateTime: now,
 			UpdateTime: now,
 		}
-		if (req.AuthType == "wechat-phone" || req.AuthType == "web-phone") && resp.Options != nil {
+		if (req.AuthType == consts.AuthTypeWechatPhone || req.AuthType == consts.AuthTypeWebPhone) && resp.Options != nil {
 			u.Phone = *resp.Options
-		} else if req.AuthType == "phone" {
+		} else if req.AuthType == consts.AuthTypePhone {
 			u.Phone = req.AuthId
 		}
 
@@ -126,9 +126,9 @@ func (s *UserService) BindAuth(ctx context.Context, req *show.BindAuthReq) (*sho
 		return nil, consts.ErrNotFound
 	}
 	switch req.AuthType {
-	case "wechat-phone":
+	case consts.AuthTypeWechatPhone:
 		u.Phone = data["options"].(string)
-	case "wechat-openid":
+	case consts.AuthTypeWechatOpenId:
 	default:
 		return nil, consts.ErrBindAuth
 	}

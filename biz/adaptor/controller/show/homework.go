@@ -91,3 +91,19 @@ func GetSubmissionEvaluate(ctx context.Context, c *app.RequestContext) {
 	resp, err := p.HomeworkService.GetSubmissionEvaluate(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
+
+// CorrectHomework .
+// @router /homework/correct [POST]
+func CorrectHomework(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.CorrectHomeworkReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(show.CorrectHomeworkResp)
+
+	c.JSON(consts.StatusOK, resp)
+}

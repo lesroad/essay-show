@@ -271,11 +271,6 @@ func (c *HttpClient) SignIn(ctx context.Context, authType string, authId string,
 	header["Content-Type"] = consts.ContentTypeJson
 	header["Charset"] = consts.CharSetUTF8
 
-	// 如果是测试环境则向测试环境中台发送请求
-	if config.GetConfig().State == "test" {
-		header["X-Xh-Env"] = "test"
-	}
-
 	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.PlatfromURL+"/sts/sign_in", header, body)
 	if err != nil {
 		return nil, err
