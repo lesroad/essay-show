@@ -29,6 +29,7 @@ func Register(r *server.Hertz) {
 		_essay.POST("/evaluate", append(_essayevaluateMw(), show.EssayEvaluate)...)
 		_evaluate := _essay.Group("/evaluate", _evaluateMw()...)
 		_evaluate.POST("/download", append(_downloadevaluateMw(), show.DownloadEvaluate)...)
+		_evaluate.POST("/modify", append(_evaluatemodifyMw(), show.EvaluateModify)...)
 		_evaluate.POST("/stream", append(_essayevaluatestreamMw(), show.EssayEvaluateStream)...)
 		_essay.POST("/like", append(_likeevaluateMw(), show.LikeEvaluate)...)
 		_essay.POST("/logs", append(_getevaluatelogsMw(), show.GetEvaluateLogs)...)
@@ -56,6 +57,9 @@ func Register(r *server.Hertz) {
 		_homework.POST("/create", append(_createhomeworkMw(), show.CreateHomework)...)
 		_homework.GET("/list", append(_listhomeworksMw(), show.ListHomeworks)...)
 		_homework.GET("/submission", append(_getsubmissionevaluateMw(), show.GetSubmissionEvaluate)...)
+		_submission := _homework.Group("/submission", _submissionMw()...)
+		_submission.POST("/download", append(_downloadsubmissionevaluateMw(), show.DownloadSubmissionEvaluate)...)
+		_submission.POST("/modify", append(_modifysubmissionevaluateMw(), show.ModifySubmissionEvaluate)...)
 		_homework.GET("/submissions", append(_getsubmissionsMw(), show.GetSubmissions)...)
 		_homework.POST("/submit", append(_submithomeworkMw(), show.SubmitHomework)...)
 	}

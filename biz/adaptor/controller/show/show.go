@@ -304,3 +304,19 @@ func BindAuth(ctx context.Context, c *app.RequestContext) {
 	resp, err := p.UserService.BindAuth(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
+
+// EvaluateModify .
+// @router /essay/evaluate/modify [POST]
+func EvaluateModify(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.EvaluateModifyReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.EssayService.EvaluateModify(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}

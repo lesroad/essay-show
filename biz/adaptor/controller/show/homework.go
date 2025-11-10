@@ -107,3 +107,35 @@ func CorrectHomework(ctx context.Context, c *app.RequestContext) {
 
 	c.JSON(consts.StatusOK, resp)
 }
+
+// ModifySubmissionEvaluate .
+// @router /homework/submission/modify [POST]
+func ModifySubmissionEvaluate(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.ModifySubmissionEvaluateReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.HomeworkService.ModifySubmissionEvaluate(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// DownloadSubmissionEvaluate .
+// @router /homework/submission/download [POST]
+func DownloadSubmissionEvaluate(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.DownloadSubmissionEvaluateReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.HomeworkService.DownloadSubmissionEvaluate(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}

@@ -6,12 +6,15 @@ import (
 	"essay-show/biz/adaptor"
 	"essay-show/biz/application/dto/essay/show"
 	"essay-show/biz/application/dto/essay/stateless"
+	"essay-show/biz/infrastructure/cache"
 	"essay-show/biz/infrastructure/consts"
 	"essay-show/biz/infrastructure/repository/class"
 	"essay-show/biz/infrastructure/repository/homework"
 	"essay-show/biz/infrastructure/repository/user"
 	"essay-show/biz/infrastructure/util"
 	"essay-show/biz/infrastructure/util/log"
+	"fmt"
+	"sort"
 	"strings"
 	"time"
 
@@ -24,16 +27,19 @@ type IHomeworkService interface {
 	SubmitHomework(ctx context.Context, req *show.SubmitHomeworkReq) (*show.SubmitHomeworkResp, error)
 	GetSubmissions(ctx context.Context, req *show.GetSubmissionsReq) (*show.GetSubmissionsResp, error)
 	GetSubmissionEvaluate(ctx context.Context, req *show.GetSubmissionEvaluateReq) (*show.GetSubmissionEvaluateResp, error)
+	ModifySubmissionEvaluate(ctx context.Context, req *show.ModifySubmissionEvaluateReq) (*show.Response, error)
+	DownloadSubmissionEvaluate(ctx context.Context, req *show.DownloadSubmissionEvaluateReq) (*show.DownloadSubmissionEvaluateResp, error)
 	StartGrader(ctx context.Context) error
 }
 
 type HomeworkService struct {
-	HomeworkMapper   *homework.MongoMapper
-	SubmissionMapper *homework.SubmissionMongoMapper
-	ClassMapper      *class.MongoMapper
-	MemberMapper     *class.MemberMongoMapper
-	UserMapper       *user.MongoMapper
-	EssayService     IEssayService
+	HomeworkMapper      *homework.MongoMapper
+	SubmissionMapper    *homework.SubmissionMongoMapper
+	ClassMapper         *class.MongoMapper
+	MemberMapper        *class.MemberMongoMapper
+	UserMapper          *user.MongoMapper
+	EssayService        IEssayService
+	DownloadCacheMapper *cache.DownloadCacheMapper
 }
 
 var HomeworkServiceSet = wire.NewSet(
@@ -395,6 +401,227 @@ func (s *HomeworkService) StartGrader(ctx context.Context) error {
 	}()
 
 	return nil
+}
+
+// ModifySubmissionEvaluate 修改作业提交的批改结果
+func (s *HomeworkService) ModifySubmissionEvaluate(ctx context.Context, req *show.ModifySubmissionEvaluateReq) (*show.Response, error) {
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	user, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+	if user.Role != consts.RoleTeacher {
+		log.Error("用户不是教师，无权修改批改结果, userId: %s, role: %d", userMeta.GetUserId(), user.Role)
+		return nil, consts.ErrNotAuthentication
+	}
+
+	submission, err := s.SubmissionMapper.FindOne(ctx, req.SubmissionId)
+	if err != nil {
+		log.Error("查询提交记录失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+
+	if submission.TeacherID != userMeta.GetUserId() {
+		log.Error("提交记录不属于当前教师, teacherId: %s, userId: %s", submission.TeacherID, userMeta.GetUserId())
+		return nil, consts.ErrNotFound
+	}
+
+	var evaluateResult stateless.Evaluate
+	if err := json.Unmarshal([]byte(submission.Response), &evaluateResult); err != nil {
+		log.Error("解析批改结果失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	getDenominator := func(originalWithTotal string) string {
+		parts := strings.Split(originalWithTotal, "/")
+		if len(parts) == 2 {
+			return parts[1]
+		}
+		return "100" // 默认分母
+	}
+
+	if req.Content != nil {
+		if req.Content.Text != nil {
+			evaluateResult.AIEvaluation.ScoreEvaluation.Comments.Content = *req.Content.Text
+		}
+		if req.Content.Score != nil {
+			originalDenominator := getDenominator(evaluateResult.AIEvaluation.ScoreEvaluation.Scores.ContentWithTotal)
+			evaluateResult.AIEvaluation.ScoreEvaluation.Scores.ContentWithTotal = fmt.Sprintf("%d/%s", *req.Content.Score, originalDenominator)
+		}
+	}
+
+	if req.Expression != nil {
+		if req.Expression.Text != nil {
+			evaluateResult.AIEvaluation.ScoreEvaluation.Comments.Expression = *req.Expression.Text
+		}
+		if req.Expression.Score != nil {
+			originalDenominator := getDenominator(evaluateResult.AIEvaluation.ScoreEvaluation.Scores.ExpressionWithTotal)
+			evaluateResult.AIEvaluation.ScoreEvaluation.Scores.ExpressionWithTotal = fmt.Sprintf("%d/%s", *req.Expression.Score, originalDenominator)
+		}
+	}
+
+	if req.Structure != nil {
+		if req.Structure.Text != nil {
+			evaluateResult.AIEvaluation.ScoreEvaluation.Comments.Structure = *req.Structure.Text
+		}
+		if req.Structure.Score != nil {
+			originalDenominator := getDenominator(evaluateResult.AIEvaluation.ScoreEvaluation.Scores.StructureWithTotal)
+			evaluateResult.AIEvaluation.ScoreEvaluation.Scores.StructureWithTotal = fmt.Sprintf("%d/%s", *req.Structure.Score, originalDenominator)
+		}
+	}
+
+	if req.Development != nil {
+		if req.Development.Text != nil {
+			evaluateResult.AIEvaluation.ScoreEvaluation.Comments.Development = *req.Development.Text
+		}
+		if req.Development.Score != nil {
+			originalDenominator := getDenominator(evaluateResult.AIEvaluation.ScoreEvaluation.Scores.DevelopmentWithTotal)
+			evaluateResult.AIEvaluation.ScoreEvaluation.Scores.DevelopmentWithTotal = fmt.Sprintf("%d/%s", *req.Development.Score, originalDenominator)
+		}
+	}
+
+	if req.OverallComment != nil {
+		if req.OverallComment.Text != nil {
+			evaluateResult.AIEvaluation.ScoreEvaluation.Comment = *req.OverallComment.Text
+		}
+		if req.OverallComment.Score != nil {
+			originalDenominator := getDenominator(evaluateResult.AIEvaluation.ScoreEvaluation.Scores.AllWithTotal)
+			evaluateResult.AIEvaluation.ScoreEvaluation.Scores.AllWithTotal = fmt.Sprintf("%d/%s", *req.OverallComment.Score, originalDenominator)
+		}
+	}
+
+	if req.Suggestion != nil {
+		evaluateResult.AIEvaluation.SuggestionEvaluation.SuggestionDescription = *req.Suggestion
+	}
+
+	submission.Status = 3
+
+	evaluateBytes, err := json.Marshal(evaluateResult)
+	if err != nil {
+		log.Error("序列化批改结果失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	// 更新提交记录
+	submission.Response = string(evaluateBytes)
+	if err := s.SubmissionMapper.Update(ctx, submission); err != nil {
+		log.Error("更新提交记录失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	return &show.Response{
+		Code: 0,
+		Msg:  "修改成功",
+	}, nil
+}
+
+// DownloadSubmissionEvaluate 下载作业提交的批改结果
+func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *show.DownloadSubmissionEvaluateReq) (*show.DownloadSubmissionEvaluateResp, error) {
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	sortedIds := make([]string, len(req.SubmissionIds))
+	copy(sortedIds, req.SubmissionIds)
+	sort.Strings(sortedIds)
+	cacheKey := strings.Join(sortedIds, "_")
+
+	if cachedResp, err := s.DownloadCacheMapper.Get(ctx, cacheKey); err == nil {
+		log.Info("缓存命中，直接返回下载链接, cacheKey: %s", cacheKey)
+		return &show.DownloadSubmissionEvaluateResp{
+			Url:          cachedResp.Url,
+			SessionToken: cachedResp.SessionToken,
+		}, nil
+	}
+
+	user, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+
+	var submissions []*homework.HomeworkSubmission
+	for _, submissionId := range req.SubmissionIds {
+		submission, err := s.SubmissionMapper.FindOne(ctx, submissionId)
+		if err != nil {
+			log.Error("查询提交记录失败, submissionId: %s, error: %v", submissionId, err)
+			continue
+		}
+		submissions = append(submissions, submission)
+	}
+
+	if len(submissions) == 0 {
+		return nil, consts.ErrNotFound
+	}
+
+	var essayList []map[string]any
+	for _, submission := range submissions {
+		var evaluateResult stateless.Evaluate
+		if err := json.Unmarshal([]byte(submission.Response), &evaluateResult); err != nil {
+			log.Error("解析批改结果失败, submissionId: %s, error: %v", submission.ID.Hex(), err)
+			continue
+		}
+
+		essayData := map[string]any{
+			"data": evaluateResult,
+		}
+		essayList = append(essayList, essayData)
+	}
+
+	if len(essayList) == 0 {
+		return nil, consts.ErrCall
+	}
+
+	downloadData := map[string]any{
+		"essay_list": essayList,
+		"user_id":    user.Username,
+		"watermark":  true,
+	}
+
+	client := util.GetHttpClient()
+	_resp, err := client.EssayPolish(ctx, downloadData)
+	if err != nil {
+		log.Error("调用批改结果下载服务失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	code := int64(_resp["code"].(float64))
+	if code != 200 {
+		msg := _resp["msg"].(string)
+		log.Error("批改结果下载服务返回错误: %s", msg)
+		return nil, consts.ErrCall
+	}
+
+	url, urlOk := _resp["signedUrl"].(string)
+	sessionToken, tokenOk := _resp["sessionToken"].(string)
+
+	if !urlOk || !tokenOk {
+		log.Error("下游返回的url或sessionToken字段格式错误")
+		return nil, consts.ErrCall
+	}
+
+	result := &show.DownloadSubmissionEvaluateResp{
+		Url:          url,
+		SessionToken: sessionToken,
+	}
+
+	cacheData := &show.DownloadEvaluateResp{
+		Url:          url,
+		SessionToken: sessionToken,
+	}
+	if err := s.DownloadCacheMapper.Set(ctx, cacheKey, cacheData); err != nil {
+		log.Error("存储缓存失败: %v", err)
+	} else {
+		log.Info("成功缓存下载链接, cacheKey: %s, 缓存时间: 1小时", cacheKey)
+	}
+
+	return result, nil
 }
 
 // processHomeworkSubmissions 处理待批改的作业

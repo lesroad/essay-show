@@ -295,3 +295,23 @@ func _correcthomeworkMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _evaluatemodifyMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _submissionMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _downloadsubmissionevaluateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _modifysubmissionevaluateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

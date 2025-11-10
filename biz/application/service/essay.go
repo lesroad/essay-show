@@ -15,6 +15,7 @@ import (
 	"essay-show/biz/infrastructure/util"
 	logx "essay-show/biz/infrastructure/util/log"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/google/wire"
@@ -28,6 +29,7 @@ type IEssayService interface {
 	GetEvaluateLogs(ctx context.Context, req *show.GetEssayEvaluateLogsReq) (resp *show.GetEssayEvaluateLogsResp, err error)
 	LikeEvaluate(ctx context.Context, req *show.LikeEvaluateReq) (resp *show.Response, err error)
 	DownloadEvaluate(ctx context.Context, req *show.DownloadEvaluateReq) (resp *show.DownloadEvaluateResp, err error)
+	EvaluateModify(ctx context.Context, req *show.EvaluateModifyReq) (resp *show.Response, err error)
 }
 
 type EssayService struct {
@@ -209,41 +211,45 @@ func (s *EssayService) LikeEvaluate(ctx context.Context, req *show.LikeEvaluateR
 
 // DownloadEvaluate 下载批改结果
 func (s *EssayService) DownloadEvaluate(ctx context.Context, req *show.DownloadEvaluateReq) (resp *show.DownloadEvaluateResp, err error) {
-	// 获取登录状态信息
 	meta := adaptor.ExtractUserMeta(ctx)
 	if meta.GetUserId() == "" {
 		return nil, consts.ErrNotAuthentication
 	}
 
-	// 首先尝试从缓存获取
 	if cachedResp, err := s.DownloadCacheMapper.Get(ctx, req.Id); err == nil {
 		logx.Info("缓存命中，直接返回下载链接, id: %s", req.Id)
 		return cachedResp, nil
 	}
 
-	// 根据ID查询批改记录
 	l, err := s.LogMapper.FindOne(ctx, req.Id)
 	if err != nil {
 		logx.Error("查询批改记录失败: %v", err)
 		return nil, consts.ErrNotFound
 	}
 
-	// 验证记录是否属于当前用户
 	if l.UserId != meta.GetUserId() {
 		return nil, consts.ErrNotFound
 	}
 
-	// 解析存储的批改结果到结构体
+	user, err := s.UserMapper.FindOne(ctx, meta.GetUserId())
+	if err != nil {
+		logx.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+
 	var evaluateResult stateless.Evaluate
 	if err := json.Unmarshal([]byte(l.Response), &evaluateResult); err != nil {
 		logx.Error("解析批改结果失败: %v", err)
 		return nil, consts.ErrCall
 	}
 
-	// 构造下载请求参数
-	downloadData := map[string]interface{}{
-		"data":      evaluateResult,
-		"user_id":   meta.GetUserId(),
+	downloadData := map[string]any{
+		"essay_list": []map[string]any{
+			{
+				"data": evaluateResult,
+			},
+		},
+		"user_id":   user.Username,
 		"watermark": true,
 	}
 
@@ -395,4 +401,110 @@ func (s *EssayService) validateAndFilterStreamMessage(messageJSON string) (strin
 
 	validatedBytes, _ := json.Marshal(validatedMessage)
 	return string(validatedBytes), false, nil
+}
+
+// EvaluateModify 修改作文评价
+func (s *EssayService) EvaluateModify(ctx context.Context, req *show.EvaluateModifyReq) (resp *show.Response, err error) {
+	meta := adaptor.ExtractUserMeta(ctx)
+	if meta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	l, err := s.LogMapper.FindOne(ctx, req.Id)
+	if err != nil {
+		logx.Error("查询批改记录失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+
+	if l.UserId != meta.GetUserId() {
+		return nil, consts.ErrNotFound
+	}
+
+	var evaluateResult stateless.Evaluate
+	if err := json.Unmarshal([]byte(l.Response), &evaluateResult); err != nil {
+		logx.Error("解析批改结果失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	getDenominator := func(originalWithTotal string) string {
+		parts := strings.Split(originalWithTotal, "/")
+		if len(parts) == 2 {
+			return parts[1]
+		}
+		return "100" // 默认分母
+	}
+
+	if req.Content != nil {
+		if req.Content.Text != nil {
+			evaluateResult.AIEvaluation.ScoreEvaluation.Comments.Content = *req.Content.Text
+		}
+		if req.Content.Score != nil {
+			originalDenominator := getDenominator(evaluateResult.AIEvaluation.ScoreEvaluation.Scores.ContentWithTotal)
+			evaluateResult.AIEvaluation.ScoreEvaluation.Scores.ContentWithTotal = fmt.Sprintf("%d/%s", *req.Content.Score, originalDenominator)
+		}
+	}
+
+	if req.Expression != nil {
+		if req.Expression.Text != nil {
+			evaluateResult.AIEvaluation.ScoreEvaluation.Comments.Expression = *req.Expression.Text
+		}
+		if req.Expression.Score != nil {
+			originalDenominator := getDenominator(evaluateResult.AIEvaluation.ScoreEvaluation.Scores.ExpressionWithTotal)
+			evaluateResult.AIEvaluation.ScoreEvaluation.Scores.ExpressionWithTotal = fmt.Sprintf("%d/%s", *req.Expression.Score, originalDenominator)
+		}
+	}
+
+	if req.Structure != nil {
+		if req.Structure.Text != nil {
+			evaluateResult.AIEvaluation.ScoreEvaluation.Comments.Structure = *req.Structure.Text
+		}
+		if req.Structure.Score != nil {
+			originalDenominator := getDenominator(evaluateResult.AIEvaluation.ScoreEvaluation.Scores.StructureWithTotal)
+			evaluateResult.AIEvaluation.ScoreEvaluation.Scores.StructureWithTotal = fmt.Sprintf("%d/%s", *req.Structure.Score, originalDenominator)
+		}
+	}
+
+	if req.Development != nil {
+		if req.Development.Text != nil {
+			evaluateResult.AIEvaluation.ScoreEvaluation.Comments.Development = *req.Development.Text
+		}
+		if req.Development.Score != nil {
+			originalDenominator := getDenominator(evaluateResult.AIEvaluation.ScoreEvaluation.Scores.DevelopmentWithTotal)
+			evaluateResult.AIEvaluation.ScoreEvaluation.Scores.DevelopmentWithTotal = fmt.Sprintf("%d/%s", *req.Development.Score, originalDenominator)
+		}
+	}
+
+	if req.OverallComment != nil {
+		if req.OverallComment.Text != nil {
+			evaluateResult.AIEvaluation.ScoreEvaluation.Comment = *req.OverallComment.Text
+		}
+		if req.OverallComment.Score != nil {
+			originalDenominator := getDenominator(evaluateResult.AIEvaluation.ScoreEvaluation.Scores.AllWithTotal)
+			evaluateResult.AIEvaluation.ScoreEvaluation.Scores.AllWithTotal = fmt.Sprintf("%d/%s", *req.OverallComment.Score, originalDenominator)
+		}
+	}
+
+	if req.Suggestion != nil {
+		evaluateResult.AIEvaluation.SuggestionEvaluation.SuggestionDescription = *req.Suggestion
+	}
+
+	l.Status = 1
+
+	modifiedResponse, err := json.Marshal(evaluateResult)
+	if err != nil {
+		logx.Error("序列化修改后的批改结果失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	l.Response = string(modifiedResponse)
+	if err := s.LogMapper.Update(ctx, l); err != nil {
+		logx.Error("更新批改记录失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	logx.Info("批改记录修改成功，ID: %s", req.Id)
+	return &show.Response{
+		Code: 0,
+		Msg:  "修改成功",
+	}, nil
 }
