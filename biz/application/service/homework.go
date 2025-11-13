@@ -6,7 +6,6 @@ import (
 	"essay-show/biz/adaptor"
 	"essay-show/biz/application/dto/essay/show"
 	"essay-show/biz/application/dto/essay/stateless"
-	"essay-show/biz/infrastructure/cache"
 	"essay-show/biz/infrastructure/consts"
 	"essay-show/biz/infrastructure/repository/class"
 	"essay-show/biz/infrastructure/repository/homework"
@@ -14,7 +13,6 @@ import (
 	"essay-show/biz/infrastructure/util"
 	"essay-show/biz/infrastructure/util/log"
 	"fmt"
-	"sort"
 	"strings"
 	"time"
 
@@ -33,13 +31,12 @@ type IHomeworkService interface {
 }
 
 type HomeworkService struct {
-	HomeworkMapper      *homework.MongoMapper
-	SubmissionMapper    *homework.SubmissionMongoMapper
-	ClassMapper         *class.MongoMapper
-	MemberMapper        *class.MemberMongoMapper
-	UserMapper          *user.MongoMapper
-	EssayService        IEssayService
-	DownloadCacheMapper *cache.DownloadCacheMapper
+	HomeworkMapper   *homework.MongoMapper
+	SubmissionMapper *homework.SubmissionMongoMapper
+	ClassMapper      *class.MongoMapper
+	MemberMapper     *class.MemberMongoMapper
+	UserMapper       *user.MongoMapper
+	EssayService     IEssayService
 }
 
 var HomeworkServiceSet = wire.NewSet(
@@ -174,7 +171,7 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 			notSubmittedCount := c.MemberCount - submitCount - 1
 
 			// 获取已批改数量
-			gradeList, err := s.SubmissionMapper.FindByStatus(ctx, consts.StatusCompleted)
+			gradeList, err := s.SubmissionMapper.FindByStatus(ctx, []int{consts.StatusCompleted, consts.StatusModified})
 			if err != nil {
 				log.Error("获取已批改数量失败: %v", err)
 				return nil, consts.ErrGetHomeworkList
@@ -203,7 +200,7 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 				homeworkInfo.SubmissionId = &submissionId
 				homeworkInfo.SubmitTime = &submitTime
 
-				if submission.Status == int(consts.StatusCompleted) {
+				if submission.Status == int(consts.StatusCompleted) || submission.Status == int(consts.StatusModified) {
 					homeworkInfo.GradeResult = &submission.GradeResult
 				}
 			}
@@ -232,7 +229,7 @@ func (s *HomeworkService) GetSubmissionEvaluate(ctx context.Context, req *show.G
 		return nil, consts.ErrGetHomework
 	}
 
-	if submission.Status != consts.StatusCompleted {
+	if submission.Status != consts.StatusCompleted && submission.Status != consts.StatusModified {
 		log.Error("批改未完成")
 		return nil, consts.ErrHomeworkNotGrade
 	}
@@ -368,7 +365,7 @@ func (s *HomeworkService) GetSubmissions(ctx context.Context, req *show.GetSubmi
 			sub.Id = &id
 			sub.Title = &userSubmission.Title
 			sub.SubmitTime = &submitTime
-			if userSubmission.Status == consts.StatusCompleted {
+			if userSubmission.Status == consts.StatusCompleted || userSubmission.Status == consts.StatusModified {
 				sub.GradeResult = &userSubmission.GradeResult
 			}
 		}
@@ -527,25 +524,6 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 		return nil, consts.ErrNotAuthentication
 	}
 
-	sortedIds := make([]string, len(req.SubmissionIds))
-	copy(sortedIds, req.SubmissionIds)
-	sort.Strings(sortedIds)
-	cacheKey := strings.Join(sortedIds, "_")
-
-	if cachedResp, err := s.DownloadCacheMapper.Get(ctx, cacheKey); err == nil {
-		log.Info("缓存命中，直接返回下载链接, cacheKey: %s", cacheKey)
-		return &show.DownloadSubmissionEvaluateResp{
-			Url:          cachedResp.Url,
-			SessionToken: cachedResp.SessionToken,
-		}, nil
-	}
-
-	user, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
-	if err != nil {
-		log.Error("获取用户信息失败: %v", err)
-		return nil, consts.ErrNotFound
-	}
-
 	var submissions []*homework.HomeworkSubmission
 	for _, submissionId := range req.SubmissionIds {
 		submission, err := s.SubmissionMapper.FindOne(ctx, submissionId)
@@ -553,6 +531,7 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 			log.Error("查询提交记录失败, submissionId: %s, error: %v", submissionId, err)
 			continue
 		}
+
 		submissions = append(submissions, submission)
 	}
 
@@ -568,8 +547,15 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 			continue
 		}
 
+		user, err := s.UserMapper.FindOne(ctx, submission.StudentID)
+		if err != nil {
+			log.Error("获取学生信息失败: %v", err)
+			return nil, consts.ErrNotFound
+		}
+
 		essayData := map[string]any{
-			"data": evaluateResult,
+			"data":    evaluateResult,
+			"user_id": user.Username,
 		}
 		essayList = append(essayList, essayData)
 	}
@@ -580,7 +566,6 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 
 	downloadData := map[string]any{
 		"essay_list": essayList,
-		"user_id":    user.Username,
 		"watermark":  true,
 	}
 
@@ -611,22 +596,12 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 		SessionToken: sessionToken,
 	}
 
-	cacheData := &show.DownloadEvaluateResp{
-		Url:          url,
-		SessionToken: sessionToken,
-	}
-	if err := s.DownloadCacheMapper.Set(ctx, cacheKey, cacheData); err != nil {
-		log.Error("存储缓存失败: %v", err)
-	} else {
-		log.Info("成功缓存下载链接, cacheKey: %s, 缓存时间: 1小时", cacheKey)
-	}
-
 	return result, nil
 }
 
 // processHomeworkSubmissions 处理待批改的作业
 func (s *HomeworkService) processHomeworkSubmissions(ctx context.Context) {
-	submissions, err := s.SubmissionMapper.FindByStatus(ctx, consts.StatusInitialized)
+	submissions, err := s.SubmissionMapper.FindByStatus(ctx, []int{consts.StatusInitialized})
 	if err != nil {
 		log.Error("查询待批改作业失败: %v", err)
 		return

@@ -246,10 +246,10 @@ func (s *EssayService) DownloadEvaluate(ctx context.Context, req *show.DownloadE
 	downloadData := map[string]any{
 		"essay_list": []map[string]any{
 			{
-				"data": evaluateResult,
+				"data":    evaluateResult,
+				"user_id": user.Username,
 			},
 		},
-		"user_id":   user.Username,
 		"watermark": true,
 	}
 

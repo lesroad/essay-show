@@ -6,6 +6,7 @@ import (
 	"context"
 	"essay-show/biz/adaptor"
 	"essay-show/biz/application/dto/essay/show"
+	"essay-show/biz/infrastructure/util/log"
 	"essay-show/provider"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -137,5 +138,6 @@ func DownloadSubmissionEvaluate(ctx context.Context, c *app.RequestContext) {
 
 	p := provider.Get()
 	resp, err := p.HomeworkService.DownloadSubmissionEvaluate(ctx, &req)
+	log.Info("下载批改结果: %+v", resp)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
