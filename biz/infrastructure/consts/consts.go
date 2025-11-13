@@ -43,6 +43,7 @@ const (
 	StatusInitialized   = 0 // 初始化
 	StatusGrading       = 1 // 批改中
 	StatusCompleted     = 2 // 批改完成
+	StatusModified      = 3 // 已人工修改
 	StatusFailed        = 7 // 批改失败
 
 	// 定时器配置常量

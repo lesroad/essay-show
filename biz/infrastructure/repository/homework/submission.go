@@ -16,7 +16,7 @@ type HomeworkSubmission struct {
 	Title       string             `bson:"title" json:"title"`
 	Response    string             `bson:"response" json:"response"`
 	Message     string             `bson:"message" json:"message"`
-	Status      int                `bson:"status" json:"status"` // 0: 初始化, 1: 批改中, 2: 批改完成, 7:批改失败
+	Status      int                `bson:"status" json:"status"` // 0: 初始化, 1: 批改中, 2: 批改完成, 3: 批改已人工修改, 7:批改失败
 	CreateTime  time.Time          `bson:"create_time" json:"createTime"`
 	UpdateTime  time.Time          `bson:"update_time" json:"updateTime"`
 }

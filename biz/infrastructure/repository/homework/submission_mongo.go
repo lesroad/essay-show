@@ -114,9 +114,9 @@ func (m *SubmissionMongoMapper) FindByStudentAndHomework(ctx context.Context, st
 }
 
 // FindByStatus 根据状态查找作业提交
-func (m *SubmissionMongoMapper) FindByStatus(ctx context.Context, status int) ([]*HomeworkSubmission, error) {
+func (m *SubmissionMongoMapper) FindByStatus(ctx context.Context, status []int) ([]*HomeworkSubmission, error) {
 	var submissions []*HomeworkSubmission
-	filter := bson.M{"status": status}
+	filter := bson.M{"status": bson.M{"$in": status}}
 
 	err := m.conn.Find(ctx, &submissions, filter, &options.FindOptions{
 		Sort: bson.M{"create_time": 1}, // 按创建时间升序，优先处理早提交的

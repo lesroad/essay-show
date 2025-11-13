@@ -13,6 +13,6 @@ type Log struct {
 	Ocr        []string           `bson:"ocr" json:"ocr"`
 	Response   string             `bson:"response" json:"response"`
 	Like       int64              `bson:"like" json:"like"`
-	Status     int                `bson:"status" json:"status"`
+	Status     int                `bson:"status" json:"status"` // 0: 正常, 1: 已修改
 	CreateTime time.Time          `bson:"create_time,omitempty" json:"createTime"`
 }
