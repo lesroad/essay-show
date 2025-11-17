@@ -331,12 +331,12 @@ func (s *HomeworkService) GetSubmissions(ctx context.Context, req *show.GetSubmi
 		log.Error("获取班级成员失败: %v", err)
 		return nil, consts.ErrGetClassMembers
 	}
+	total = total - 1 // 去掉老师
 
 	submissionInfos := make([]*show.SubmissionInfo, 0)
 	for _, m := range members {
 		// 如果加入班级时是老师，就无需提交
 		if m.Role == consts.RoleTeacher {
-			total = total - 1
 			continue
 		}
 
