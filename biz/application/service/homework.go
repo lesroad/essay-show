@@ -16,6 +16,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/google/wire"
 )
 
@@ -27,6 +28,7 @@ type IHomeworkService interface {
 	GetSubmissionEvaluate(ctx context.Context, req *show.GetSubmissionEvaluateReq) (*show.GetSubmissionEvaluateResp, error)
 	ModifySubmissionEvaluate(ctx context.Context, req *show.ModifySubmissionEvaluateReq) (*show.Response, error)
 	DownloadSubmissionEvaluate(ctx context.Context, req *show.DownloadSubmissionEvaluateReq) (*show.DownloadSubmissionEvaluateResp, error)
+	ReCorrectHomework(ctx context.Context, req *show.ReCorrectHomeworkReq) (*show.ReCorrectHomeworkResp, error)
 	StartGrader(ctx context.Context) error
 }
 
@@ -69,19 +71,29 @@ func (s *HomeworkService) CreateHomework(ctx context.Context, req *show.CreateHo
 		return nil, consts.ErrNotFound
 	}
 
+	// 验证自定义评分标准（如果提供）
+	if err := s.validateCustomScoring(req); err != nil {
+		return nil, err
+	}
+
 	// 创建作业
 	now := time.Now()
 	h := &homework.Homework{
-		Subject:     int64(req.Subject),
-		Title:       req.Title,
-		Description: req.Description,
-		ClassID:     req.ClassId,
-		Grade:       req.Grade,
-		TotalScore:  req.TotalScore,
-		EssayType:   req.EssayType,
-		CreatorID:   userMeta.GetUserId(),
-		CreateTime:  now,
-		UpdateTime:  now,
+		Subject:          int64(req.Subject),
+		Title:            req.Title,
+		Description:      req.Description,
+		ClassID:          req.ClassId,
+		Grade:            req.Grade,
+		TotalScore:       req.TotalScore,
+		EssayType:        req.EssayType,
+		CreatorID:        userMeta.GetUserId(),
+		Standard:         req.Standard, // 批改标准
+		ContentScore:     req.ContentScore,
+		ExpressionScore:  req.ExpressionScore,
+		StructureScore:   req.StructureScore,
+		DevelopmentScore: req.DevelopmentScore,
+		CreateTime:       now,
+		UpdateTime:       now,
 	}
 
 	err = s.HomeworkMapper.Insert(ctx, h)
@@ -93,6 +105,70 @@ func (s *HomeworkService) CreateHomework(ctx context.Context, req *show.CreateHo
 	return &show.CreateHomeworkResp{
 		HomeworkId: h.ID.Hex(),
 	}, nil
+}
+
+// validateCustomScoring 验证自定义评分标准
+func (s *HomeworkService) validateCustomScoring(req *show.CreateHomeworkReq) error {
+	// 如果没有设置任何自定义评分，直接返回（使用默认平均分配）
+	if req.ContentScore == nil && req.ExpressionScore == nil &&
+		req.StructureScore == nil && req.DevelopmentScore == nil {
+		return nil
+	}
+
+	// 如果设置了自定义评分，必须满足以下条件：
+	// 1. 初中（structureScore）和高中（developmentScore）只能二选一
+	// 2. 三项（或四项）之和必须等于总分
+
+	hasStructure := req.StructureScore != nil
+	hasDevelopment := req.DevelopmentScore != nil
+
+	// 不能同时设置 structure 和 development
+	if hasStructure && hasDevelopment {
+		return consts.ErrInvalidScoreDistribution
+	}
+
+	// 计算分数总和
+	var scoreSum int64
+	if req.ContentScore != nil {
+		if *req.ContentScore < 0 {
+			return consts.ErrInvalidScore
+		}
+		scoreSum += *req.ContentScore
+	} else {
+		return consts.ErrIncompleteScoreDistribution
+	}
+
+	if req.ExpressionScore != nil {
+		if *req.ExpressionScore < 0 {
+			return consts.ErrInvalidScore
+		}
+		scoreSum += *req.ExpressionScore
+	} else {
+		return consts.ErrIncompleteScoreDistribution
+	}
+
+	if hasStructure {
+		if *req.StructureScore < 0 {
+			return consts.ErrInvalidScore
+		}
+		scoreSum += *req.StructureScore
+	} else if hasDevelopment {
+		if *req.DevelopmentScore < 0 {
+			return consts.ErrInvalidScore
+		}
+		scoreSum += *req.DevelopmentScore
+	} else {
+		// 必须设置 structure 或 development 其中之一
+		return consts.ErrIncompleteScoreDistribution
+	}
+
+	// 验证总分是否匹配
+	if scoreSum != req.TotalScore {
+		log.Error("自定义评分总和(%d)不等于总分(%d)", scoreSum, req.TotalScore)
+		return consts.ErrScoreSumMismatch
+	}
+
+	return nil
 }
 
 // ListHomeworks 获取作业列表
@@ -149,13 +225,18 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 	homeworkInfos := make([]*show.HomeworkInfo, 0, len(homeworks))
 	for _, h := range homeworks {
 		homeworkInfo := &show.HomeworkInfo{
-			Id:          h.ID.Hex(),
-			Subject:     show.Subject(h.Subject),
-			Title:       h.Title,
-			Description: h.Description,
-			TotalScore:  h.TotalScore,
-			EssayType:   h.EssayType,
-			CreateTime:  h.CreateTime.Unix(),
+			Id:               h.ID.Hex(),
+			Subject:          show.Subject(h.Subject),
+			Title:            h.Title,
+			Description:      h.Description,
+			TotalScore:       h.TotalScore,
+			EssayType:        h.EssayType,
+			CreateTime:       h.CreateTime.Unix(),
+			Standard:         h.Standard,
+			ContentScore:     h.ContentScore,
+			ExpressionScore:  h.ExpressionScore,
+			StructureScore:   h.StructureScore,
+			DevelopmentScore: h.DevelopmentScore,
 		}
 
 		if u.Role == consts.RoleTeacher {
@@ -376,6 +457,76 @@ func (s *HomeworkService) GetSubmissions(ctx context.Context, req *show.GetSubmi
 	return &show.GetSubmissionsResp{
 		Submissions: submissionInfos,
 		Total:       total,
+	}, nil
+}
+
+// ReCorrectHomework 作业重批
+func (s *HomeworkService) ReCorrectHomework(ctx context.Context, req *show.ReCorrectHomeworkReq) (*show.ReCorrectHomeworkResp, error) {
+	// 获取用户信息
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	// 校验教师身份
+	user, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+	if user.Role != consts.RoleTeacher {
+		log.Error("用户不是教师，无权重批作业, userId: %s, role: %d", userMeta.GetUserId(), user.Role)
+		return nil, consts.ErrNotAuthentication
+	}
+
+	if len(req.SubmissionIds) == 0 {
+		log.Error("提交ID列表为空")
+		return nil, consts.ErrInvalidParams
+	}
+
+	successIds := make([]string, 0, len(req.SubmissionIds))
+
+	// 批量处理每个提交
+	for _, submissionId := range req.SubmissionIds {
+		// 查询提交记录
+		submission, err := s.SubmissionMapper.FindOne(ctx, submissionId)
+		if err != nil {
+			log.Error("查询提交记录失败: submissionId=%s, error=%v", submissionId, err)
+			continue
+		}
+
+		// 验证提交是否属于当前教师
+		if submission.TeacherID != userMeta.GetUserId() {
+			log.Error("提交不属于当前教师: submissionId=%s, teacherId=%s, userId=%s",
+				submissionId, submission.TeacherID, userMeta.GetUserId())
+			continue
+		}
+
+		if submission.Status == consts.StatusInitialized || submission.Status == consts.StatusGrading {
+			log.Info("提交状态不允许重批: submissionId=%s, status=%d", submissionId, submission.Status)
+			continue
+		}
+
+		// 重置为待批改状态
+		submission.Status = consts.StatusInitialized
+		submission.Response = "" // 清空之前的批改结果
+		submission.Message = ""
+		submission.UpdateTime = time.Now()
+
+		if err := s.SubmissionMapper.Update(ctx, submission); err != nil {
+			log.Error("更新提交状态失败: submissionId=%s, error=%v", submissionId, err)
+			continue
+		}
+
+		successIds = append(successIds, submissionId)
+		log.Info("作业提交已标记为待重批: submissionId=%s, studentId=%s, homeworkId=%s",
+			submissionId, submission.StudentID, submission.HomeworkID)
+	}
+
+	log.Info("作业重批完成: 请求数=%d, 成功数=%d", len(req.SubmissionIds), len(successIds))
+
+	return &show.ReCorrectHomeworkResp{
+		SubmissionIds: successIds,
 	}, nil
 }
 
@@ -674,10 +825,32 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 	resultChan := make(chan string, 100)
 	var finalResult string
 
+	// 准备批改标准（如果作业设置了）
+	var standard *string
+	if homework.Standard != nil {
+		standard = homework.Standard
+	}
+
+	// 准备自定义分项打分比例
+	var ratio *util.ScoreRatio
+	if homework.ContentScore != nil || homework.ExpressionScore != nil ||
+		homework.StructureScore != nil || homework.DevelopmentScore != nil {
+		// 如果作业设置了自定义评分，使用设置的值
+		ratio = &util.ScoreRatio{
+			Content:     int(aws.Int64Value(homework.ContentScore)),
+			Expression:  int(aws.Int64Value(homework.ExpressionScore)),
+			Structure:   int(aws.Int64Value(homework.StructureScore)),
+			Development: int(aws.Int64Value(homework.DevelopmentScore)),
+		}
+	} else {
+		// 如果作业没有设置自定义评分，自动分配（总分除以3）
+		ratio = util.CalculateScoreRatio(grade, totalScore)
+	}
+
 	// 调用批改服务
 	go func() {
 		defer close(resultChan)
-		client.EvaluateStream(ctx, title, text, &grade, &totalScore, &essayType, &prompt, resultChan)
+		client.EvaluateStream(ctx, title, text, &grade, &totalScore, &essayType, &prompt, standard, ratio, resultChan)
 	}()
 
 	for jsonMessage := range resultChan {

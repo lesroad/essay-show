@@ -400,7 +400,48 @@ func (c *HttpClient) GenSignedUrl(ctx context.Context, secretId, secretKey strin
 }
 
 // EvaluateStream 流式批改作文，支持context和链路追踪
-func (c *HttpClient) EvaluateStream(ctx context.Context, title string, text string, grade, totalScore *int64, essayType *string, prompt *string, resultChan chan<- string) error {
+// ScoreRatio 自定义分项打分比例
+type ScoreRatio struct {
+	Content     int `json:"content"`     // 内容分数
+	Expression  int `json:"expression"`  // 表达分数
+	Structure   int `json:"structure"`   // 结构分数（初中）
+	Development int `json:"development"` // 发展分数（高中）
+}
+
+// CalculateScoreRatio 自动计算分项打分比例（总分除以3）
+// grade: 年级(1-12)
+// totalScore: 总分
+// 返回: 分项打分比例
+func CalculateScoreRatio(grade int64, totalScore int64) *ScoreRatio {
+	baseScore := int(totalScore / 3)
+	remainder := int(totalScore % 3)
+
+	contentScore := baseScore
+	expressionScore := baseScore
+	thirdScore := baseScore
+
+	// 将余数分配给第一项（内容分）
+	if remainder > 0 {
+		contentScore += remainder
+	}
+
+	ratio := &ScoreRatio{
+		Content:    contentScore,
+		Expression: expressionScore,
+	}
+
+	// 根据年级判断使用结构分（初中）还是发展分（高中）
+	// 1-9年级为初中及以下，使用结构分；10-12年级为高中，使用发展分
+	if grade <= 9 {
+		ratio.Structure = thirdScore
+	} else {
+		ratio.Development = thirdScore
+	}
+
+	return ratio
+}
+
+func (c *HttpClient) EvaluateStream(ctx context.Context, title string, text string, grade, totalScore *int64, essayType *string, prompt *string, standard *string, ratio *ScoreRatio, resultChan chan<- string) error {
 	// 准备请求参数
 	data := make(map[string]interface{})
 	data["title"] = title
@@ -416,6 +457,25 @@ func (c *HttpClient) EvaluateStream(ctx context.Context, title string, text stri
 	}
 	if totalScore != nil {
 		data["totalScore"] = totalScore
+	}
+
+	// 添加批改标准
+	if standard != nil {
+		data["standard"] = *standard
+	}
+
+	// 添加自定义分项打分比例
+	if ratio != nil {
+		data["contentScore"] = int64(ratio.Content)
+		data["expressionScore"] = int64(ratio.Expression)
+		if ratio.Structure > 0 {
+			data["structureScore"] = int64(ratio.Structure)
+		}
+		if ratio.Development > 0 {
+			data["developmentScore"] = int64(ratio.Development)
+		} else {
+			data["developmentScore"] = 0
+		}
 	}
 
 	// 准备请求头

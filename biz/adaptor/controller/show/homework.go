@@ -141,3 +141,19 @@ func DownloadSubmissionEvaluate(ctx context.Context, c *app.RequestContext) {
 	log.Info("下载批改结果: %+v", resp)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
+
+// ReCorrectHomework .
+// @router /homework/recorrect [POST]
+func ReCorrectHomework(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.ReCorrectHomeworkReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.HomeworkService.ReCorrectHomework(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
