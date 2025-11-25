@@ -3,6 +3,7 @@ module essay-show
 go 1.23.4
 
 require (
+	github.com/aws/aws-sdk-go v1.55.5
 	github.com/bytedance/gopkg v0.1.3
 	github.com/cloudwego/hertz v0.10.0
 	github.com/go-sql-driver/mysql v1.9.3

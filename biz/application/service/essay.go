@@ -87,7 +87,15 @@ func (s *EssayService) EssayEvaluateStream(ctx context.Context, req *show.EssayE
 	go func() {
 		defer close(downstreamChan) // 确保HTTP请求完成后关闭channel，避免主函数永远阻塞
 		client := util.GetHttpClient()
-		client.EvaluateStream(ctx, req.Title, req.Text, req.Grade, &req.TotalScore, req.EssayType, nil, downstreamChan)
+
+		// 准备分项打分比例（自动分配：总分除以3）
+		var ratio *util.ScoreRatio
+		if req.Grade != nil {
+			ratio = util.CalculateScoreRatio(*req.Grade, req.TotalScore)
+		}
+
+		// 参数: title, text, grade, totalScore, essayType, prompt, standard, ratio, resultChan
+		client.EvaluateStream(ctx, req.Title, req.Text, req.Grade, &req.TotalScore, req.EssayType, req.Description, nil, ratio, downstreamChan)
 	}()
 
 	for jsonMessage := range downstreamChan {
@@ -301,7 +309,20 @@ func (s *EssayService) APIEssayEvaluateStreamV1(ctx context.Context, req *show.E
 	go func() {
 		defer close(downstreamChan)
 		client := util.GetHttpClient()
-		client.EvaluateStream(ctx, req.Title, req.Text, req.Grade, nil, req.EssayType, nil, downstreamChan)
+
+		// 准备分项打分比例（自动分配：总分除以3）
+		var ratio *util.ScoreRatio
+		if req.Grade != nil {
+			// 使用请求中的总分，如果没有则使用默认值100
+			totalScore := int64(100)
+			if req.TotalScore > 0 {
+				totalScore = req.TotalScore
+			}
+			ratio = util.CalculateScoreRatio(*req.Grade, totalScore)
+		}
+
+		// 参数: title, text, grade, totalScore, essayType, prompt, standard, ratio, resultChan
+		client.EvaluateStream(ctx, req.Title, req.Text, req.Grade, nil, req.EssayType, req.Description, nil, ratio, downstreamChan)
 	}()
 
 	for jsonMessage := range downstreamChan {

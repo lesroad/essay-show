@@ -56,6 +56,7 @@ func Register(r *server.Hertz) {
 		_homework.POST("/correct", append(_correcthomeworkMw(), show.CorrectHomework)...)
 		_homework.POST("/create", append(_createhomeworkMw(), show.CreateHomework)...)
 		_homework.GET("/list", append(_listhomeworksMw(), show.ListHomeworks)...)
+		_homework.POST("/recorrect", append(_recorrecthomeworkMw(), show.ReCorrectHomework)...)
 		_homework.GET("/submission", append(_getsubmissionevaluateMw(), show.GetSubmissionEvaluate)...)
 		_submission := _homework.Group("/submission", _submissionMw()...)
 		_submission.POST("/download", append(_downloadsubmissionevaluateMw(), show.DownloadSubmissionEvaluate)...)
