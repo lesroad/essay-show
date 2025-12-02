@@ -14,6 +14,7 @@ import (
 	"essay-show/biz/infrastructure/util/log"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -750,8 +751,8 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 	return result, nil
 }
 
-// processHomeworkSubmissions 处理待批改的作业
 func (s *HomeworkService) processHomeworkSubmissions(ctx context.Context) {
+	const maxConcurrency = 10
 	submissions, err := s.SubmissionMapper.FindByStatus(ctx, []int{consts.StatusInitialized})
 	if err != nil {
 		log.Error("查询待批改作业失败: %v", err)
@@ -764,10 +765,35 @@ func (s *HomeworkService) processHomeworkSubmissions(ctx context.Context) {
 
 	log.Info("找到 %d 个待批改的作业", len(submissions))
 
+	sem := make(chan struct{}, maxConcurrency)
+	var wg sync.WaitGroup
+
 	for _, submission := range submissions {
-		log.Info("作业详情:%+v", submission)
-		s.processOneSubmission(ctx, submission)
+		success, err := s.SubmissionMapper.TryUpdateStatusToGrading(ctx, submission.ID, consts.StatusInitialized, consts.StatusGrading)
+		if err != nil {
+			log.Error("更新作业状态失败: %v", err)
+			continue
+		}
+
+		if !success {
+			continue
+		}
+
+		sem <- struct{}{}
+		wg.Add(1)
+
+		go func(sub *homework.HomeworkSubmission) {
+			defer func() {
+				<-sem
+				wg.Done()
+			}()
+
+			s.processOneSubmission(ctx, sub)
+
+		}(submission)
 	}
+
+	wg.Wait()
 
 	// 处理超时任务
 	s.processTimeoutSubmissions(ctx)
@@ -816,10 +842,8 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 	grade := homework.Grade
 	totalScore := homework.TotalScore
 
-	// 更新为批改中
-	submission.Status = consts.StatusGrading
-	submission.UpdateTime = time.Now()
 	submission.Title = title
+	submission.UpdateTime = time.Now()
 	s.SubmissionMapper.Update(ctx, submission)
 
 	resultChan := make(chan string, 100)

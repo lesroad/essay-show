@@ -145,3 +145,24 @@ func (m *SubmissionMongoMapper) FindTimeoutSubmissions(ctx context.Context, stat
 
 	return submissions, nil
 }
+
+func (m *SubmissionMongoMapper) TryUpdateStatusToGrading(ctx context.Context, id primitive.ObjectID, fromStatus, toStatus int) (bool, error) {
+	filter := bson.M{
+		"_id":    id,
+		"status": fromStatus, // 只有当前状态为 fromStatus 时才更新
+	}
+	update := bson.M{
+		"$set": bson.M{
+			"status":      toStatus,
+			"update_time": time.Now(),
+		},
+	}
+
+	result, err := m.conn.UpdateOneNoCache(ctx, filter, update)
+	if err != nil {
+		return false, err
+	}
+
+	// 如果 ModifiedCount > 0，说明更新成功
+	return result.ModifiedCount > 0, nil
+}
