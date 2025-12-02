@@ -335,15 +335,14 @@ func (s *UserService) FillInvitationCode(ctx context.Context, req *show.FillInvi
 		return nil, consts.ErrInvitation
 	}
 
-	err = s.UserMapper.UpdateCount(ctx, inviter, consts.InvitationReward)
-	if err != nil {
+	err, err2 := s.UserMapper.UpdateCount(ctx, inviter, consts.InvitationReward), s.UserMapper.UpdateCount(ctx, invitee, 5)
+	if err != nil || err2 != nil {
 		return nil, consts.ErrUpdate
 	}
 	return util.Succeed("success")
 }
 
 func (s *UserService) GetInvitationCode(ctx context.Context, req *show.GetInvitationCodeReq) (*show.GetInvitationCodeResp, error) {
-	// 用户信息
 	userMeta := adaptor.ExtractUserMeta(ctx)
 	if userMeta.GetUserId() == "" {
 		return nil, consts.ErrNotAuthentication
