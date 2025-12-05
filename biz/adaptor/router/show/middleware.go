@@ -320,3 +320,8 @@ func _recorrecthomeworkMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _sendwechatmessageMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

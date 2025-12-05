@@ -49,6 +49,9 @@ const (
 	// 定时器配置常量
 	TimerInterval   = 30 * time.Second // 扫描间隔
 	TimeoutDuration = 20 * time.Minute // 超时时间
+
+	InvitationTemplateId = "KglmTXE65kiACeTM85kwpA2oO9SU0urRGBJTo4gH9O0"
+	InvitationJumpPage = "pages/tabbar/profile"
 )
 
 const (

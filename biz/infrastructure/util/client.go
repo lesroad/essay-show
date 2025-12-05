@@ -378,6 +378,33 @@ func (c *HttpClient) GenCosSts(ctx context.Context, path string) (map[string]any
 	return resp, nil
 }
 
+func (c *HttpClient) SendWechatMessage(ctx context.Context, userId, templateId string, templateData map[string]string, page *string) (map[string]any, error) {
+	body := make(map[string]any)
+	body["userId"] = userId
+	body["templateId"] = templateId
+	body["templateData"] = templateData
+	if page != nil && *page != "" {
+		body["page"] = *page
+	}
+
+	if config.GetConfig().State == "test" {
+		body["miniProgramState"] = "trial"
+	} else {
+		body["miniProgramState"] = "formal"
+	}
+
+	header := make(map[string]string)
+	header["Content-Type"] = consts.ContentTypeJson
+	header["Charset"] = consts.CharSetUTF8
+
+	url := config.GetConfig().Api.PlatfromURL + "/sts/send_wechat_message"
+	resp, err := c.SendRequest(ctx, consts.Post, url, header, body)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 func (c *HttpClient) GenSignedUrl(ctx context.Context, secretId, secretKey string, method string, path string) (map[string]any, error) {
 	body := make(map[string]any)
 	body["secretId"] = secretId
