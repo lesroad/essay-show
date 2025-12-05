@@ -335,10 +335,29 @@ func (s *UserService) FillInvitationCode(ctx context.Context, req *show.FillInvi
 		return nil, consts.ErrInvitation
 	}
 
-	err, err2 := s.UserMapper.UpdateCount(ctx, inviter, consts.InvitationReward), s.UserMapper.UpdateCount(ctx, invitee, 5)
+	err, err2 := s.UserMapper.UpdateCount(ctx, inviter, consts.InvitationReward), s.UserMapper.UpdateCount(ctx, invitee, consts.InvitationReward)
 	if err != nil || err2 != nil {
 		return nil, consts.ErrUpdate
 	}
+
+	// 对邀请者推送微信消息
+	client := util.GetHttpClient()
+	page := consts.InvitationJumpPage
+
+	resp, err := client.SendWechatMessage(ctx, inviter, consts.InvitationTemplateId, map[string]string{
+		"thing4": "邀请好友成功",
+		"thing9": "批改次数到账了，请在小程序领取奖励吧~",
+	}, &page)
+	if err != nil {
+		log.Error("发送微信消息失败: %v", err)
+		return nil, consts.ErrSendWechatMessage
+	}
+
+	if code, ok := resp["code"].(float64); !ok || code != 0 {
+		log.Error("发送微信消息失败, resp=%v", resp)
+		return nil, consts.ErrSendWechatMessage
+	}
+
 	return util.Succeed("success")
 }
 

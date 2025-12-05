@@ -39,7 +39,7 @@ type AIEvaluation struct {
 	SuggestionEvaluation   SuggestionEvaluation   `json:"suggestionEvaluation"`   // 建议
 	ParagraphEvaluations   []ParagraphEvaluation  `json:"paragraphEvaluations"`   // 段落点评
 	ScoreEvaluation        ScoreEvaluation        `json:"scoreEvaluations"`       // 分数点评
-	PolishingEvaluation    []PolishingEvaluation  `json:"polishingEvaluations"`   // 润色
+	PolishingEvaluation    []PolishingEvaluation  `json:"polishingEvaluation"`    // 润色
 }
 
 type ModelVersion struct {
