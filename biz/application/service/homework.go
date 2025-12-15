@@ -23,6 +23,7 @@ import (
 
 type IHomeworkService interface {
 	CreateHomework(ctx context.Context, req *show.CreateHomeworkReq) (*show.CreateHomeworkResp, error)
+	EditHomework(ctx context.Context, req *show.EditHomeworkReq) (*show.Response, error)
 	ListHomeworks(ctx context.Context, req *show.ListHomeworksReq) (*show.ListHomeworksResp, error)
 	SubmitHomework(ctx context.Context, req *show.SubmitHomeworkReq) (*show.SubmitHomeworkResp, error)
 	GetSubmissions(ctx context.Context, req *show.GetSubmissionsReq) (*show.GetSubmissionsResp, error)
@@ -30,6 +31,7 @@ type IHomeworkService interface {
 	ModifySubmissionEvaluate(ctx context.Context, req *show.ModifySubmissionEvaluateReq) (*show.Response, error)
 	DownloadSubmissionEvaluate(ctx context.Context, req *show.DownloadSubmissionEvaluateReq) (*show.DownloadSubmissionEvaluateResp, error)
 	ReCorrectHomework(ctx context.Context, req *show.ReCorrectHomeworkReq) (*show.ReCorrectHomeworkResp, error)
+	DeleteHomework(ctx context.Context, req *show.DeleteHomeworkReq) (*show.Response, error)
 	StartGrader(ctx context.Context) error
 }
 
@@ -81,6 +83,7 @@ func (s *HomeworkService) CreateHomework(ctx context.Context, req *show.CreateHo
 	now := time.Now()
 	h := &homework.Homework{
 		Subject:          int64(req.Subject),
+		Topic:            req.Topic,
 		Title:            req.Title,
 		Description:      req.Description,
 		ClassID:          req.ClassId,
@@ -172,6 +175,120 @@ func (s *HomeworkService) validateCustomScoring(req *show.CreateHomeworkReq) err
 	return nil
 }
 
+func (s *HomeworkService) validateEditCustomScoring(req *show.EditHomeworkReq) error {
+	if req.ContentScore == nil && req.ExpressionScore == nil &&
+		req.StructureScore == nil && req.DevelopmentScore == nil {
+		return nil
+	}
+
+	// 如果设置了自定义评分，必须满足以下条件：
+	// 1. 初中（structureScore）和高中（developmentScore）只能二选一
+	// 2. 三项（或四项）之和必须等于总分
+
+	hasStructure := req.StructureScore != nil
+	hasDevelopment := req.DevelopmentScore != nil
+
+	// 不能同时设置 structure 和 development
+	if hasStructure && hasDevelopment {
+		return consts.ErrInvalidScoreDistribution
+	}
+
+	// 计算分数总和
+	var scoreSum int64
+	if req.ContentScore != nil {
+		if *req.ContentScore < 0 {
+			return consts.ErrInvalidScore
+		}
+		scoreSum += *req.ContentScore
+	} else {
+		return consts.ErrIncompleteScoreDistribution
+	}
+
+	if req.ExpressionScore != nil {
+		if *req.ExpressionScore < 0 {
+			return consts.ErrInvalidScore
+		}
+		scoreSum += *req.ExpressionScore
+	} else {
+		return consts.ErrIncompleteScoreDistribution
+	}
+
+	if hasStructure {
+		if *req.StructureScore < 0 {
+			return consts.ErrInvalidScore
+		}
+		scoreSum += *req.StructureScore
+	} else if hasDevelopment {
+		if *req.DevelopmentScore < 0 {
+			return consts.ErrInvalidScore
+		}
+		scoreSum += *req.DevelopmentScore
+	} else {
+		// 必须设置 structure 或 development 其中之一
+		return consts.ErrIncompleteScoreDistribution
+	}
+
+	// 验证总分是否匹配
+	if scoreSum != req.TotalScore {
+		log.Error("自定义评分总和(%d)不等于总分(%d)", scoreSum, req.TotalScore)
+		return consts.ErrScoreSumMismatch
+	}
+
+	return nil
+}
+
+func (s *HomeworkService) EditHomework(ctx context.Context, req *show.EditHomeworkReq) (*show.Response, error) {
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	user, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+	if user.Role != consts.RoleTeacher {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	h, err := s.HomeworkMapper.FindOne(ctx, req.HomeworkId)
+	if err != nil {
+		log.Error("作业不存在: %v", err)
+		return nil, consts.ErrNotFound
+	}
+
+	if h.CreatorID != userMeta.GetUserId() {
+		log.Error("用户无权编辑此作业, userId: %s, creatorId: %s", userMeta.GetUserId(), h.CreatorID)
+		return nil, consts.ErrForbidden
+	}
+
+	if err := s.validateEditCustomScoring(req); err != nil {
+		return nil, err
+	}
+
+	h.Title = req.Title
+	h.Description = req.Description
+	h.EssayType = req.EssayType
+	h.Grade = req.Grade
+	h.TotalScore = req.TotalScore
+	h.Standard = req.Standard
+	h.ContentScore = req.ContentScore
+	h.ExpressionScore = req.ExpressionScore
+	h.StructureScore = req.StructureScore
+	h.DevelopmentScore = req.DevelopmentScore
+
+	if err := s.HomeworkMapper.Update(ctx, h); err != nil {
+		log.Error("编辑作业失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	return &show.Response{
+		Code: 0,
+		Msg:  "更新成功",
+	}, nil
+}
+
 // ListHomeworks 获取作业列表
 func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomeworksReq) (*show.ListHomeworksResp, error) {
 	// 获取用户信息
@@ -228,8 +345,10 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 		homeworkInfo := &show.HomeworkInfo{
 			Id:               h.ID.Hex(),
 			Subject:          show.Subject(h.Subject),
+			Topic:            h.Topic,
 			Title:            h.Title,
 			Description:      h.Description,
+			Grade:            &h.Grade,
 			TotalScore:       h.TotalScore,
 			EssayType:        h.EssayType,
 			CreateTime:       h.CreateTime.Unix(),
@@ -959,4 +1078,43 @@ func markSubmissionFailed(ctx context.Context, submission *homework.HomeworkSubm
 	} else {
 		log.Info("标记作业失败: %s, 原因: %s", submission.ID.Hex(), reason)
 	}
+}
+
+func (s *HomeworkService) DeleteHomework(ctx context.Context, req *show.DeleteHomeworkReq) (*show.Response, error) {
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	user, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+	if user.Role != consts.RoleTeacher {
+		log.Error("用户不是教师，无权删除作业, userId: %s, role: %d", userMeta.GetUserId(), user.Role)
+		return nil, consts.ErrNotAuthentication
+	}
+
+	h, err := s.HomeworkMapper.FindOne(ctx, req.HomeworkId)
+	if err != nil {
+		log.Error("作业不存在: %v", err)
+		return nil, consts.ErrNotFound
+	}
+
+	if h.CreatorID != userMeta.GetUserId() {
+		log.Error("用户无权删除此作业, userId: %s, creatorId: %s", userMeta.GetUserId(), h.CreatorID)
+		return nil, consts.ErrForbidden
+	}
+
+	err = s.HomeworkMapper.Delete(ctx, req.HomeworkId)
+	if err != nil {
+		log.Error("删除作业失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	return &show.Response{
+		Code: 0,
+		Msg:  "删除成功",
+	}, nil
 }

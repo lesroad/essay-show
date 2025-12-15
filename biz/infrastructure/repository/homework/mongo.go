@@ -111,3 +111,12 @@ func (m *MongoMapper) FindByClassID(ctx context.Context, classID string, page, p
 
 	return homeworks, total, nil
 }
+
+func (m *MongoMapper) Delete(ctx context.Context, id string) error {
+	oid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return consts.ErrInvalidObjectId
+	}
+	_, err = m.conn.DeleteOneNoCache(ctx, bson.M{consts.ID: oid})
+	return err
+}
