@@ -105,3 +105,12 @@ func (m *MongoMapper) Update(ctx context.Context, l *Log) error {
 	_, err := m.conn.UpdateByID(ctx, key, l.ID, bson.M{"$set": l})
 	return err
 }
+
+func (m *MongoMapper) Delete(ctx context.Context, id string) error {
+	oid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return consts.ErrInvalidObjectId
+	}
+	_, err = m.conn.DeleteOneNoCache(ctx, bson.M{consts.ID: oid})
+	return err
+}

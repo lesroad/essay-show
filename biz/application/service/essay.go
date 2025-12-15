@@ -30,6 +30,7 @@ type IEssayService interface {
 	LikeEvaluate(ctx context.Context, req *show.LikeEvaluateReq) (resp *show.Response, err error)
 	DownloadEvaluate(ctx context.Context, req *show.DownloadEvaluateReq) (resp *show.DownloadEvaluateResp, err error)
 	EvaluateModify(ctx context.Context, req *show.EvaluateModifyReq) (resp *show.Response, err error)
+	DeleteEvaluate(ctx context.Context, req *show.DeleteEvaluateReq) (resp *show.Response, err error)
 }
 
 type EssayService struct {
@@ -527,5 +528,34 @@ func (s *EssayService) EvaluateModify(ctx context.Context, req *show.EvaluateMod
 	return &show.Response{
 		Code: 0,
 		Msg:  "修改成功",
+	}, nil
+}
+
+func (s *EssayService) DeleteEvaluate(ctx context.Context, req *show.DeleteEvaluateReq) (resp *show.Response, err error) {
+	meta := adaptor.ExtractUserMeta(ctx)
+	if meta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	l, err := s.LogMapper.FindOne(ctx, req.Id)
+	if err != nil {
+		logx.Error("查询批改记录失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+
+	if l.UserId != meta.GetUserId() {
+		logx.Error("用户无权删除此批改记录, userId: %s, logUserId: %s", meta.GetUserId(), l.UserId)
+		return nil, consts.ErrNotFound
+	}
+
+	err = s.LogMapper.Delete(ctx, req.Id)
+	if err != nil {
+		logx.Error("删除批改记录失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	return &show.Response{
+		Code: 0,
+		Msg:  "删除成功",
 	}, nil
 }

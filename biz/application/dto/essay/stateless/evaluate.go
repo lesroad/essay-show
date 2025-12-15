@@ -33,9 +33,7 @@ type Counting struct {
 type AIEvaluation struct {
 	ModelVersion           ModelVersion           `json:"modelVersion"`
 	OverallEvaluation      OverallEvaluation      `json:"overallEvaluation"`      // 总评
-	FluencyEvaluation      FluencyEvaluation      `json:"fluencyEvaluation"`      // 流畅度评价
 	WordSentenceEvaluation WordSentenceEvaluation `json:"wordSentenceEvaluation"` // 好词好句评价
-	ExpressionEvaluation   ExpressionEvaluation   `json:"expressionEvaluation"`   // 逻辑表达评价
 	SuggestionEvaluation   SuggestionEvaluation   `json:"suggestionEvaluation"`   // 建议
 	ParagraphEvaluations   []ParagraphEvaluation  `json:"paragraphEvaluations"`   // 段落点评
 	ScoreEvaluation        ScoreEvaluation        `json:"scoreEvaluations"`       // 分数点评
@@ -50,11 +48,6 @@ type ModelVersion struct {
 type OverallEvaluation struct {
 	Description         string `json:"description"`
 	TopicRelevanceScore int    `json:"topicRelevanceScore"`
-}
-
-type FluencyEvaluation struct {
-	FluencyDescription string `json:"fluencyDescription"`
-	FluencyScore       int    `json:"fluencyScore"`
 }
 
 type WordSentenceEvaluation struct {
@@ -74,11 +67,6 @@ type WordEvaluation struct {
 	Type    map[string]string `json:"type"`
 	Ori     string            `json:"ori,omitempty"`
 	Revised string            `json:"revised,omitempty"`
-}
-
-type ExpressionEvaluation struct {
-	ExpressDescription string `json:"expressDescription"`
-	ExpressionScore    int    `json:"expressionScore"`
 }
 
 type SuggestionEvaluation struct {

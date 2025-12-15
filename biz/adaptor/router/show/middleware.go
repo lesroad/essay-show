@@ -325,3 +325,23 @@ func _sendwechatmessageMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _deleteevaluateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _deletehomeworkMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _edithomeworkMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _isneedrenameMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

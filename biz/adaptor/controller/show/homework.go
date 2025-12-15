@@ -157,3 +157,35 @@ func ReCorrectHomework(ctx context.Context, c *app.RequestContext) {
 	resp, err := p.HomeworkService.ReCorrectHomework(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
+
+// DeleteHomework .
+// @router /homework/delete [POST]
+func DeleteHomework(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.DeleteHomeworkReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.HomeworkService.DeleteHomework(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// EditHomework .
+// @router /homework/edit [POST]
+func EditHomework(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.EditHomeworkReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.HomeworkService.EditHomework(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}

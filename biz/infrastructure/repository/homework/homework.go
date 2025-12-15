@@ -9,6 +9,7 @@ import (
 type Homework struct {
 	ID          primitive.ObjectID `bson:"_id,omitempty" json:"id"`
 	Subject     int64              `bson:"subject" json:"subject"`
+	Topic       int64              `bson:"topic" json:"topic"` // 0.自定义 1.题库
 	Title       string             `bson:"title" json:"title"`
 	Description string             `bson:"description" json:"description"`
 	ClassID     string             `bson:"class_id" json:"classId"`
