@@ -283,7 +283,7 @@ func (s *UserService) GetDailyAttend(ctx context.Context, req *show.GetDailyAtte
 	}
 
 	// 获取所有的指定年月的所有签到记录
-	data, total, err := s.AttendMapper.FindByYearAndMonth(ctx, meta.GetUserId(), int(req.Year), int(req.Month))
+	data, _, err := s.AttendMapper.FindByYearAndMonth(ctx, meta.GetUserId(), int(req.Year), int(req.Month))
 	if err != nil {
 		log.Error("获取签到记录失败, err:%v", err.Error())
 		return nil, consts.ErrNotFound
@@ -294,7 +294,7 @@ func (s *UserService) GetDailyAttend(ctx context.Context, req *show.GetDailyAtte
 		dtos = append(dtos, int64(d.Timestamp.Day()))
 	}
 	resp.History = dtos
-	resp.Total = total
+	resp.Total = int64(len(dtos))
 
 	return resp, nil
 }
