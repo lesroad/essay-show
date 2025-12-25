@@ -345,3 +345,33 @@ func _isneedrenameMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _lesson_planMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _downloadlessonplanMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generateurllinkMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _sourceMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _fillsourceMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _gethomeworkstatisticsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

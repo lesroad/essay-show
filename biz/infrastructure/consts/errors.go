@@ -66,6 +66,7 @@ var (
 	ErrIncompleteScoreDistribution = NewErrno(codes.Code(1028), errors.New("自定义评分必须包含内容、表达、结构(或发展)三项"))
 	ErrInvalidScoreDistribution    = NewErrno(codes.Code(1029), errors.New("结构和发展不能同时设置"))
 	ErrSendWechatMessage           = NewErrno(codes.Code(1030), errors.New("发送微信消息失败"))
+	ErrNoCompletedSubmissions      = NewErrno(codes.Code(1031), errors.New("没有已批改完成的提交"))
 )
 
 // ErrInvalidParams 调用时错误

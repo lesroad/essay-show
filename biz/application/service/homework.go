@@ -30,8 +30,10 @@ type IHomeworkService interface {
 	GetSubmissionEvaluate(ctx context.Context, req *show.GetSubmissionEvaluateReq) (*show.GetSubmissionEvaluateResp, error)
 	ModifySubmissionEvaluate(ctx context.Context, req *show.ModifySubmissionEvaluateReq) (*show.Response, error)
 	DownloadSubmissionEvaluate(ctx context.Context, req *show.DownloadSubmissionEvaluateReq) (*show.DownloadSubmissionEvaluateResp, error)
+	DownloadLessonPlan(ctx context.Context, req *show.DownloadLessonPlanReq) (*show.DownloadLessonPlanResp, error)
 	ReCorrectHomework(ctx context.Context, req *show.ReCorrectHomeworkReq) (*show.ReCorrectHomeworkResp, error)
 	DeleteHomework(ctx context.Context, req *show.DeleteHomeworkReq) (*show.Response, error)
+	GetHomeworkStatistics(ctx context.Context, req *show.GetHomeworkStatisticsReq) (*show.GetHomeworkStatisticsResp, error)
 	StartGrader(ctx context.Context) error
 }
 
@@ -870,6 +872,120 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 	return result, nil
 }
 
+func (s *HomeworkService) DownloadLessonPlan(ctx context.Context, req *show.DownloadLessonPlanReq) (*show.DownloadLessonPlanResp, error) {
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	homework, err := s.HomeworkMapper.FindOne(ctx, req.HomeworkId)
+	if err != nil {
+		log.Error("查询作业失败, homeworkId: %s, error: %v", req.HomeworkId, err)
+		return nil, consts.ErrNotFound
+	}
+
+	if homework.CreatorID != userMeta.GetUserId() {
+		log.Error("用户无权下载此作业教案, userId: %s, creatorId: %s", userMeta.GetUserId(), homework.CreatorID)
+		return nil, consts.ErrForbidden
+	}
+
+	classInfo, err := s.ClassMapper.FindOne(ctx, homework.ClassID)
+	if err != nil {
+		log.Error("获取班级信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+
+	submissions, err := s.SubmissionMapper.FindByHomeworkID(ctx, req.HomeworkId)
+	if err != nil {
+		log.Error("查询作业提交记录失败, homeworkId: %s, error: %v", req.HomeworkId, err)
+		return nil, consts.ErrCall
+	}
+
+	if len(submissions) == 0 {
+		log.Error("没有找到已批改的提交记录, homeworkId: %s", req.HomeworkId)
+		return nil, consts.ErrNotFound
+	}
+
+	var essayList []map[string]any
+	for _, submission := range submissions {
+		if submission.Status != consts.StatusCompleted && submission.Status != consts.StatusModified {
+			continue
+		}
+
+		var evaluateResult stateless.Evaluate
+		if err := json.Unmarshal([]byte(submission.Response), &evaluateResult); err != nil {
+			log.Error("解析批改结果失败, submissionId: %s, error: %v", submission.ID.Hex(), err)
+			continue
+		}
+
+		user, err := s.UserMapper.FindOne(ctx, submission.StudentID)
+		if err != nil {
+			log.Error("获取学生信息失败, studentId: %s, error: %v", submission.StudentID, err)
+			continue
+		}
+
+		essayData := map[string]any{
+			"student_name": user.Username,
+			"title":        submission.Title,
+			"scores": map[string]any{
+				"all":                  evaluateResult.AIEvaluation.ScoreEvaluation.Scores.All,
+				"allWithTotal":         evaluateResult.AIEvaluation.ScoreEvaluation.Scores.AllWithTotal,
+				"appearance":           evaluateResult.AIEvaluation.ScoreEvaluation.Scores.Appearance,
+				"content":              evaluateResult.AIEvaluation.ScoreEvaluation.Scores.Content,
+				"contentWithTotal":     evaluateResult.AIEvaluation.ScoreEvaluation.Scores.ContentWithTotal,
+				"developmentWithTotal": evaluateResult.AIEvaluation.ScoreEvaluation.Scores.DevelopmentWithTotal,
+				"expression":           evaluateResult.AIEvaluation.ScoreEvaluation.Scores.Expression,
+				"expressionWithTotal":  evaluateResult.AIEvaluation.ScoreEvaluation.Scores.ExpressionWithTotal,
+				"structure":            evaluateResult.AIEvaluation.ScoreEvaluation.Scores.Structure,
+				"structureWithTotal":   evaluateResult.AIEvaluation.ScoreEvaluation.Scores.StructureWithTotal,
+			},
+			"comments": map[string]any{
+				"appearance": evaluateResult.AIEvaluation.ScoreEvaluation.Comments.Appearance,
+				"content":    evaluateResult.AIEvaluation.ScoreEvaluation.Comments.Content,
+				"expression": evaluateResult.AIEvaluation.ScoreEvaluation.Comments.Expression,
+				"structure":  evaluateResult.AIEvaluation.ScoreEvaluation.Comments.Structure,
+			},
+			"text": evaluateResult.Text,
+		}
+
+		essayList = append(essayList, essayData)
+	}
+
+	if len(essayList) == 0 {
+		log.Error("没有已完成批改的提交记录可用于生成教案, homeworkId: %s", req.HomeworkId)
+		return nil, consts.ErrNotFound
+	}
+
+	client := util.GetHttpClient()
+	_resp, err := client.LessonPlan(ctx, classInfo, homework, essayList)
+	if err != nil {
+		log.Error("调用教案下载服务失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	code := int64(_resp["code"].(float64))
+	if code != 200 {
+		msg := _resp["msg"].(string)
+		log.Error("教案下载服务返回错误: %s", msg)
+		return nil, consts.ErrCall
+	}
+
+	url, urlOk := _resp["signedUrl"].(string)
+	sessionToken, tokenOk := _resp["sessionToken"].(string)
+
+	if !urlOk || !tokenOk {
+		log.Error("下游返回的url或sessionToken字段格式错误")
+		return nil, consts.ErrCall
+	}
+
+	result := &show.DownloadLessonPlanResp{
+		Url:          url,
+		SessionToken: sessionToken,
+	}
+
+	return result, nil
+}
+
 func (s *HomeworkService) processHomeworkSubmissions(ctx context.Context) {
 	const maxConcurrency = 10
 	submissions, err := s.SubmissionMapper.FindByStatus(ctx, []int{consts.StatusInitialized})
@@ -1116,5 +1232,99 @@ func (s *HomeworkService) DeleteHomework(ctx context.Context, req *show.DeleteHo
 	return &show.Response{
 		Code: 0,
 		Msg:  "删除成功",
+	}, nil
+}
+
+func (s *HomeworkService) GetHomeworkStatistics(ctx context.Context, req *show.GetHomeworkStatisticsReq) (*show.GetHomeworkStatisticsResp, error) {
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	user, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+	if user.Role != consts.RoleTeacher {
+		log.Error("用户不是教师，无权查看统计, userId: %s, role: %d", userMeta.GetUserId(), user.Role)
+		return nil, consts.ErrNotAuthentication
+	}
+
+	h, err := s.HomeworkMapper.FindOne(ctx, req.HomeworkId)
+	if err != nil {
+		log.Error("作业不存在: %v", err)
+		return nil, consts.ErrNotFound
+	}
+
+	if h.CreatorID != userMeta.GetUserId() {
+		log.Error("用户无权查看此作业统计, userId: %s, creatorId: %s", userMeta.GetUserId(), h.CreatorID)
+		return nil, consts.ErrForbidden
+	}
+
+	classInfo, err := s.ClassMapper.FindOne(ctx, h.ClassID)
+	if err != nil {
+		log.Error("获取班级信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+
+	submissions, err := s.SubmissionMapper.FindByHomeworkID(ctx, req.HomeworkId)
+	if err != nil {
+		log.Error("获取作业提交列表失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	completedSubmissions := make([]*homework.HomeworkSubmission, 0)
+	for _, sub := range submissions {
+		if sub.Status == consts.StatusCompleted || sub.Status == consts.StatusModified {
+			completedSubmissions = append(completedSubmissions, sub)
+		}
+	}
+
+	if len(completedSubmissions) == 0 {
+		return nil, consts.ErrNoCompletedSubmissions
+	}
+
+	statisticsData := make([]map[string]any, 0, len(completedSubmissions))
+	for _, sub := range completedSubmissions {
+		var evaluateResult stateless.Evaluate
+		if err := json.Unmarshal([]byte(sub.Response), &evaluateResult); err != nil {
+			log.Error("解析批改结果失败, submissionId: %s, error: %v", sub.ID.Hex(), err)
+			continue
+		}
+
+		studentData := map[string]any{
+			"wordSentenceEvaluation": evaluateResult.AIEvaluation.WordSentenceEvaluation,
+			"scoreEvaluations":       evaluateResult.AIEvaluation.ScoreEvaluation,
+		}
+		statisticsData = append(statisticsData, studentData)
+	}
+
+	client := util.GetHttpClient()
+	resp, err := client.AnalyzeClassStatistics(ctx, map[string]any{
+		"submittedStudents": statisticsData,
+		"totalStudents":     classInfo.MemberCount,
+	})
+	if err != nil {
+		log.Error("调用统计服务失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	code, ok := resp["code"].(float64)
+	if !ok || code != 0 {
+		return nil, consts.ErrCall
+	}
+
+	data, ok := resp["data"]
+	if !ok {
+		return nil, consts.ErrCall
+	}
+	statisticsJSON, err := json.Marshal(data)
+	if err != nil {
+		return nil, consts.ErrCall
+	}
+
+	return &show.GetHomeworkStatisticsResp{
+		Statistics: string(statisticsJSON),
 	}, nil
 }

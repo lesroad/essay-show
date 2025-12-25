@@ -43,7 +43,7 @@ func GenerateExerciseStream(ctx context.Context, grade int64, l *log.Log, result
 
 	body := buildBody(grade, m)
 	client := util.GetHttpClient()
-	url := config.GetConfig().Api.GenerateExercisesURL + "_stream"
+	url := config.GetConfig().Api.AlgorithmURL + "/generate_exercises_stream"
 
 	go client.SendRequestStream(ctx, consts.Post, url, header, body, downstreamChan)
 
@@ -182,7 +182,7 @@ func generateByHttp(ctx context.Context, grade int64, m map[string]any) (map[str
 	body := buildBody(grade, m)
 
 	client := util.GetHttpClient()
-	resp, err := client.SendRequest(ctx, consts.Post, config.GetConfig().Api.GenerateExercisesURL, header, body)
+	resp, err := client.SendRequest(ctx, consts.Post, config.GetConfig().Api.AlgorithmURL+"/generate_exercises", header, body)
 	if err != nil {
 		return nil, err
 	}

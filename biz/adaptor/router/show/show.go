@@ -60,12 +60,17 @@ func Register(r *server.Hertz) {
 		_homework.POST("/edit", append(_edithomeworkMw(), show.EditHomework)...)
 		_homework.GET("/list", append(_listhomeworksMw(), show.ListHomeworks)...)
 		_homework.POST("/recorrect", append(_recorrecthomeworkMw(), show.ReCorrectHomework)...)
+		_homework.GET("/statistics", append(_gethomeworkstatisticsMw(), show.GetHomeworkStatistics)...)
 		_homework.GET("/submission", append(_getsubmissionevaluateMw(), show.GetSubmissionEvaluate)...)
 		_submission := _homework.Group("/submission", _submissionMw()...)
 		_submission.POST("/download", append(_downloadsubmissionevaluateMw(), show.DownloadSubmissionEvaluate)...)
 		_submission.POST("/modify", append(_modifysubmissionevaluateMw(), show.ModifySubmissionEvaluate)...)
 		_homework.GET("/submissions", append(_getsubmissionsMw(), show.GetSubmissions)...)
 		_homework.POST("/submit", append(_submithomeworkMw(), show.SubmitHomework)...)
+		{
+			_lesson_plan := _homework.Group("/lesson_plan", _lesson_planMw()...)
+			_lesson_plan.POST("/download", append(_downloadlessonplanMw(), show.DownloadLessonPlan)...)
+		}
 	}
 	{
 		_question_bank := root.Group("/question_bank", _question_bankMw()...)
@@ -83,6 +88,7 @@ func Register(r *server.Hertz) {
 		_user.GET("/daily_attend", append(_dailyattendMw(), show.DailyAttend)...)
 		_daily_attend := _user.Group("/daily_attend", _daily_attendMw()...)
 		_daily_attend.GET("/get", append(_getdailyattendMw(), show.GetDailyAttend)...)
+		_user.POST("/generate_url_link", append(_generateurllinkMw(), show.GenerateUrlLink)...)
 		_user.GET("/info", append(_getuserinfoMw(), show.GetUserInfo)...)
 		_user.POST("/sign_in", append(_signinMw(), show.SignIn)...)
 		_user.POST("/update", append(_updateuserinfoMw(), show.UpdateUserInfo)...)

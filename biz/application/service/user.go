@@ -28,6 +28,7 @@ type IUserService interface {
 	GetDailyAttend(ctx context.Context, req *show.GetDailyAttendReq) (*show.GetDailyAttendResp, error)
 	FillInvitationCode(ctx context.Context, req *show.FillInvitationCodeReq) (*show.Response, error)
 	GetInvitationCode(ctx context.Context, req *show.GetInvitationCodeReq) (*show.GetInvitationCodeResp, error)
+	GenerateUrlLink(ctx context.Context, req *show.GenerateUrlLinkReq) (*show.GenerateUrlLinkResp, error)
 }
 type UserService struct {
 	UserMapper   *user.MongoMapper
@@ -41,7 +42,6 @@ var UserServiceSet = wire.NewSet(
 	wire.Bind(new(IUserService), new(*UserService)),
 )
 
-// SignIn 登录用户
 func (s *UserService) SignIn(ctx context.Context, req *show.SignInReq) (*show.SignInResp, error) {
 	var u *user.User
 	var err error
@@ -66,10 +66,12 @@ func (s *UserService) SignIn(ctx context.Context, req *show.SignInReq) (*show.Si
 	}
 
 	userId := resp.UserId
+	isNew := false
 
 	u, err = s.UserMapper.FindOne(ctx, userId)
 	if errors.Is(err, consts.ErrNotFound) || u == nil {
 		// 注册流程
+		isNew = true
 		oid, err2 := primitive.ObjectIDFromHex(userId)
 		if err2 != nil {
 			return nil, err2
@@ -103,6 +105,7 @@ func (s *UserService) SignIn(ctx context.Context, req *show.SignInReq) (*show.Si
 		AccessToken:  accessToken,
 		AccessExpire: accessExpire,
 		Name:         u.Username,
+		IsNew:        isNew,
 	}, nil
 }
 
@@ -144,7 +147,6 @@ func (s *UserService) BindAuth(ctx context.Context, req *show.BindAuthReq) (*sho
 	}, nil
 }
 
-// GetUserInfo 获取用户信息
 func (s *UserService) GetUserInfo(ctx context.Context, req *show.GetUserInfoReq) (*show.GetUserInfoResp, error) {
 	// 用户信息
 	meta := adaptor.ExtractUserMeta(ctx)
@@ -180,7 +182,6 @@ func (s *UserService) GetUserInfo(ctx context.Context, req *show.GetUserInfoReq)
 	}, nil
 }
 
-// UpdateUserInfo 更新用户信息
 func (s *UserService) UpdateUserInfo(ctx context.Context, req *show.UpdateUserInfoReq) (*show.Response, error) {
 	userMeta := adaptor.ExtractUserMeta(ctx)
 	if userMeta.GetUserId() == "" {
@@ -300,13 +301,11 @@ func (s *UserService) GetDailyAttend(ctx context.Context, req *show.GetDailyAtte
 }
 
 func (s *UserService) FillInvitationCode(ctx context.Context, req *show.FillInvitationCodeReq) (*show.Response, error) {
-	// 用户信息
 	userMeta := adaptor.ExtractUserMeta(ctx)
 	if userMeta.GetUserId() == "" {
 		return nil, consts.ErrNotAuthentication
 	}
 
-	// 获取邀请码对应邀请者
 	c, err := s.CodeMapper.FindOneByCode(ctx, req.InvitationCode)
 	if err != nil {
 		return nil, consts.ErrNotFound
@@ -319,18 +318,16 @@ func (s *UserService) FillInvitationCode(ctx context.Context, req *show.FillInvi
 		return nil, consts.ErrInvitation
 	}
 
-	// 尝试获取邀请记录
 	l, err := s.LogMapper.FindOneByInvitee(ctx, invitee)
 	if err == nil && l != nil {
 		// 已填过邀请码
 		return nil, consts.ErrRepeatInvitation
 	} else if !errors.Is(err, consts.ErrNotFound) {
-		// 异常
 		return nil, err
 	}
 
 	// 插入邀请记录
-	err = s.LogMapper.Insert(ctx, inviter, invitee)
+	err = s.LogMapper.Insert(ctx, inviter, invitee, req.Source)
 	if err != nil {
 		return nil, consts.ErrInvitation
 	}
@@ -389,4 +386,43 @@ func (s *UserService) GetInvitationCode(ctx context.Context, req *show.GetInvita
 func (s *UserService) findAttend(ctx context.Context, userId string) (*attend.Attend, error) {
 	a, err := s.AttendMapper.FindLatestOneByUserId(ctx, userId)
 	return a, err
+}
+
+func (s *UserService) GenerateUrlLink(ctx context.Context, req *show.GenerateUrlLinkReq) (*show.GenerateUrlLinkResp, error) {
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	wechatMeta := userMeta.GetWechatUserMeta()
+	if wechatMeta == nil || wechatMeta.GetAppId() == "" {
+		return nil, errors.New("用户未绑定微信小程序")
+	}
+	appId := wechatMeta.GetAppId()
+
+	client := util.GetHttpClient()
+	resp, err := client.GenerateUrlLink(ctx, appId, req.Path, req.Query)
+	if err != nil {
+		log.Error("GenerateUrlLink: 调用下游服务失败, err=%v", err)
+		return nil, err
+	}
+
+	if code, ok := resp["code"].(float64); ok && code != 0 {
+		msg := resp["message"].(string)
+		return nil, errors.New(msg)
+	}
+
+	data, ok := resp["data"].(map[string]any)
+	if !ok {
+		return nil, errors.New("响应格式错误")
+	}
+
+	urlLink, ok := data["urlLink"].(string)
+	if !ok {
+		return nil, errors.New("urlLink字段不存在")
+	}
+
+	return &show.GenerateUrlLinkResp{
+		UrlLink: urlLink,
+	}, nil
 }

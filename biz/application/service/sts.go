@@ -204,3 +204,4 @@ func (s *StsService) APIOCRV1(ctx context.Context, req *show.OCRReq) (*show.OCRR
 		TotalScore: int64(totalScore),
 	}, nil
 }
+
