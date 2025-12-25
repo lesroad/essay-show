@@ -34,11 +34,12 @@ func NewLogMongoMapper(config *config.Config) *LogMongoMapper {
 	}
 }
 
-func (m *LogMongoMapper) Insert(ctx context.Context, inviter string, invitee string) error {
+func (m *LogMongoMapper) Insert(ctx context.Context, inviter string, invitee string, source *string) error {
 	l := Log{
 		ID:        primitive.NewObjectID(),
 		Inviter:   inviter,
 		Invitee:   invitee,
+		Source:    source,
 		Timestamp: time.Now(),
 	}
 	_, err := m.conn.InsertOneNoCache(ctx, &l)

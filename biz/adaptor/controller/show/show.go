@@ -162,22 +162,6 @@ func GetInvitationCode(ctx context.Context, c *app.RequestContext) {
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
 
-// FillInvitationCode .
-// @router /user/invitation/fill [POST]
-func FillInvitationCode(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req show.FillInvitationCodeReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	p := provider.Get()
-	resp, err := p.UserService.FillInvitationCode(ctx, &req)
-	adaptor.PostProcess(ctx, c, &req, resp, err)
-}
-
 // GetDailyAttend .
 // @router /user/daily_attend/get [GET]
 func GetDailyAttend(ctx context.Context, c *app.RequestContext) {
@@ -334,5 +318,37 @@ func DeleteEvaluate(ctx context.Context, c *app.RequestContext) {
 
 	p := provider.Get()
 	resp, err := p.EssayService.DeleteEvaluate(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// GenerateUrlLink .
+// @router /sts/generate_url_link [POST]
+func GenerateUrlLink(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.GenerateUrlLinkReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.UserService.GenerateUrlLink(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// FillInvitationCode .
+// @router /user/invitation/fill [POST]
+func FillInvitationCode(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.FillInvitationCodeReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.UserService.FillInvitationCode(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }

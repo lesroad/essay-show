@@ -7,6 +7,8 @@ import (
 	"encoding/json"
 	"essay-show/biz/infrastructure/config"
 	"essay-show/biz/infrastructure/consts"
+	"essay-show/biz/infrastructure/repository/class"
+	"essay-show/biz/infrastructure/repository/homework"
 	"essay-show/biz/infrastructure/util/log"
 	"fmt"
 	"io"
@@ -338,7 +340,7 @@ func (c *HttpClient) TitleUrlOCR(ctx context.Context, images []string, left stri
 		header["X-Xh-Env"] = "test"
 	}
 
-	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.TitleUrlOcr, header, body)
+	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.StatelessURL+"/sts/ocr/title/ark/url", header, body)
 	if err != nil {
 		return nil, err
 	}
@@ -353,7 +355,7 @@ func (c *HttpClient) GetEssayInfo(ctx context.Context, essay string, title strin
 	header := make(map[string]string)
 	header["Content-Type"] = consts.ContentTypeJson
 
-	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.EssayInfoURL, header, body)
+	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.AlgorithmURL+"/essay_info", header, body)
 	if err != nil {
 		return nil, err
 	}
@@ -426,6 +428,34 @@ func (c *HttpClient) GenSignedUrl(ctx context.Context, secretId, secretKey strin
 	return resp, nil
 }
 
+func (c *HttpClient) GenerateUrlLink(ctx context.Context, appId string, path *string, query *string) (map[string]any, error) {
+	body := make(map[string]any)
+	body["appId"] = appId
+	if path != nil && *path != "" {
+		body["path"] = *path
+	}
+	if query != nil && *query != "" {
+		body["query"] = *query
+	}
+
+	if config.GetConfig().State == "test" {
+		body["miniProgramState"] = "trial"
+	} else {
+		body["miniProgramState"] = "formal"
+	}
+
+	header := make(map[string]string)
+	header["Content-Type"] = consts.ContentTypeJson
+	header["Charset"] = consts.CharSetUTF8
+
+	url := config.GetConfig().Api.PlatfromURL + "/sts/generate_url_link"
+	resp, err := c.SendRequest(ctx, consts.Post, url, header, body)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
 // EvaluateStream 流式批改作文，支持context和链路追踪
 // ScoreRatio 自定义分项打分比例
 type ScoreRatio struct {
@@ -469,7 +499,6 @@ func CalculateScoreRatio(grade int64, totalScore int64) *ScoreRatio {
 }
 
 func (c *HttpClient) EvaluateStream(ctx context.Context, title string, text string, grade, totalScore *int64, essayType *string, prompt *string, standard *string, ratio *ScoreRatio, resultChan chan<- string) error {
-	// 准备请求参数
 	data := make(map[string]interface{})
 	data["title"] = title
 	data["content"] = text
@@ -486,12 +515,10 @@ func (c *HttpClient) EvaluateStream(ctx context.Context, title string, text stri
 		data["totalScore"] = totalScore
 	}
 
-	// 添加批改标准
 	if standard != nil {
 		data["standard"] = *standard
 	}
 
-	// 添加自定义分项打分比例
 	if ratio != nil {
 		data["contentScore"] = int64(ratio.Content)
 		data["expressionScore"] = int64(ratio.Expression)
@@ -505,22 +532,52 @@ func (c *HttpClient) EvaluateStream(ctx context.Context, title string, text stri
 		}
 	}
 
-	// 准备请求头
 	headers := make(map[string]string)
 	headers["Content-Type"] = "application/json"
 
-	// 构建完整的URL
-	url := config.GetConfig().Api.EvaluateUrl + "/stream"
+	url := config.GetConfig().Api.StatelessURL + "/evaluate/stream"
 
 	return c.SendRequestStream(ctx, "POST", url, headers, data, resultChan)
 }
 
-// EssayPolish 批改结果下载，支持context和链路追踪
 func (c *HttpClient) EssayPolish(ctx context.Context, data map[string]any) (map[string]any, error) {
 	header := make(map[string]string)
 	header["Content-Type"] = "application/json"
 	header["Charset"] = "utf-8"
-	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.DownloadURL, header, data)
+	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.AlgorithmURL+"/essay_polish", header, data)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func (c *HttpClient) LessonPlan(ctx context.Context, classInfo *class.Class, homework *homework.Homework, essayList []map[string]any) (map[string]any, error) {
+	lessonPlanData := map[string]any{
+		"class_id":        classInfo.Name,
+		"grade":           homework.Grade,
+		"last_topic":      "",
+		"lesson_duration": 40,
+		"essays":          essayList,
+	}
+
+	header := make(map[string]string)
+	header["Content-Type"] = "application/json"
+	header["Charset"] = "utf-8"
+	resp, err := c.SendRequest(ctx, consts.Post, config.GetConfig().Api.AlgorithmURL+"/lesson_generate", header, lessonPlanData)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *HttpClient) AnalyzeClassStatistics(ctx context.Context, data map[string]any) (map[string]any, error) {
+	header := make(map[string]string)
+	header["Content-Type"] = "application/json"
+	header["Charset"] = "utf-8"
+
+	url := config.GetConfig().Api.StatelessURL + "/statistics/class"
+	resp, err := c.SendRequest(ctx, consts.Post, url, header, data)
 	if err != nil {
 		return nil, err
 	}

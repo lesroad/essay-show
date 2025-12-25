@@ -189,3 +189,35 @@ func EditHomework(ctx context.Context, c *app.RequestContext) {
 	resp, err := p.HomeworkService.EditHomework(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
+
+// DownloadLessonPlan .
+// @router /homework/lesson_plan/download [POST]
+func DownloadLessonPlan(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.DownloadLessonPlanReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.HomeworkService.DownloadLessonPlan(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// GetHomeworkStatistics .
+// @router /homework/statistics [GET]
+func GetHomeworkStatistics(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.GetHomeworkStatisticsReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.HomeworkService.GetHomeworkStatistics(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}

@@ -45,13 +45,9 @@ type LogConfig struct {
 }
 
 type API struct {
-	PlatfromURL          string
-	MiniProgramURL       string
-	GenerateExercisesURL string
-	TitleUrlOcr          string
-	EvaluateUrl          string
-	DownloadURL          string
-	EssayInfoURL         string
+	PlatfromURL  string
+	StatelessURL string
+	AlgorithmURL string
 }
 
 func NewConfig() (*Config, error) {
