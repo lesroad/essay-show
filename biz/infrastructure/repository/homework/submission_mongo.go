@@ -93,10 +93,10 @@ func (m *SubmissionMongoMapper) FindByHomeworkID(ctx context.Context, homeworkID
 }
 
 // 查询一条最新的提交记录
-func (m *SubmissionMongoMapper) FindByStudentAndHomework(ctx context.Context, studentID, homeworkID string) (*HomeworkSubmission, error) {
+func (m *SubmissionMongoMapper) FindByMemberAndHomework(ctx context.Context, memberID, homeworkID string) (*HomeworkSubmission, error) {
 	var submission HomeworkSubmission
 	filter := bson.M{
-		"student_id":  studentID,
+		"member_id":   memberID,
 		"homework_id": homeworkID,
 	}
 

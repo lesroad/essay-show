@@ -375,3 +375,33 @@ func _gethomeworkstatisticsMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _membersMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _bindclassmemberMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _createclassmembersMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _editclassmembernameMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _unbindclassmemberMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _deleteclassmemberMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

@@ -2,24 +2,29 @@ package service
 
 import (
 	"context"
-	"crypto/rand"
 	"essay-show/biz/adaptor"
 	"essay-show/biz/application/dto/essay/show"
 	"essay-show/biz/infrastructure/consts"
 	"essay-show/biz/infrastructure/repository/class"
 	"essay-show/biz/infrastructure/repository/user"
+	"essay-show/biz/infrastructure/util"
 	"essay-show/biz/infrastructure/util/log"
-	"math/big"
 	"time"
 
 	"github.com/google/wire"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type IClassService interface {
 	CreateClass(ctx context.Context, req *show.CreateClassReq) (*show.CreateClassResp, error)
 	ListClasses(ctx context.Context, req *show.ListClassesReq) (*show.ListClassesResp, error)
-	JoinClass(ctx context.Context, req *show.JoinClassReq) (*show.JoinClassResp, error)
 	GetClassMembers(ctx context.Context, req *show.GetClassMembersReq) (*show.GetClassMembersResp, error)
+	CreateClassMembers(ctx context.Context, req *show.CreateClassMembersReq) (*show.CreateClassMembersResp, error)
+	BindClassMember(ctx context.Context, req *show.BindClassMemberReq) (*show.Response, error)
+	UnbindClassMember(ctx context.Context, req *show.UnbindClassMemberReq) (*show.Response, error)
+	EditClassMemberName(ctx context.Context, req *show.EditClassMemberNameReq) (*show.Response, error)
+	DeleteClassMember(ctx context.Context, req *show.DeleteClassMemberReq) (*show.Response, error)
 }
 
 type ClassService struct {
@@ -33,15 +38,12 @@ var ClassServiceSet = wire.NewSet(
 	wire.Bind(new(IClassService), new(*ClassService)),
 )
 
-// CreateClass 创建班级
 func (s *ClassService) CreateClass(ctx context.Context, req *show.CreateClassReq) (*show.CreateClassResp, error) {
-	// 获取用户信息
 	userMeta := adaptor.ExtractUserMeta(ctx)
 	if userMeta.GetUserId() == "" {
 		return nil, consts.ErrNotAuthentication
 	}
 
-	// 获取用户详情
 	user, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
 	if err != nil {
 		log.Error("获取用户信息失败: %v, userID: %s", err, userMeta.GetUserId())
@@ -51,17 +53,13 @@ func (s *ClassService) CreateClass(ctx context.Context, req *show.CreateClassReq
 		return nil, consts.ErrNotAuthentication
 	}
 
-	// 生成邀请码
-	inviteCode := s.generateInviteCode()
-
 	// 创建班级
 	now := time.Now()
 	c := &class.Class{
 		Name:        req.Name,
 		Description: req.Description,
-		InviteCode:  inviteCode,
 		CreatorID:   userMeta.GetUserId(),
-		MemberCount: 1, // 创建者自动成为成员
+		MemberCount: 0, // 不算老师自己
 		CreateTime:  now,
 		UpdateTime:  now,
 	}
@@ -72,37 +70,17 @@ func (s *ClassService) CreateClass(ctx context.Context, req *show.CreateClassReq
 		return nil, consts.ErrCreateClass
 	}
 
-	// 创建者自动加入班级
-	member := &class.ClassMember{
-		ClassID:    c.ID.Hex(),
-		UserID:     userMeta.GetUserId(),
-		Role:       consts.RoleTeacher,
-		JoinTime:   now,
-		CreateTime: now,
-		UpdateTime: now,
-	}
-
-	err = s.MemberMapper.Insert(ctx, member)
-	if err != nil {
-		log.Error("添加班级成员失败: %v", err)
-		// 这里可以考虑回滚班级创建，但为了简单起见，暂时只记录错误
-	}
-
 	return &show.CreateClassResp{
-		ClassId:    c.ID.Hex(),
-		InviteCode: inviteCode,
+		ClassId: c.ID.Hex(),
 	}, nil
 }
 
-// ListClasses 获取班级列表
 func (s *ClassService) ListClasses(ctx context.Context, req *show.ListClassesReq) (*show.ListClassesResp, error) {
-	// 获取用户信息
 	userMeta := adaptor.ExtractUserMeta(ctx)
 	if userMeta.GetUserId() == "" {
 		return nil, consts.ErrNotAuthentication
 	}
 
-	// 解析分页参数
 	page := int64(1)
 	pageSize := int64(10)
 	if req.PaginationOptions != nil {
@@ -140,7 +118,6 @@ func (s *ClassService) ListClasses(ctx context.Context, req *show.ListClassesReq
 				Id:          c.ID.Hex(),
 				Name:        c.Name,
 				Description: c.Description,
-				InviteCode:  c.InviteCode,
 				MemberCount: c.MemberCount,
 				CreateTime:  c.CreateTime.Unix(),
 				CreatorId:   c.CreatorID,
@@ -176,7 +153,6 @@ func (s *ClassService) ListClasses(ctx context.Context, req *show.ListClassesReq
 			Id:          c.ID.Hex(),
 			Name:        c.Name,
 			Description: c.Description,
-			InviteCode:  c.InviteCode,
 			MemberCount: c.MemberCount,
 			CreateTime:  c.CreateTime.Unix(),
 			CreatorId:   c.CreatorID,
@@ -190,68 +166,28 @@ func (s *ClassService) ListClasses(ctx context.Context, req *show.ListClassesReq
 	}, nil
 }
 
-// JoinClass 学生加入班级
-func (s *ClassService) JoinClass(ctx context.Context, req *show.JoinClassReq) (*show.JoinClassResp, error) {
-	// 获取用户信息
+func (s *ClassService) CreateClassMembers(ctx context.Context, req *show.CreateClassMembersReq) (*show.CreateClassMembersResp, error) {
 	meta := adaptor.ExtractUserMeta(ctx)
 	if meta.GetUserId() == "" {
 		return nil, consts.ErrNotAuthentication
 	}
-	userID := meta.GetUserId()
-
-	// 确认学生身份
-	u, err := s.UserMapper.FindOne(ctx, userID)
-	if err != nil {
-		log.Error("获取用户信息失败: %v", err)
-		return nil, consts.ErrNotFound
-	}
-	if u.Role != consts.RoleStudent {
-		return nil, consts.ErrNotAuthentication
-	}
-
-	// 根据邀请码查找班级
-	c, err := s.ClassMapper.FindOneByInviteCode(ctx, req.InviteCode)
-	if err != nil {
-		log.Error("班级不存在: %v", err)
-		return nil, consts.ErrNotFound
-	}
-
-	// 检查是否已经是班级成员
-	existingMember, err := s.MemberMapper.FindByClassIDAndStuID(ctx, c.ID.Hex(), userID)
-	if err == nil && existingMember != nil {
-		return &show.JoinClassResp{
-			ClassId:   c.ID.Hex(),
-			ClassName: c.Name,
-		}, nil
-	}
-
-	// 添加班级成员
-	now := time.Now()
 	member := &class.ClassMember{
-		ClassID:    c.ID.Hex(),
-		UserID:     userID,
-		Role:       consts.RoleStudent,
-		JoinTime:   now,
-		CreateTime: now,
-		UpdateTime: now,
+		ClassID: req.ClassId,
+		Name:    req.Name,
 	}
-
-	err = s.MemberMapper.Insert(ctx, member)
+	err := s.MemberMapper.Insert(ctx, member)
 	if err != nil {
-		log.Error("加入班级失败: %v", err)
-		return nil, consts.ErrJoinClass
+		log.Error("创建班级成员失败: %v", err)
+		return nil, consts.ErrCreateClassMember
 	}
-
 	// 更新班级成员数量
-	err = s.ClassMapper.UpdateMemberCount(ctx, c.ID.Hex(), 1)
+	err = s.ClassMapper.UpdateMemberCount(ctx, req.ClassId, 1)
 	if err != nil {
 		log.Error("更新班级成员数量失败: %v", err)
 		// 不影响主流程，只记录错误
 	}
-
-	return &show.JoinClassResp{
-		ClassId:   c.ID.Hex(),
-		ClassName: c.Name,
+	return &show.CreateClassMembersResp{
+		MemberId: member.ID.Hex(),
 	}, nil
 }
 
@@ -276,25 +212,19 @@ func (s *ClassService) GetClassMembers(ctx context.Context, req *show.GetClassMe
 		return nil, consts.ErrGetClassMembers
 	}
 
-	// 转换为响应格式
 	memberInfos := make([]*show.ClassMemberInfo, 0, len(members))
 	for _, m := range members {
-		// 查找用户信息
-		user, err := s.UserMapper.FindOne(ctx, m.UserID)
-		if err != nil {
-			log.Error("获取班级成员信息失败: %v", err)
-			continue
-		}
-
 		memberInfo := &show.ClassMemberInfo{
-			Id:       m.ID.Hex(),
+			MemberId: m.ID.Hex(),
+			Name:     m.Name,
 			UserId:   m.UserID,
-			UserName: user.Username,
-			Role:     show.UserRole_STUDENT,
-			JoinTime: m.JoinTime.Unix(),
-		}
-		if m.Role == consts.RoleTeacher {
-			memberInfo.Role = show.UserRole_TEACHER
+			JoinTime: func() *int64 {
+				if m.JoinTime != nil {
+					joinTime := m.JoinTime.Unix()
+					return &joinTime
+				}
+				return nil
+			}(),
 		}
 		memberInfos = append(memberInfos, memberInfo)
 	}
@@ -305,13 +235,155 @@ func (s *ClassService) GetClassMembers(ctx context.Context, req *show.GetClassMe
 	}, nil
 }
 
-// generateInviteCode 生成邀请码
-func (s *ClassService) generateInviteCode() string {
-	const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	code := make([]byte, 10)
-	for i := range code {
-		randomIndex, _ := rand.Int(rand.Reader, big.NewInt(int64(len(charset))))
-		code[i] = charset[randomIndex.Int64()]
+func (s *ClassService) BindClassMember(ctx context.Context, req *show.BindClassMemberReq) (*show.Response, error) {
+	meta := adaptor.ExtractUserMeta(ctx)
+	if meta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
 	}
-	return string(code)
+	userID := meta.GetUserId()
+
+	// 确认学生身份
+	u, err := s.UserMapper.FindOne(ctx, userID)
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+	if u.Role != consts.RoleStudent {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	// 检查是否已经是班级成员且成员没被绑定
+	existingStudent, err1 := s.MemberMapper.FindByClassIDAndStuID(ctx, req.ClassId, userID)
+	existingMember, err2 := s.MemberMapper.FindByMemberID(ctx, req.MemberId)
+
+	switch {
+	case err1 == nil && err2 == nil:
+		if existingStudent.ID == existingMember.ID && existingMember.UserID != nil && *existingMember.UserID == userID {
+			// 学生已经绑定到这个member上了
+			return util.Succeed("已进入班级")
+		}
+		if req.MemberId != existingStudent.ID.Hex() {
+			// 学生已绑定到其他member上
+			return nil, consts.ErrMemberAlreadyBound
+		}
+		if existingMember.UserID != nil && *existingMember.UserID != userID {
+			// 指定的member已被其他学生绑定
+			return nil, consts.ErrMemberPositionOccupied
+		}
+		// 理论上不应该到这里，但为了安全起见
+		return nil, consts.ErrBindClassMember
+
+	case err1 == nil && err2 != nil:
+		// 学生已在班级中，但指定的member不存在
+		return nil, consts.ErrMemberPositionNotFound
+
+	case err1 != nil && err2 == nil:
+		// 学生不在班级中，指定的member已被其他人绑定
+		if existingMember.UserID != nil {
+			return nil, consts.ErrMemberPositionOccupied
+		}
+		// 指定的member不属于当前班级
+		if existingMember.ClassID != req.ClassId {
+			return nil, consts.ErrMemberPositionNotFound
+		}
+		// member未绑定，可以绑定
+		updateFields := bson.M{
+			"user_id":   userID,
+			"join_time": time.Now(),
+		}
+		if err := s.MemberMapper.UpdateFields(ctx, existingMember.ID, updateFields); err != nil {
+			log.Error("绑定班级成员失败: %v", err)
+			return nil, consts.ErrBindClassMember
+		}
+		return util.Succeed("绑定成功")
+
+	case err1 != nil && err2 != nil:
+		// 学生不在班级中，指定的member也不存在
+		return nil, consts.ErrMemberPositionNotFound
+
+	default:
+		// 理论上不会到这里
+		return nil, consts.ErrBindClassMember
+	}
+}
+
+func (s *ClassService) UnbindClassMember(ctx context.Context, req *show.UnbindClassMemberReq) (*show.Response, error) {
+	meta := adaptor.ExtractUserMeta(ctx)
+	if meta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+	userID := meta.GetUserId()
+
+	// 确认学生身份
+	u, err := s.UserMapper.FindOne(ctx, userID)
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+	if u.Role != consts.RoleStudent {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	updateFields := bson.M{
+		"user_id":   nil,
+		"join_time": nil,
+	}
+
+	oid, err := primitive.ObjectIDFromHex(req.MemberId)
+	if err != nil {
+		return nil, consts.ErrInvalidObjectId
+	}
+
+	err = s.MemberMapper.UpdateFields(ctx, oid, updateFields)
+	if err != nil {
+		return nil, err
+	}
+	return util.Succeed("解绑成功")
+}
+
+func (s *ClassService) EditClassMemberName(ctx context.Context, req *show.EditClassMemberNameReq) (*show.Response, error) {
+	meta := adaptor.ExtractUserMeta(ctx)
+	if meta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	updateFields := bson.M{
+		"name": req.Name,
+	}
+
+	oid, err := primitive.ObjectIDFromHex(req.MemberId)
+	if err != nil {
+		return nil, consts.ErrInvalidObjectId
+	}
+
+	err = s.MemberMapper.UpdateFields(ctx, oid, updateFields)
+	if err != nil {
+		return nil, err
+	}
+	return util.Succeed("修改成功")
+}
+
+func (s *ClassService) DeleteClassMember(ctx context.Context, req *show.DeleteClassMemberReq) (*show.Response, error) {
+	meta := adaptor.ExtractUserMeta(ctx)
+	if meta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+	userID := meta.GetUserId()
+
+	// 确认教师身份
+	u, err := s.UserMapper.FindOne(ctx, userID)
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+	if u.Role != consts.RoleTeacher {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	err = s.MemberMapper.Delete(ctx, req.MemberId)
+	if err != nil {
+		return nil, err
+	}
+	// 删除成员对应的作业 todo
+	return util.Succeed("删除成功")
 }

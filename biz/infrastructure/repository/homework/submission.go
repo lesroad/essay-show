@@ -9,7 +9,7 @@ import (
 type HomeworkSubmission struct {
 	ID          primitive.ObjectID `bson:"_id,omitempty" json:"id"`
 	HomeworkID  string             `bson:"homework_id" json:"homeworkId"`
-	StudentID   string             `bson:"student_id" json:"studentId"`
+	MemberId    string             `bson:"member_id" json:"memberId"`
 	TeacherID   string             `bson:"teacher_id" json:"teacherId"`
 	Images      []string           `bson:"images" json:"images"`
 	GradeResult string             `bson:"grade_result" json:"gradeResult"`

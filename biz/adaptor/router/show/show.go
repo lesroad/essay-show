@@ -20,15 +20,22 @@ func Register(r *server.Hertz) {
 	{
 		_class := root.Group("/class", _classMw()...)
 		_class.POST("/create", append(_createclassMw(), show.CreateClass)...)
-		_class.POST("/join", append(_joinclassMw(), show.JoinClass)...)
 		_class.GET("/list", append(_listclassesMw(), show.ListClasses)...)
-		_class.GET("/members", append(_getclassmembersMw(), show.GetClassMembers)...)
+		{
+			_members := _class.Group("/members", _membersMw()...)
+			_members.POST("/bind", append(_bindclassmemberMw(), show.BindClassMember)...)
+			_members.POST("/create", append(_createclassmembersMw(), show.CreateClassMembers)...)
+			_members.DELETE("/delete", append(_deleteclassmemberMw(), show.DeleteClassMember)...)
+			_members.POST("/edit", append(_editclassmembernameMw(), show.EditClassMemberName)...)
+			_members.GET("/get", append(_getclassmembersMw(), show.GetClassMembers)...)
+			_members.POST("/unbind", append(_unbindclassmemberMw(), show.UnbindClassMember)...)
+		}
 	}
 	{
 		_essay := root.Group("/essay", _essayMw()...)
 		_essay.POST("/evaluate", append(_essayevaluateMw(), show.EssayEvaluate)...)
 		_evaluate := _essay.Group("/evaluate", _evaluateMw()...)
-		_evaluate.POST("/delete", append(_deleteevaluateMw(), show.DeleteEvaluate)...)
+		_evaluate.DELETE("/delete", append(_deleteevaluateMw(), show.DeleteEvaluate)...)
 		_evaluate.POST("/download", append(_downloadevaluateMw(), show.DownloadEvaluate)...)
 		_evaluate.POST("/modify", append(_evaluatemodifyMw(), show.EvaluateModify)...)
 		_evaluate.POST("/stream", append(_essayevaluatestreamMw(), show.EssayEvaluateStream)...)
@@ -54,9 +61,8 @@ func Register(r *server.Hertz) {
 	}
 	{
 		_homework := root.Group("/homework", _homeworkMw()...)
-		_homework.POST("/correct", append(_correcthomeworkMw(), show.CorrectHomework)...)
 		_homework.POST("/create", append(_createhomeworkMw(), show.CreateHomework)...)
-		_homework.POST("/delete", append(_deletehomeworkMw(), show.DeleteHomework)...)
+		_homework.DELETE("/delete", append(_deletehomeworkMw(), show.DeleteHomework)...)
 		_homework.POST("/edit", append(_edithomeworkMw(), show.EditHomework)...)
 		_homework.GET("/list", append(_listhomeworksMw(), show.ListHomeworks)...)
 		_homework.POST("/recorrect", append(_recorrecthomeworkMw(), show.ReCorrectHomework)...)
