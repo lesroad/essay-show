@@ -584,3 +584,28 @@ func (c *HttpClient) AnalyzeClassStatistics(ctx context.Context, data map[string
 
 	return resp, nil
 }
+
+func (c *HttpClient) ExtractRubricCategories(ctx context.Context, data map[string]any) (map[string]any, error) {
+	header := make(map[string]string)
+	header["Content-Type"] = "application/json"
+	header["Charset"] = "utf-8"
+
+	url := config.GetConfig().Api.WebEndpointURL + "/extract_rubric_categories"
+	resp, err := c.SendRequest(ctx, consts.Post, url, header, data)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (c *HttpClient) GradeSingleStudent(ctx context.Context, data map[string]any) (map[string]any, error) {
+	header := make(map[string]string)
+	header["Content-Type"] = "application/json"
+	header["Charset"] = "utf-8"
+	url := config.GetConfig().Api.WebEndpointURL + "/grade_single_student"
+	resp, err := c.SendRequest(ctx, consts.Post, url, header, data)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}

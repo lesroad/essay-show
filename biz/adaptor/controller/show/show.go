@@ -305,22 +305,6 @@ func EvaluateModify(ctx context.Context, c *app.RequestContext) {
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
 
-// DeleteEvaluate .
-// @router /essay/evaluate/delete [POST]
-func DeleteEvaluate(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req show.DeleteEvaluateReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	p := provider.Get()
-	resp, err := p.EssayService.DeleteEvaluate(ctx, &req)
-	adaptor.PostProcess(ctx, c, &req, resp, err)
-}
-
 // GenerateUrlLink .
 // @router /sts/generate_url_link [POST]
 func GenerateUrlLink(ctx context.Context, c *app.RequestContext) {
@@ -350,5 +334,20 @@ func FillInvitationCode(ctx context.Context, c *app.RequestContext) {
 
 	p := provider.Get()
 	resp, err := p.UserService.FillInvitationCode(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// DeleteEvaluate .
+// @router /essay/evaluate/delete/:evaluateId [DELETE]
+func DeleteEvaluate(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.DeleteEvaluateReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	p := provider.Get()
+	resp, err := p.EssayService.DeleteEvaluate(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }

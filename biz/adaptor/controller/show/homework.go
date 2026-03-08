@@ -93,22 +93,6 @@ func GetSubmissionEvaluate(ctx context.Context, c *app.RequestContext) {
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
 
-// CorrectHomework .
-// @router /homework/correct [POST]
-func CorrectHomework(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req show.CorrectHomeworkReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	resp := new(show.CorrectHomeworkResp)
-
-	c.JSON(consts.StatusOK, resp)
-}
-
 // ModifySubmissionEvaluate .
 // @router /homework/submission/modify [POST]
 func ModifySubmissionEvaluate(ctx context.Context, c *app.RequestContext) {
@@ -158,22 +142,6 @@ func ReCorrectHomework(ctx context.Context, c *app.RequestContext) {
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
 
-// DeleteHomework .
-// @router /homework/delete [POST]
-func DeleteHomework(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req show.DeleteHomeworkReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	p := provider.Get()
-	resp, err := p.HomeworkService.DeleteHomework(ctx, &req)
-	adaptor.PostProcess(ctx, c, &req, resp, err)
-}
-
 // EditHomework .
 // @router /homework/edit [POST]
 func EditHomework(ctx context.Context, c *app.RequestContext) {
@@ -219,5 +187,20 @@ func GetHomeworkStatistics(ctx context.Context, c *app.RequestContext) {
 
 	p := provider.Get()
 	resp, err := p.HomeworkService.GetHomeworkStatistics(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// DeleteHomework .
+// @router /homework/delete/:homeworkId [DELETE]
+func DeleteHomework(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.DeleteHomeworkReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	p := provider.Get()
+	resp, err := p.HomeworkService.DeleteHomework(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }

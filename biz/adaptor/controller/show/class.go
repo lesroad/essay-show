@@ -44,24 +44,8 @@ func ListClasses(ctx context.Context, c *app.RequestContext) {
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
 
-// JoinClass .
-// @router /class/join [POST]
-func JoinClass(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req show.JoinClassReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	p := provider.Get()
-	resp, err := p.ClassService.JoinClass(ctx, &req)
-	adaptor.PostProcess(ctx, c, &req, resp, err)
-}
-
 // GetClassMembers .
-// @router /class/members [GET]
+// @router /class/members/get [GET]
 func GetClassMembers(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req show.GetClassMembersReq
@@ -73,5 +57,101 @@ func GetClassMembers(ctx context.Context, c *app.RequestContext) {
 
 	p := provider.Get()
 	resp, err := p.ClassService.GetClassMembers(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// BindClassMember .
+// @router /class/members/bind [POST]
+func BindClassMember(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.BindClassMemberReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.ClassService.BindClassMember(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// CreateClassMembers .
+// @router /class/members/create [POST]
+func CreateClassMembers(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.CreateClassMembersReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.ClassService.CreateClassMembers(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// EditClassMemberName .
+// @router /class/members/edit [POST]
+func EditClassMemberName(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.EditClassMemberNameReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.ClassService.EditClassMemberName(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// UnbindClassMember .
+// @router /class/members/unbind [POST]
+func UnbindClassMember(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.UnbindClassMemberReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.ClassService.UnbindClassMember(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// DeleteClassMember .
+// @router /class/members/delete/:memberId [DELETE]
+func DeleteClassMember(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.DeleteClassMemberReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.ClassService.DeleteClassMember(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// GetClassMemberInfo .
+// @router /class/members/info [GET]
+func GetClassMemberInfo(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.GetClassMemberInfoReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.ClassService.GetClassMemberInfo(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }

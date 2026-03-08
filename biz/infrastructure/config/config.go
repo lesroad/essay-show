@@ -45,9 +45,10 @@ type LogConfig struct {
 }
 
 type API struct {
-	PlatfromURL  string
-	StatelessURL string
-	AlgorithmURL string
+	PlatfromURL    string
+	StatelessURL   string
+	AlgorithmURL   string
+	WebEndpointURL string
 }
 
 func NewConfig() (*Config, error) {

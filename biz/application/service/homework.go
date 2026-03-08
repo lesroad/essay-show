@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"essay-show/biz/adaptor"
 	"essay-show/biz/application/dto/essay/show"
 	"essay-show/biz/application/dto/essay/stateless"
@@ -19,6 +20,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/google/wire"
+	"github.com/spf13/cast"
 )
 
 type IHomeworkService interface {
@@ -100,6 +102,28 @@ func (s *HomeworkService) CreateHomework(ctx context.Context, req *show.CreateHo
 		DevelopmentScore: req.DevelopmentScore,
 		CreateTime:       now,
 		UpdateTime:       now,
+	}
+
+	// 网页端提交作业，需自定义批改
+	if req.Topic == 3 {
+		httpClient := util.GetHttpClient()
+		extractRubricCategoriesResponse, err := httpClient.ExtractRubricCategories(ctx, map[string]any{
+			"rubric_text": req.Standard,
+			"grade_type":  util.GetGradeType(h.Grade),
+		})
+		if err != nil {
+			return nil, err
+		}
+		if !extractRubricCategoriesResponse["success"].(bool) {
+			return nil, consts.ErrExtractRubricCategories
+		}
+		data := extractRubricCategoriesResponse["data"].(map[string]any)
+		dataJsonBytes, err := json.Marshal(data)
+		if err != nil {
+			return nil, errors.New("marshal rubric categories data failed: " + err.Error())
+		}
+		dataJsonStr := string(dataJsonBytes)
+		h.RubricCategories = &dataJsonStr
 	}
 
 	err = s.HomeworkMapper.Insert(ctx, h)
@@ -308,6 +332,7 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 
 	// 老师检查是否为班级创建者，学生检查是否加入班级
 	c := new(class.Class)
+	member := new(class.ClassMember)
 	if u.Role == consts.RoleTeacher {
 		c, err = s.ClassMapper.FindOne(ctx, req.ClassId)
 		if err != nil {
@@ -318,10 +343,10 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 			return nil, consts.ErrForbidden
 		}
 	} else {
-		_, err = s.MemberMapper.FindByClassIDAndStuID(ctx, req.ClassId, userMeta.GetUserId())
-		if err == consts.ErrNotFound {
-			log.Error("用户不是班级成员")
-			return nil, consts.ErrNotClassMember
+		member, err = s.MemberMapper.FindByClassIDAndStuID(ctx, req.ClassId, userMeta.GetUserId())
+		if err != nil {
+			log.Error("获取班级成员失败: %v", err)
+			return nil, err
 		}
 	}
 
@@ -371,7 +396,7 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 			submitCount := int64(len(homeworkInfos))
 
 			// 计算未提交学生数
-			notSubmittedCount := c.MemberCount - submitCount - 1
+			notSubmittedCount := c.MemberCount - submitCount
 
 			// 获取已批改数量
 			gradeList, err := s.SubmissionMapper.FindByStatus(ctx, []int{consts.StatusCompleted, consts.StatusModified})
@@ -386,7 +411,7 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 			homeworkInfo.GradeCount = &gradeCount
 		} else {
 			// 获取提交状态
-			submission, err := s.SubmissionMapper.FindByStudentAndHomework(ctx, userMeta.GetUserId(), h.ID.Hex())
+			submission, err := s.SubmissionMapper.FindByMemberAndHomework(ctx, member.ID.Hex(), h.ID.Hex())
 			switch {
 			case err == consts.ErrNotFound:
 				status := show.HomeworkStatus(consts.StatusNotSubmission)
@@ -443,20 +468,10 @@ func (s *HomeworkService) GetSubmissionEvaluate(ctx context.Context, req *show.G
 	}, nil
 }
 
-// SubmitHomework 学生提交作业
+// SubmitHomework 提交作业
 func (s *HomeworkService) SubmitHomework(ctx context.Context, req *show.SubmitHomeworkReq) (*show.SubmitHomeworkResp, error) {
 	userMeta := adaptor.ExtractUserMeta(ctx)
 	if userMeta.GetUserId() == "" {
-		return nil, consts.ErrNotAuthentication
-	}
-
-	// 确认学生身份
-	u, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
-	if err != nil {
-		log.Error("获取用户信息失败: %v", err)
-		return nil, consts.ErrNotFound
-	}
-	if u.Role != consts.RoleStudent {
 		return nil, consts.ErrNotAuthentication
 	}
 
@@ -465,16 +480,29 @@ func (s *HomeworkService) SubmitHomework(ctx context.Context, req *show.SubmitHo
 		log.Error("作业不存在: %v", err)
 		return nil, consts.ErrNotFound
 	}
+	user, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
 
-	now := time.Now()
+	// 教师端可直接提交，学生端需检查member和userid是否绑定
+	member, err := s.MemberMapper.FindByMemberID(ctx, req.MemberId)
+	if err != nil {
+		log.Error("获取班级成员失败: %v", err)
+		return nil, consts.ErrGetClassMembers
+	}
+	if member.UserID != nil && *member.UserID != userMeta.GetUserId() && user.Role == consts.RoleStudent {
+		log.Error("用户无权提交此作业, userId: %s, memberId: %s", userMeta.GetUserId(), req.MemberId)
+		return nil, consts.ErrForbidden
+	}
+
 	submission := &homework.HomeworkSubmission{
 		HomeworkID: req.HomeworkId,
-		StudentID:  userMeta.UserId,
+		MemberId:   req.MemberId,
 		TeacherID:  h.CreatorID,
 		Images:     req.Images,
 		Status:     consts.StatusInitialized,
-		CreateTime: now,
-		UpdateTime: now,
 	}
 
 	err = s.SubmissionMapper.Insert(ctx, submission)
@@ -534,26 +562,13 @@ func (s *HomeworkService) GetSubmissions(ctx context.Context, req *show.GetSubmi
 		log.Error("获取班级成员失败: %v", err)
 		return nil, consts.ErrGetClassMembers
 	}
-	total = total - 1 // 去掉老师
 
 	submissionInfos := make([]*show.SubmissionInfo, 0)
 	for _, m := range members {
-		// 如果加入班级时是老师，就无需提交
-		if m.Role == consts.RoleTeacher {
-			continue
-		}
-
-		// 获取学生信息
-		user, err := s.UserMapper.FindOne(ctx, m.UserID)
-		if err != nil {
-			log.Error("获取学生信息失败: %v", err)
-			return nil, consts.ErrGetSubmission
-		}
-
-		sub := &show.SubmissionInfo{StudentName: user.Username}
+		sub := &show.SubmissionInfo{MemberId: m.ID.Hex(), MemberName: m.Name}
 
 		// 查询学生提交记录
-		userSubmission, err := s.SubmissionMapper.FindByStudentAndHomework(ctx, user.ID.Hex(), req.HomeworkId)
+		userSubmission, err := s.SubmissionMapper.FindByMemberAndHomework(ctx, m.ID.Hex(), req.HomeworkId)
 		switch {
 		case err == consts.ErrNotFound:
 			sub.Status = consts.StatusNotSubmission
@@ -641,8 +656,6 @@ func (s *HomeworkService) ReCorrectHomework(ctx context.Context, req *show.ReCor
 		}
 
 		successIds = append(successIds, submissionId)
-		log.Info("作业提交已标记为待重批: submissionId=%s, studentId=%s, homeworkId=%s",
-			submissionId, submission.StudentID, submission.HomeworkID)
 	}
 
 	log.Info("作业重批完成: 请求数=%d, 成功数=%d", len(req.SubmissionIds), len(successIds))
@@ -784,10 +797,7 @@ func (s *HomeworkService) ModifySubmissionEvaluate(ctx context.Context, req *sho
 		return nil, consts.ErrCall
 	}
 
-	return &show.Response{
-		Code: 0,
-		Msg:  "修改成功",
-	}, nil
+	return util.Succeed("修改成功")
 }
 
 // DownloadSubmissionEvaluate 下载作业提交的批改结果
@@ -820,7 +830,7 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 			continue
 		}
 
-		user, err := s.UserMapper.FindOne(ctx, submission.StudentID)
+		member, err := s.MemberMapper.FindByMemberID(ctx, submission.MemberId)
 		if err != nil {
 			log.Error("获取学生信息失败: %v", err)
 			return nil, consts.ErrNotFound
@@ -828,7 +838,7 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 
 		essayData := map[string]any{
 			"data":    evaluateResult,
-			"user_id": user.Username,
+			"user_id": member.Name,
 		}
 		essayList = append(essayList, essayData)
 	}
@@ -918,14 +928,14 @@ func (s *HomeworkService) DownloadLessonPlan(ctx context.Context, req *show.Down
 			continue
 		}
 
-		user, err := s.UserMapper.FindOne(ctx, submission.StudentID)
+		member, err := s.MemberMapper.FindByMemberID(ctx, submission.MemberId)
 		if err != nil {
-			log.Error("获取学生信息失败, studentId: %s, error: %v", submission.StudentID, err)
+			log.Error("获取学生信息失败, memberId: %s, error: %v", submission.MemberId, err)
 			continue
 		}
 
 		essayData := map[string]any{
-			"student_name": user.Username,
+			"student_name": member.Name,
 			"title":        submission.Title,
 			"scores": map[string]any{
 				"all":                  evaluateResult.AIEvaluation.ScoreEvaluation.Scores.All,
@@ -1036,6 +1046,14 @@ func (s *HomeworkService) processHomeworkSubmissions(ctx context.Context) {
 
 // processOneSubmission 处理单个作业提交
 func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *homework.HomeworkSubmission) {
+	// 查询学生信息
+	member, err := s.MemberMapper.FindByMemberID(ctx, submission.MemberId)
+	if err != nil {
+		log.Error("查询学生信息失败: %v", err)
+		markSubmissionFailed(ctx, submission, s.SubmissionMapper, err.Error())
+		return
+	}
+
 	// 查询老师批改次数
 	teacher, err := s.UserMapper.FindOne(ctx, submission.TeacherID)
 	if err != nil {
@@ -1070,6 +1088,7 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 
 	// 解析结果
 	data := ocrResp["data"].(map[string]any)
+	log.Info("OCR识别结果: %v", data)
 	title := data["title"].(string)
 	text := data["content"].(string)
 	prompt := homework.Description
@@ -1079,6 +1098,7 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 
 	submission.Title = title
 	submission.UpdateTime = time.Now()
+	submission.Status = consts.StatusGrading
 	s.SubmissionMapper.Update(ctx, submission)
 
 	resultChan := make(chan string, 100)
@@ -1090,6 +1110,37 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 		standard = homework.Standard
 	}
 
+	// 自定义批改标准
+	if homework.Topic == 3 {
+		httpClient := util.GetHttpClient()
+		gradeSingleStudentResponse, err := httpClient.GradeSingleStudent(ctx, map[string]any{
+			"student_id":      member.ID,
+			"student_name":    member.Name,
+			"ocr_text":        text,
+			"title":           title,
+			"standard":        homework.Standard,
+			"categories_dict": homework.RubricCategories,
+			"grade_type":      util.GetGradeType(homework.Grade),
+		})
+		if err != nil {
+			markSubmissionFailed(ctx, submission, s.SubmissionMapper, err.Error())
+			return
+		}
+		submission.GradeResult = cast.ToString(gradeSingleStudentResponse["score"].(float64))
+		submission.Status = consts.StatusCompleted
+		submission.UpdateTime = time.Now()
+		data, _ := json.Marshal(gradeSingleStudentResponse)
+		submission.Response = string(data)
+		if err := s.SubmissionMapper.Update(ctx, submission); err != nil {
+			log.Error("保存批改结果失败: %v", err)
+			markSubmissionFailed(ctx, submission, s.SubmissionMapper, err.Error())
+			return
+		}
+		log.Info("网页端作业批改完成: %s", submission.ID.Hex())
+		return
+	}
+
+	// 小程序批改标准
 	// 准备自定义分项打分比例
 	var ratio *util.ScoreRatio
 	if homework.ContentScore != nil || homework.ExpressionScore != nil ||

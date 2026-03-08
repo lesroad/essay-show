@@ -20,18 +20,32 @@ func Register(r *server.Hertz) {
 	{
 		_class := root.Group("/class", _classMw()...)
 		_class.POST("/create", append(_createclassMw(), show.CreateClass)...)
-		_class.POST("/join", append(_joinclassMw(), show.JoinClass)...)
 		_class.GET("/list", append(_listclassesMw(), show.ListClasses)...)
-		_class.GET("/members", append(_getclassmembersMw(), show.GetClassMembers)...)
+		{
+			_members := _class.Group("/members", _membersMw()...)
+			_members.POST("/bind", append(_bindclassmemberMw(), show.BindClassMember)...)
+			_members.POST("/create", append(_createclassmembersMw(), show.CreateClassMembers)...)
+			_members.POST("/edit", append(_editclassmembernameMw(), show.EditClassMemberName)...)
+			_members.GET("/get", append(_getclassmembersMw(), show.GetClassMembers)...)
+			_members.GET("/info", append(_getclassmemberinfoMw(), show.GetClassMemberInfo)...)
+			_members.POST("/unbind", append(_unbindclassmemberMw(), show.UnbindClassMember)...)
+			{
+				_delete := _members.Group("/delete", _deleteMw()...)
+				_delete.DELETE("/:memberId", append(_deleteclassmemberMw(), show.DeleteClassMember)...)
+			}
+		}
 	}
 	{
 		_essay := root.Group("/essay", _essayMw()...)
 		_essay.POST("/evaluate", append(_essayevaluateMw(), show.EssayEvaluate)...)
 		_evaluate := _essay.Group("/evaluate", _evaluateMw()...)
-		_evaluate.POST("/delete", append(_deleteevaluateMw(), show.DeleteEvaluate)...)
 		_evaluate.POST("/download", append(_downloadevaluateMw(), show.DownloadEvaluate)...)
 		_evaluate.POST("/modify", append(_evaluatemodifyMw(), show.EvaluateModify)...)
 		_evaluate.POST("/stream", append(_essayevaluatestreamMw(), show.EssayEvaluateStream)...)
+		{
+			_delete0 := _evaluate.Group("/delete", _delete0Mw()...)
+			_delete0.DELETE("/{evaluateId}", append(_deleteevaluateMw(), show.DeleteEvaluate)...)
+		}
 		_essay.POST("/like", append(_likeevaluateMw(), show.LikeEvaluate)...)
 		_essay.POST("/logs", append(_getevaluatelogsMw(), show.GetEvaluateLogs)...)
 	}
@@ -54,9 +68,7 @@ func Register(r *server.Hertz) {
 	}
 	{
 		_homework := root.Group("/homework", _homeworkMw()...)
-		_homework.POST("/correct", append(_correcthomeworkMw(), show.CorrectHomework)...)
 		_homework.POST("/create", append(_createhomeworkMw(), show.CreateHomework)...)
-		_homework.POST("/delete", append(_deletehomeworkMw(), show.DeleteHomework)...)
 		_homework.POST("/edit", append(_edithomeworkMw(), show.EditHomework)...)
 		_homework.GET("/list", append(_listhomeworksMw(), show.ListHomeworks)...)
 		_homework.POST("/recorrect", append(_recorrecthomeworkMw(), show.ReCorrectHomework)...)
@@ -67,6 +79,10 @@ func Register(r *server.Hertz) {
 		_submission.POST("/modify", append(_modifysubmissionevaluateMw(), show.ModifySubmissionEvaluate)...)
 		_homework.GET("/submissions", append(_getsubmissionsMw(), show.GetSubmissions)...)
 		_homework.POST("/submit", append(_submithomeworkMw(), show.SubmitHomework)...)
+		{
+			_delete1 := _homework.Group("/delete", _delete1Mw()...)
+			_delete1.DELETE("/:homeworkId", append(_deletehomeworkMw(), show.DeleteHomework)...)
+		}
 		{
 			_lesson_plan := _homework.Group("/lesson_plan", _lesson_planMw()...)
 			_lesson_plan.POST("/download", append(_downloadlessonplanMw(), show.DownloadLessonPlan)...)

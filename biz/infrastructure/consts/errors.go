@@ -51,7 +51,7 @@ var (
 	ErrBindAuth                    = NewErrno(codes.Code(1014), errors.New("绑定授权失败"))
 	ErrCreateClass                 = NewErrno(codes.Code(1015), errors.New("创建班级失败"))
 	ErrGetClassList                = NewErrno(codes.Code(1016), errors.New("获取班级列表失败"))
-	ErrJoinClass                   = NewErrno(codes.Code(1017), errors.New("加入班级失败"))
+	ErrCreateClassMember           = NewErrno(codes.Code(1017), errors.New("创建班级成员失败"))
 	ErrGetClassMembers             = NewErrno(codes.Code(1018), errors.New("获取班级成员失败"))
 	ErrCreateHomework              = NewErrno(codes.Code(1019), errors.New("创建作业失败"))
 	ErrGetHomeworkList             = NewErrno(codes.Code(1020), errors.New("获取作业列表失败"))
@@ -67,6 +67,11 @@ var (
 	ErrInvalidScoreDistribution    = NewErrno(codes.Code(1029), errors.New("结构和发展不能同时设置"))
 	ErrSendWechatMessage           = NewErrno(codes.Code(1030), errors.New("发送微信消息失败"))
 	ErrNoCompletedSubmissions      = NewErrno(codes.Code(1031), errors.New("没有已批改完成的提交"))
+	ErrMemberAlreadyBound          = NewErrno(codes.Code(1032), errors.New("该学生已绑定到其他成员位"))
+	ErrMemberPositionOccupied      = NewErrno(codes.Code(1033), errors.New("该成员位已被其他学生占用"))
+	ErrMemberPositionNotFound      = NewErrno(codes.Code(1034), errors.New("指定的成员位不存在"))
+	ErrBindClassMember             = NewErrno(codes.Code(1035), errors.New("绑定班级成员失败"))
+	ErrExtractRubricCategories     = NewErrno(codes.Code(1036), errors.New("提取批改标准失败"))
 )
 
 // ErrInvalidParams 调用时错误
@@ -74,6 +79,7 @@ var (
 	ErrInvalidParams = NewErrno(codes.InvalidArgument, errors.New("参数错误"))
 	ErrCall          = NewErrno(codes.Unknown, errors.New("调用接口失败，请重试"))
 	ErrOneCall       = NewErrno(codes.Code(3001), errors.New("同一时刻仅可以批改一篇作文, 请等待上一篇作文批改结束"))
+	ErrAlreadyExists = NewErrno(codes.AlreadyExists, errors.New("资源已存在"))
 )
 
 // 数据库相关错误
