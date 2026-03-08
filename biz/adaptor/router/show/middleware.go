@@ -405,3 +405,23 @@ func _deleteclassmemberMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _deleteMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _delete0Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _delete1Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getclassmemberinfoMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

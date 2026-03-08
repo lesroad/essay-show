@@ -71,6 +71,7 @@ var (
 	ErrMemberPositionOccupied      = NewErrno(codes.Code(1033), errors.New("该成员位已被其他学生占用"))
 	ErrMemberPositionNotFound      = NewErrno(codes.Code(1034), errors.New("指定的成员位不存在"))
 	ErrBindClassMember             = NewErrno(codes.Code(1035), errors.New("绑定班级成员失败"))
+	ErrExtractRubricCategories     = NewErrno(codes.Code(1036), errors.New("提取批改标准失败"))
 )
 
 // ErrInvalidParams 调用时错误

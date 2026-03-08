@@ -51,6 +51,26 @@ func (m *MemberMongoMapper) Insert(ctx context.Context, member *ClassMember) err
 	return err
 }
 
+func (m *MemberMongoMapper) FindByClassIDAndName(ctx context.Context, classID, name string) (*ClassMember, error) {
+	var member ClassMember
+	filter := bson.M{
+		"class_id": classID,
+		"name":     name,
+	}
+
+	err := m.conn.FindOneNoCache(ctx, &member, filter)
+	if err != nil {
+		switch {
+		case errors.Is(err, monc.ErrNotFound):
+			return nil, consts.ErrNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	return &member, nil
+}
+
 func (m *MemberMongoMapper) FindByClassID(ctx context.Context, classID string, page, pageSize int64) ([]*ClassMember, int64, error) {
 	var members []*ClassMember
 	filter := bson.M{"class_id": classID}
@@ -77,7 +97,7 @@ func (m *MemberMongoMapper) FindByClassID(ctx context.Context, classID string, p
 
 func (m *MemberMongoMapper) FindByStuID(ctx context.Context, userID string) ([]*ClassMember, int64, error) {
 	var members []*ClassMember
-	filter := bson.M{"user_id": userID, "role": consts.RoleStudent}
+	filter := bson.M{"user_id": userID}
 
 	total, err := m.conn.CountDocuments(ctx, filter)
 	if err != nil {

@@ -142,22 +142,6 @@ func ReCorrectHomework(ctx context.Context, c *app.RequestContext) {
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
 
-// DeleteHomework .
-// @router /homework/delete [POST]
-func DeleteHomework(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req show.DeleteHomeworkReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	p := provider.Get()
-	resp, err := p.HomeworkService.DeleteHomework(ctx, &req)
-	adaptor.PostProcess(ctx, c, &req, resp, err)
-}
-
 // EditHomework .
 // @router /homework/edit [POST]
 func EditHomework(ctx context.Context, c *app.RequestContext) {
@@ -203,5 +187,20 @@ func GetHomeworkStatistics(ctx context.Context, c *app.RequestContext) {
 
 	p := provider.Get()
 	resp, err := p.HomeworkService.GetHomeworkStatistics(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// DeleteHomework .
+// @router /homework/delete/:homeworkId [DELETE]
+func DeleteHomework(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.DeleteHomeworkReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+	p := provider.Get()
+	resp, err := p.HomeworkService.DeleteHomework(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }

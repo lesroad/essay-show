@@ -11,7 +11,7 @@ import (
 	"github.com/zeromicro/go-zero/core/stores/redis"
 )
 
-//go:embed config.local.yaml
+// //go:embed config.local.yaml
 var embeddedConfig []byte
 
 var config *Config
@@ -45,9 +45,10 @@ type LogConfig struct {
 }
 
 type API struct {
-	PlatfromURL  string
-	StatelessURL string
-	AlgorithmURL string
+	PlatfromURL    string
+	StatelessURL   string
+	AlgorithmURL   string
+	WebEndpointURL string
 }
 
 func NewConfig() (*Config, error) {

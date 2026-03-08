@@ -25,6 +25,7 @@ type IClassService interface {
 	UnbindClassMember(ctx context.Context, req *show.UnbindClassMemberReq) (*show.Response, error)
 	EditClassMemberName(ctx context.Context, req *show.EditClassMemberNameReq) (*show.Response, error)
 	DeleteClassMember(ctx context.Context, req *show.DeleteClassMemberReq) (*show.Response, error)
+	GetClassMemberInfo(ctx context.Context, req *show.GetClassMemberInfoReq) (*show.GetClassMemberInfoResp, error)
 }
 
 type ClassService struct {
@@ -171,23 +172,43 @@ func (s *ClassService) CreateClassMembers(ctx context.Context, req *show.CreateC
 	if meta.GetUserId() == "" {
 		return nil, consts.ErrNotAuthentication
 	}
-	member := &class.ClassMember{
-		ClassID: req.ClassId,
-		Name:    req.Name,
+	if len(req.Names) == 0 {
+		return nil, consts.ErrInvalidParams
 	}
-	err := s.MemberMapper.Insert(ctx, member)
-	if err != nil {
-		log.Error("创建班级成员失败: %v", err)
-		return nil, consts.ErrCreateClassMember
+
+	success := make([]bool, len(req.Names))
+	newMemberCount := int64(0)
+
+	for i, name := range req.Names {
+		existingMember, err := s.MemberMapper.FindByClassIDAndName(ctx, req.ClassId, name)
+		if err == nil && existingMember != nil {
+			success[i] = true
+			continue
+		}
+
+		member := &class.ClassMember{
+			ClassID: req.ClassId,
+			Name:    name,
+		}
+		err = s.MemberMapper.Insert(ctx, member)
+		if err != nil {
+			log.Error("创建班级成员 %s 失败: %v", name, err)
+			success[i] = false
+		} else {
+			success[i] = true
+			newMemberCount++
+		}
 	}
-	// 更新班级成员数量
-	err = s.ClassMapper.UpdateMemberCount(ctx, req.ClassId, 1)
-	if err != nil {
-		log.Error("更新班级成员数量失败: %v", err)
-		// 不影响主流程，只记录错误
+
+	if newMemberCount > 0 {
+		err := s.ClassMapper.UpdateMemberCount(ctx, req.ClassId, newMemberCount)
+		if err != nil {
+			log.Error("更新班级成员数量失败: %v", err)
+		}
 	}
+
 	return &show.CreateClassMembersResp{
-		MemberId: member.ID.Hex(),
+		Success: success,
 	}, nil
 }
 
@@ -384,6 +405,43 @@ func (s *ClassService) DeleteClassMember(ctx context.Context, req *show.DeleteCl
 	if err != nil {
 		return nil, err
 	}
-	// 删除成员对应的作业 todo
+	member, err := s.MemberMapper.FindByMemberID(ctx, req.MemberId)
+	if err != nil {
+		return nil, err
+	}
+	err = s.ClassMapper.UpdateMemberCount(ctx, member.ClassID, -1)
+	if err != nil {
+		return nil, err
+	}
+	// 删除成员作业 TODO
 	return util.Succeed("删除成功")
+}
+
+func (s *ClassService) GetClassMemberInfo(ctx context.Context, req *show.GetClassMemberInfoReq) (*show.GetClassMemberInfoResp, error) {
+	meta := adaptor.ExtractUserMeta(ctx)
+	if meta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+	userID := meta.GetUserId()
+
+	// 确认学生身份
+	u, err := s.UserMapper.FindOne(ctx, userID)
+	if err != nil {
+		log.Error("获取用户信息失败: %v, userID: %s", err, userID)
+		return nil, consts.ErrNotFound
+	}
+	if u.Role != consts.RoleStudent {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	member, err := s.MemberMapper.FindByClassIDAndStuID(ctx, req.ClassId, userID)
+	if err != nil {
+		log.Error("获取班级成员信息失败: %v, classID: %s, userID: %s", err, req.ClassId, userID)
+		return nil, consts.ErrNotFound
+	}
+	return &show.GetClassMemberInfoResp{
+		Name:     member.Name,
+		MemberId: member.ID.Hex(),
+		JoinTime: member.JoinTime.Unix(),
+	}, nil
 }

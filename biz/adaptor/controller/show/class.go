@@ -45,7 +45,7 @@ func ListClasses(ctx context.Context, c *app.RequestContext) {
 }
 
 // GetClassMembers .
-// @router /class/members [GET]
+// @router /class/members/get [GET]
 func GetClassMembers(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req show.GetClassMembersReq
@@ -125,7 +125,7 @@ func UnbindClassMember(ctx context.Context, c *app.RequestContext) {
 }
 
 // DeleteClassMember .
-// @router /class/members/delete [POST]
+// @router /class/members/delete/:memberId [DELETE]
 func DeleteClassMember(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req show.DeleteClassMemberReq
@@ -137,5 +137,21 @@ func DeleteClassMember(ctx context.Context, c *app.RequestContext) {
 
 	p := provider.Get()
 	resp, err := p.ClassService.DeleteClassMember(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
+
+// GetClassMemberInfo .
+// @router /class/members/info [GET]
+func GetClassMemberInfo(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.GetClassMemberInfoReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.ClassService.GetClassMemberInfo(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }

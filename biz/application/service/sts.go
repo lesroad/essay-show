@@ -129,25 +129,6 @@ func (s *StsService) OCR(ctx context.Context, req *show.OCRReq) (*show.OCRResp, 
 
 // SendVerifyCode 发送验证码
 func (s *StsService) SendVerifyCode(ctx context.Context, req *show.SendVerifyCodeReq) (*show.Response, error) {
-	// 查找用户
-	aUser, err := s.UserMapper.FindOneByPhone(ctx, req.AuthId)
-
-	if req.Type == 1 { // 登录验证码
-		// 查找数据库判断手机号是否注册过
-		if errors.Is(err, consts.ErrNotFound) || aUser == nil { // 未找到，说明没有注册
-			return nil, consts.ErrNotSignUp
-		} else if err != nil {
-			return nil, consts.ErrSend
-		}
-	} else { // 注册验证码
-		if err == nil && aUser != nil {
-			return nil, consts.ErrRepeatedSignUp
-		} else if err != nil && !errors.Is(err, consts.ErrNotFound) {
-			return nil, consts.ErrSignUp
-		}
-	}
-
-	// 通过中台发送验证码
 	httpClient := util.GetHttpClient()
 	ret, err := httpClient.SendVerifyCode(ctx, req.AuthType, req.AuthId)
 	if err != nil || ret["code"].(float64) != 0 {
