@@ -593,6 +593,7 @@ func (c *HttpClient) ExtractRubricCategories(ctx context.Context, data map[strin
 	url := config.GetConfig().Api.WebEndpointURL + "/extract_rubric_categories"
 	resp, err := c.SendRequest(ctx, consts.Post, url, header, data)
 	if err != nil {
+		log.Error("ExtractRubricCategories error: %v, data: %v", err, data)
 		return nil, err
 	}
 	return resp, nil
@@ -605,6 +606,7 @@ func (c *HttpClient) GradeSingleStudent(ctx context.Context, data map[string]any
 	url := config.GetConfig().Api.WebEndpointURL + "/grade_single_student"
 	resp, err := c.SendRequest(ctx, consts.Post, url, header, data)
 	if err != nil {
+		log.Error("GradeSingleStudent error: %v, data: %v", err, data)
 		return nil, err
 	}
 	return resp, nil
