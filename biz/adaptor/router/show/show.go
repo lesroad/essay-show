@@ -44,7 +44,7 @@ func Register(r *server.Hertz) {
 		_evaluate.POST("/stream", append(_essayevaluatestreamMw(), show.EssayEvaluateStream)...)
 		{
 			_delete0 := _evaluate.Group("/delete", _delete0Mw()...)
-			_delete0.DELETE("/{evaluateId}", append(_deleteevaluateMw(), show.DeleteEvaluate)...)
+			_delete0.DELETE("/:evaluateId", append(_deleteevaluateMw(), show.DeleteEvaluate)...)
 		}
 		_essay.POST("/like", append(_likeevaluateMw(), show.LikeEvaluate)...)
 		_essay.POST("/logs", append(_getevaluatelogsMw(), show.GetEvaluateLogs)...)
