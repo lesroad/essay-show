@@ -1120,6 +1120,7 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 			"title":           title,
 			"standard":        homework.Standard,
 			"categories_dict": homework.RubricCategories,
+			"description":     homework.Description,
 			"grade_type":      util.GetGradeType(homework.Grade),
 		})
 		if err != nil {
