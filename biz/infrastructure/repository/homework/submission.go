@@ -23,9 +23,11 @@ type HomeworkSubmission struct {
 	Images      []string           `bson:"images" json:"images"`
 	GradeResult string             `bson:"grade_result" json:"gradeResult"`
 	Title       string             `bson:"title" json:"title"`
+	Text        string             `bson:"text" json:"text"`
 	Response    string             `bson:"response" json:"response"`
 	Message     string             `bson:"message" json:"message"`
-	Status      int                `bson:"status" json:"status"` // 0: 初始化, 1: 批改中, 2: 批改完成, 3: 批改已人工修改, 7:批改失败
+	Status      int                `bson:"status" json:"status"`          // 0: 初始化, 1: 批改中, 2: 批改完成, 3: 批改已人工修改, 7:批改失败
+	SubmitType  int                `bson:"submit_type" json:"submitType"` // 0: 首次提交, 1: 重批：上传图片提交, 2: 重批：修改原文提交
 	CreateTime  time.Time          `bson:"create_time" json:"createTime"`
 	UpdateTime  time.Time          `bson:"update_time" json:"updateTime"`
 }

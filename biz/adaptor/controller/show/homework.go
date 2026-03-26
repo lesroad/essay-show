@@ -204,3 +204,19 @@ func DeleteHomework(ctx context.Context, c *app.RequestContext) {
 	resp, err := p.HomeworkService.DeleteHomework(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
+
+// ReEvaluateHomework .
+// @router /homework/evaluate [POST]
+func ReEvaluateHomework(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.ReEvaluateHomeworkReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.HomeworkService.ReEvaluateHomework(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}
