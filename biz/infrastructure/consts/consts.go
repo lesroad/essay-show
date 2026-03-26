@@ -51,7 +51,18 @@ const (
 	TimeoutDuration = 20 * time.Minute // 超时时间
 
 	InvitationTemplateId = "KglmTXE65kiACeTM85kwpA2oO9SU0urRGBJTo4gH9O0"
-	InvitationJumpPage = "pages/tabbar/profile"
+	InvitationJumpPage   = "pages/tabbar/profile"
+
+	SubmitTypeFirst = 0 // 首次提交
+	SubmitTypeImage = 1 // 重批：上传图片提交
+	SubmitTypeText  = 2 // 重批：修改原文提交
+
+	RecorrectTypeImage = 1 // 上传图片重批
+	RecorrectTypeText  = 2 // 修改原文后重批
+
+	TopicTypeCustom  = 0 // 自定义
+	TopicTypeLibrary = 1 // 题库
+	TopicTypeWeb     = 3 // 网页端
 )
 
 const (
