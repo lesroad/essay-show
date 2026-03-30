@@ -122,18 +122,13 @@ func (s *UserService) BindAuth(ctx context.Context, req *show.BindAuthReq) (*sho
 	if err != nil || bindAuthResponse["code"].(float64) != 0 {
 		return nil, consts.ErrBindAuth
 	}
-	data := bindAuthResponse["data"].(map[string]any)
 
 	u, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
 	if err != nil {
 		return nil, consts.ErrNotFound
 	}
-	switch req.AuthType {
-	case consts.AuthTypeWechatPhone:
-		u.Phone = data["options"].(string)
-	case consts.AuthTypeWechatOpenId:
-	default:
-		return nil, consts.ErrBindAuth
+	if req.AuthType != consts.AuthTypeWechatOpenId {
+		return nil, consts.ErrInvalidParams
 	}
 
 	err = s.UserMapper.Update(ctx, u)

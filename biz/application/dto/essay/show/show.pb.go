@@ -248,7 +248,7 @@ var file_show_proto_rawDesc = []byte{
 	0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x6c, 0x61, 0x73, 0x73,
 	0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x22, 0x17,
 	0xca, 0xc1, 0x18, 0x13, 0x2f, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x2f, 0x6d, 0x65, 0x6d, 0x62, 0x65,
-	0x72, 0x73, 0x2f, 0x69, 0x6e, 0x66, 0x6f, 0x32, 0xe4, 0x0b, 0x0a, 0x08, 0x68, 0x6f, 0x6d, 0x65,
+	0x72, 0x73, 0x2f, 0x69, 0x6e, 0x66, 0x6f, 0x32, 0xe4, 0x0c, 0x0a, 0x08, 0x68, 0x6f, 0x6d, 0x65,
 	0x77, 0x6f, 0x72, 0x6b, 0x12, 0x65, 0x0a, 0x0e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x48, 0x6f,
 	0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b, 0x12, 0x1d, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73,
 	0x68, 0x6f, 0x77, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x48, 0x6f, 0x6d, 0x65, 0x77, 0x6f,
@@ -287,20 +287,28 @@ var file_show_proto_rawDesc = []byte{
 	0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x52, 0x65, 0x43, 0x6f, 0x72, 0x72, 0x65,
 	0x63, 0x74, 0x48, 0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x22, 0x17,
 	0xd2, 0xc1, 0x18, 0x13, 0x2f, 0x68, 0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b, 0x2f, 0x72, 0x65,
-	0x63, 0x6f, 0x72, 0x72, 0x65, 0x63, 0x74, 0x12, 0x73, 0x0a, 0x12, 0x52, 0x65, 0x45, 0x76, 0x61,
+	0x63, 0x6f, 0x72, 0x72, 0x65, 0x63, 0x74, 0x12, 0x76, 0x0a, 0x12, 0x52, 0x65, 0x45, 0x76, 0x61,
 	0x6c, 0x75, 0x61, 0x74, 0x65, 0x48, 0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b, 0x12, 0x21, 0x2e,
 	0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x52, 0x65, 0x45, 0x76, 0x61,
 	0x6c, 0x75, 0x61, 0x74, 0x65, 0x48, 0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b, 0x52, 0x65, 0x71,
 	0x1a, 0x22, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x52, 0x65,
 	0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x65, 0x48, 0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b,
-	0x52, 0x65, 0x73, 0x70, 0x22, 0x16, 0xd2, 0xc1, 0x18, 0x12, 0x2f, 0x68, 0x6f, 0x6d, 0x65, 0x77,
-	0x6f, 0x72, 0x6b, 0x2f, 0x65, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x65, 0x12, 0x6a, 0x0a, 0x0e,
-	0x47, 0x65, 0x74, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x1d,
-	0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x47, 0x65, 0x74, 0x53,
-	0x75, 0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x71, 0x1a, 0x1e, 0x2e,
-	0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x75,
-	0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x73, 0x70, 0x22, 0x19, 0xca,
-	0xc1, 0x18, 0x15, 0x2f, 0x68, 0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b, 0x2f, 0x73, 0x75, 0x62,
+	0x52, 0x65, 0x73, 0x70, 0x22, 0x19, 0xd2, 0xc1, 0x18, 0x15, 0x2f, 0x68, 0x6f, 0x6d, 0x65, 0x77,
+	0x6f, 0x72, 0x6b, 0x2f, 0x72, 0x65, 0x2d, 0x65, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74, 0x65, 0x12,
+	0x6a, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e,
+	0x73, 0x12, 0x1d, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x47,
+	0x65, 0x74, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x71,
+	0x1a, 0x1e, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x47, 0x65,
+	0x74, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x73, 0x70,
+	0x22, 0x19, 0xca, 0xc1, 0x18, 0x15, 0x2f, 0x68, 0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b, 0x2f,
+	0x73, 0x75, 0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x7b, 0x0a, 0x12, 0x47,
+	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e,
+	0x73, 0x12, 0x21, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x47,
+	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e,
+	0x73, 0x52, 0x65, 0x71, 0x1a, 0x22, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f,
+	0x77, 0x2e, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x73, 0x73,
+	0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x73, 0x70, 0x22, 0x1e, 0xca, 0xc1, 0x18, 0x1a, 0x2f, 0x68,
+	0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b, 0x2f, 0x75, 0x73, 0x65, 0x72, 0x2f, 0x73, 0x75, 0x62,
 	0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x7e, 0x0a, 0x15, 0x47, 0x65, 0x74, 0x53,
 	0x75, 0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x45, 0x76, 0x61, 0x6c, 0x75, 0x61, 0x74,
 	0x65, 0x12, 0x24, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x47,
@@ -402,44 +410,46 @@ var file_show_proto_goTypes = []interface{}{
 	(*ReCorrectHomeworkReq)(nil),           // 38: essay.show.ReCorrectHomeworkReq
 	(*ReEvaluateHomeworkReq)(nil),          // 39: essay.show.ReEvaluateHomeworkReq
 	(*GetSubmissionsReq)(nil),              // 40: essay.show.GetSubmissionsReq
-	(*GetSubmissionEvaluateReq)(nil),       // 41: essay.show.GetSubmissionEvaluateReq
-	(*ModifySubmissionEvaluateReq)(nil),    // 42: essay.show.ModifySubmissionEvaluateReq
-	(*DownloadSubmissionEvaluateReq)(nil),  // 43: essay.show.DownloadSubmissionEvaluateReq
-	(*DownloadLessonPlanReq)(nil),          // 44: essay.show.DownloadLessonPlanReq
-	(*GetHomeworkStatisticsReq)(nil),       // 45: essay.show.GetHomeworkStatisticsReq
-	(*ListQuestionBanksReq)(nil),           // 46: essay.show.ListQuestionBanksReq
-	(*SignInResp)(nil),                     // 47: essay.show.SignInResp
-	(*BindAuthResp)(nil),                   // 48: essay.show.BindAuthResp
-	(*GetUserInfoResp)(nil),                // 49: essay.show.GetUserInfoResp
-	(*Response)(nil),                       // 50: essay.show.Response
-	(*GetDailyAttendResp)(nil),             // 51: essay.show.GetDailyAttendResp
-	(*GetInvitationCodeResp)(nil),          // 52: essay.show.GetInvitationCodeResp
-	(*GenerateUrlLinkResp)(nil),            // 53: essay.show.GenerateUrlLinkResp
-	(*EssayEvaluateResp)(nil),              // 54: essay.show.EssayEvaluateResp
-	(*DownloadEvaluateResp)(nil),           // 55: essay.show.DownloadEvaluateResp
-	(*GetEssayEvaluateLogsResp)(nil),       // 56: essay.show.GetEssayEvaluateLogsResp
-	(*OCRResp)(nil),                        // 57: essay.show.OCRResp
-	(*ApplySignedUrlResp)(nil),             // 58: essay.show.ApplySignedUrlResp
-	(*CreateExerciseResp)(nil),             // 59: essay.show.CreateExerciseResp
-	(*ListSimpleExercisesResp)(nil),        // 60: essay.show.ListSimpleExercisesResp
-	(*GetExerciseResp)(nil),                // 61: essay.show.GetExerciseResp
-	(*DoExerciseResp)(nil),                 // 62: essay.show.DoExerciseResp
-	(*CreateClassResp)(nil),                // 63: essay.show.CreateClassResp
-	(*ListClassesResp)(nil),                // 64: essay.show.ListClassesResp
-	(*GetClassMembersResp)(nil),            // 65: essay.show.GetClassMembersResp
-	(*CreateClassMembersResp)(nil),         // 66: essay.show.CreateClassMembersResp
-	(*GetClassMemberInfoResp)(nil),         // 67: essay.show.GetClassMemberInfoResp
-	(*CreateHomeworkResp)(nil),             // 68: essay.show.CreateHomeworkResp
-	(*ListHomeworksResp)(nil),              // 69: essay.show.ListHomeworksResp
-	(*SubmitHomeworkResp)(nil),             // 70: essay.show.SubmitHomeworkResp
-	(*ReCorrectHomeworkResp)(nil),          // 71: essay.show.ReCorrectHomeworkResp
-	(*ReEvaluateHomeworkResp)(nil),         // 72: essay.show.ReEvaluateHomeworkResp
-	(*GetSubmissionsResp)(nil),             // 73: essay.show.GetSubmissionsResp
-	(*GetSubmissionEvaluateResp)(nil),      // 74: essay.show.GetSubmissionEvaluateResp
-	(*DownloadSubmissionEvaluateResp)(nil), // 75: essay.show.DownloadSubmissionEvaluateResp
-	(*DownloadLessonPlanResp)(nil),         // 76: essay.show.DownloadLessonPlanResp
-	(*GetHomeworkStatisticsResp)(nil),      // 77: essay.show.GetHomeworkStatisticsResp
-	(*ListQuestionBanksResp)(nil),          // 78: essay.show.ListQuestionBanksResp
+	(*GetUserSubmissionsReq)(nil),          // 41: essay.show.GetUserSubmissionsReq
+	(*GetSubmissionEvaluateReq)(nil),       // 42: essay.show.GetSubmissionEvaluateReq
+	(*ModifySubmissionEvaluateReq)(nil),    // 43: essay.show.ModifySubmissionEvaluateReq
+	(*DownloadSubmissionEvaluateReq)(nil),  // 44: essay.show.DownloadSubmissionEvaluateReq
+	(*DownloadLessonPlanReq)(nil),          // 45: essay.show.DownloadLessonPlanReq
+	(*GetHomeworkStatisticsReq)(nil),       // 46: essay.show.GetHomeworkStatisticsReq
+	(*ListQuestionBanksReq)(nil),           // 47: essay.show.ListQuestionBanksReq
+	(*SignInResp)(nil),                     // 48: essay.show.SignInResp
+	(*BindAuthResp)(nil),                   // 49: essay.show.BindAuthResp
+	(*GetUserInfoResp)(nil),                // 50: essay.show.GetUserInfoResp
+	(*Response)(nil),                       // 51: essay.show.Response
+	(*GetDailyAttendResp)(nil),             // 52: essay.show.GetDailyAttendResp
+	(*GetInvitationCodeResp)(nil),          // 53: essay.show.GetInvitationCodeResp
+	(*GenerateUrlLinkResp)(nil),            // 54: essay.show.GenerateUrlLinkResp
+	(*EssayEvaluateResp)(nil),              // 55: essay.show.EssayEvaluateResp
+	(*DownloadEvaluateResp)(nil),           // 56: essay.show.DownloadEvaluateResp
+	(*GetEssayEvaluateLogsResp)(nil),       // 57: essay.show.GetEssayEvaluateLogsResp
+	(*OCRResp)(nil),                        // 58: essay.show.OCRResp
+	(*ApplySignedUrlResp)(nil),             // 59: essay.show.ApplySignedUrlResp
+	(*CreateExerciseResp)(nil),             // 60: essay.show.CreateExerciseResp
+	(*ListSimpleExercisesResp)(nil),        // 61: essay.show.ListSimpleExercisesResp
+	(*GetExerciseResp)(nil),                // 62: essay.show.GetExerciseResp
+	(*DoExerciseResp)(nil),                 // 63: essay.show.DoExerciseResp
+	(*CreateClassResp)(nil),                // 64: essay.show.CreateClassResp
+	(*ListClassesResp)(nil),                // 65: essay.show.ListClassesResp
+	(*GetClassMembersResp)(nil),            // 66: essay.show.GetClassMembersResp
+	(*CreateClassMembersResp)(nil),         // 67: essay.show.CreateClassMembersResp
+	(*GetClassMemberInfoResp)(nil),         // 68: essay.show.GetClassMemberInfoResp
+	(*CreateHomeworkResp)(nil),             // 69: essay.show.CreateHomeworkResp
+	(*ListHomeworksResp)(nil),              // 70: essay.show.ListHomeworksResp
+	(*SubmitHomeworkResp)(nil),             // 71: essay.show.SubmitHomeworkResp
+	(*ReCorrectHomeworkResp)(nil),          // 72: essay.show.ReCorrectHomeworkResp
+	(*ReEvaluateHomeworkResp)(nil),         // 73: essay.show.ReEvaluateHomeworkResp
+	(*GetSubmissionsResp)(nil),             // 74: essay.show.GetSubmissionsResp
+	(*GetUserSubmissionsResp)(nil),         // 75: essay.show.GetUserSubmissionsResp
+	(*GetSubmissionEvaluateResp)(nil),      // 76: essay.show.GetSubmissionEvaluateResp
+	(*DownloadSubmissionEvaluateResp)(nil), // 77: essay.show.DownloadSubmissionEvaluateResp
+	(*DownloadLessonPlanResp)(nil),         // 78: essay.show.DownloadLessonPlanResp
+	(*GetHomeworkStatisticsResp)(nil),      // 79: essay.show.GetHomeworkStatisticsResp
+	(*ListQuestionBanksResp)(nil),          // 80: essay.show.ListQuestionBanksResp
 }
 var file_show_proto_depIdxs = []int32{
 	0,  // 0: essay.show.show.SignIn:input_type -> essay.show.SignInReq
@@ -485,63 +495,65 @@ var file_show_proto_depIdxs = []int32{
 	38, // 40: essay.show.homework.ReCorrectHomework:input_type -> essay.show.ReCorrectHomeworkReq
 	39, // 41: essay.show.homework.ReEvaluateHomework:input_type -> essay.show.ReEvaluateHomeworkReq
 	40, // 42: essay.show.homework.GetSubmissions:input_type -> essay.show.GetSubmissionsReq
-	41, // 43: essay.show.homework.GetSubmissionEvaluate:input_type -> essay.show.GetSubmissionEvaluateReq
-	42, // 44: essay.show.homework.ModifySubmissionEvaluate:input_type -> essay.show.ModifySubmissionEvaluateReq
-	43, // 45: essay.show.homework.DownloadSubmissionEvaluate:input_type -> essay.show.DownloadSubmissionEvaluateReq
-	44, // 46: essay.show.homework.DownloadLessonPlan:input_type -> essay.show.DownloadLessonPlanReq
-	45, // 47: essay.show.homework.GetHomeworkStatistics:input_type -> essay.show.GetHomeworkStatisticsReq
-	46, // 48: essay.show.question_bank.ListQuestionBanks:input_type -> essay.show.ListQuestionBanksReq
-	47, // 49: essay.show.show.SignIn:output_type -> essay.show.SignInResp
-	48, // 50: essay.show.show.BindAuth:output_type -> essay.show.BindAuthResp
-	49, // 51: essay.show.show.GetUserInfo:output_type -> essay.show.GetUserInfoResp
-	50, // 52: essay.show.show.UpdateUserInfo:output_type -> essay.show.Response
-	50, // 53: essay.show.show.DailyAttend:output_type -> essay.show.Response
-	51, // 54: essay.show.show.GetDailyAttend:output_type -> essay.show.GetDailyAttendResp
-	52, // 55: essay.show.show.GetInvitationCode:output_type -> essay.show.GetInvitationCodeResp
-	50, // 56: essay.show.show.FillInvitationCode:output_type -> essay.show.Response
-	53, // 57: essay.show.show.GenerateUrlLink:output_type -> essay.show.GenerateUrlLinkResp
-	54, // 58: essay.show.show.EssayEvaluate:output_type -> essay.show.EssayEvaluateResp
-	54, // 59: essay.show.show.EssayEvaluateStream:output_type -> essay.show.EssayEvaluateResp
-	55, // 60: essay.show.show.DownloadEvaluate:output_type -> essay.show.DownloadEvaluateResp
-	50, // 61: essay.show.show.EvaluateModify:output_type -> essay.show.Response
-	50, // 62: essay.show.show.DeleteEvaluate:output_type -> essay.show.Response
-	50, // 63: essay.show.show.LikeEvaluate:output_type -> essay.show.Response
-	56, // 64: essay.show.show.GetEvaluateLogs:output_type -> essay.show.GetEssayEvaluateLogsResp
-	57, // 65: essay.show.show.OCR:output_type -> essay.show.OCRResp
-	58, // 66: essay.show.show.ApplySignedUrl:output_type -> essay.show.ApplySignedUrlResp
-	50, // 67: essay.show.show.SendVerifyCode:output_type -> essay.show.Response
-	50, // 68: essay.show.show.SubmitFeedback:output_type -> essay.show.Response
-	59, // 69: essay.show.exercise.CreateExercise:output_type -> essay.show.CreateExerciseResp
-	59, // 70: essay.show.exercise.CreateExerciseStream:output_type -> essay.show.CreateExerciseResp
-	60, // 71: essay.show.exercise.ListSimpleExercises:output_type -> essay.show.ListSimpleExercisesResp
-	61, // 72: essay.show.exercise.GetExercise:output_type -> essay.show.GetExerciseResp
-	62, // 73: essay.show.exercise.DoExercise:output_type -> essay.show.DoExerciseResp
-	50, // 74: essay.show.exercise.LikeExercise:output_type -> essay.show.Response
-	63, // 75: essay.show.class.CreateClass:output_type -> essay.show.CreateClassResp
-	64, // 76: essay.show.class.ListClasses:output_type -> essay.show.ListClassesResp
-	50, // 77: essay.show.class.BindClassMember:output_type -> essay.show.Response
-	50, // 78: essay.show.class.UnbindClassMember:output_type -> essay.show.Response
-	65, // 79: essay.show.class.GetClassMembers:output_type -> essay.show.GetClassMembersResp
-	66, // 80: essay.show.class.CreateClassMembers:output_type -> essay.show.CreateClassMembersResp
-	50, // 81: essay.show.class.EditClassMemberName:output_type -> essay.show.Response
-	50, // 82: essay.show.class.DeleteClassMember:output_type -> essay.show.Response
-	67, // 83: essay.show.class.GetClassMemberInfo:output_type -> essay.show.GetClassMemberInfoResp
-	68, // 84: essay.show.homework.CreateHomework:output_type -> essay.show.CreateHomeworkResp
-	50, // 85: essay.show.homework.EditHomework:output_type -> essay.show.Response
-	69, // 86: essay.show.homework.ListHomeworks:output_type -> essay.show.ListHomeworksResp
-	70, // 87: essay.show.homework.SubmitHomework:output_type -> essay.show.SubmitHomeworkResp
-	50, // 88: essay.show.homework.DeleteHomework:output_type -> essay.show.Response
-	71, // 89: essay.show.homework.ReCorrectHomework:output_type -> essay.show.ReCorrectHomeworkResp
-	72, // 90: essay.show.homework.ReEvaluateHomework:output_type -> essay.show.ReEvaluateHomeworkResp
-	73, // 91: essay.show.homework.GetSubmissions:output_type -> essay.show.GetSubmissionsResp
-	74, // 92: essay.show.homework.GetSubmissionEvaluate:output_type -> essay.show.GetSubmissionEvaluateResp
-	50, // 93: essay.show.homework.ModifySubmissionEvaluate:output_type -> essay.show.Response
-	75, // 94: essay.show.homework.DownloadSubmissionEvaluate:output_type -> essay.show.DownloadSubmissionEvaluateResp
-	76, // 95: essay.show.homework.DownloadLessonPlan:output_type -> essay.show.DownloadLessonPlanResp
-	77, // 96: essay.show.homework.GetHomeworkStatistics:output_type -> essay.show.GetHomeworkStatisticsResp
-	78, // 97: essay.show.question_bank.ListQuestionBanks:output_type -> essay.show.ListQuestionBanksResp
-	49, // [49:98] is the sub-list for method output_type
-	0,  // [0:49] is the sub-list for method input_type
+	41, // 43: essay.show.homework.GetUserSubmissions:input_type -> essay.show.GetUserSubmissionsReq
+	42, // 44: essay.show.homework.GetSubmissionEvaluate:input_type -> essay.show.GetSubmissionEvaluateReq
+	43, // 45: essay.show.homework.ModifySubmissionEvaluate:input_type -> essay.show.ModifySubmissionEvaluateReq
+	44, // 46: essay.show.homework.DownloadSubmissionEvaluate:input_type -> essay.show.DownloadSubmissionEvaluateReq
+	45, // 47: essay.show.homework.DownloadLessonPlan:input_type -> essay.show.DownloadLessonPlanReq
+	46, // 48: essay.show.homework.GetHomeworkStatistics:input_type -> essay.show.GetHomeworkStatisticsReq
+	47, // 49: essay.show.question_bank.ListQuestionBanks:input_type -> essay.show.ListQuestionBanksReq
+	48, // 50: essay.show.show.SignIn:output_type -> essay.show.SignInResp
+	49, // 51: essay.show.show.BindAuth:output_type -> essay.show.BindAuthResp
+	50, // 52: essay.show.show.GetUserInfo:output_type -> essay.show.GetUserInfoResp
+	51, // 53: essay.show.show.UpdateUserInfo:output_type -> essay.show.Response
+	51, // 54: essay.show.show.DailyAttend:output_type -> essay.show.Response
+	52, // 55: essay.show.show.GetDailyAttend:output_type -> essay.show.GetDailyAttendResp
+	53, // 56: essay.show.show.GetInvitationCode:output_type -> essay.show.GetInvitationCodeResp
+	51, // 57: essay.show.show.FillInvitationCode:output_type -> essay.show.Response
+	54, // 58: essay.show.show.GenerateUrlLink:output_type -> essay.show.GenerateUrlLinkResp
+	55, // 59: essay.show.show.EssayEvaluate:output_type -> essay.show.EssayEvaluateResp
+	55, // 60: essay.show.show.EssayEvaluateStream:output_type -> essay.show.EssayEvaluateResp
+	56, // 61: essay.show.show.DownloadEvaluate:output_type -> essay.show.DownloadEvaluateResp
+	51, // 62: essay.show.show.EvaluateModify:output_type -> essay.show.Response
+	51, // 63: essay.show.show.DeleteEvaluate:output_type -> essay.show.Response
+	51, // 64: essay.show.show.LikeEvaluate:output_type -> essay.show.Response
+	57, // 65: essay.show.show.GetEvaluateLogs:output_type -> essay.show.GetEssayEvaluateLogsResp
+	58, // 66: essay.show.show.OCR:output_type -> essay.show.OCRResp
+	59, // 67: essay.show.show.ApplySignedUrl:output_type -> essay.show.ApplySignedUrlResp
+	51, // 68: essay.show.show.SendVerifyCode:output_type -> essay.show.Response
+	51, // 69: essay.show.show.SubmitFeedback:output_type -> essay.show.Response
+	60, // 70: essay.show.exercise.CreateExercise:output_type -> essay.show.CreateExerciseResp
+	60, // 71: essay.show.exercise.CreateExerciseStream:output_type -> essay.show.CreateExerciseResp
+	61, // 72: essay.show.exercise.ListSimpleExercises:output_type -> essay.show.ListSimpleExercisesResp
+	62, // 73: essay.show.exercise.GetExercise:output_type -> essay.show.GetExerciseResp
+	63, // 74: essay.show.exercise.DoExercise:output_type -> essay.show.DoExerciseResp
+	51, // 75: essay.show.exercise.LikeExercise:output_type -> essay.show.Response
+	64, // 76: essay.show.class.CreateClass:output_type -> essay.show.CreateClassResp
+	65, // 77: essay.show.class.ListClasses:output_type -> essay.show.ListClassesResp
+	51, // 78: essay.show.class.BindClassMember:output_type -> essay.show.Response
+	51, // 79: essay.show.class.UnbindClassMember:output_type -> essay.show.Response
+	66, // 80: essay.show.class.GetClassMembers:output_type -> essay.show.GetClassMembersResp
+	67, // 81: essay.show.class.CreateClassMembers:output_type -> essay.show.CreateClassMembersResp
+	51, // 82: essay.show.class.EditClassMemberName:output_type -> essay.show.Response
+	51, // 83: essay.show.class.DeleteClassMember:output_type -> essay.show.Response
+	68, // 84: essay.show.class.GetClassMemberInfo:output_type -> essay.show.GetClassMemberInfoResp
+	69, // 85: essay.show.homework.CreateHomework:output_type -> essay.show.CreateHomeworkResp
+	51, // 86: essay.show.homework.EditHomework:output_type -> essay.show.Response
+	70, // 87: essay.show.homework.ListHomeworks:output_type -> essay.show.ListHomeworksResp
+	71, // 88: essay.show.homework.SubmitHomework:output_type -> essay.show.SubmitHomeworkResp
+	51, // 89: essay.show.homework.DeleteHomework:output_type -> essay.show.Response
+	72, // 90: essay.show.homework.ReCorrectHomework:output_type -> essay.show.ReCorrectHomeworkResp
+	73, // 91: essay.show.homework.ReEvaluateHomework:output_type -> essay.show.ReEvaluateHomeworkResp
+	74, // 92: essay.show.homework.GetSubmissions:output_type -> essay.show.GetSubmissionsResp
+	75, // 93: essay.show.homework.GetUserSubmissions:output_type -> essay.show.GetUserSubmissionsResp
+	76, // 94: essay.show.homework.GetSubmissionEvaluate:output_type -> essay.show.GetSubmissionEvaluateResp
+	51, // 95: essay.show.homework.ModifySubmissionEvaluate:output_type -> essay.show.Response
+	77, // 96: essay.show.homework.DownloadSubmissionEvaluate:output_type -> essay.show.DownloadSubmissionEvaluateResp
+	78, // 97: essay.show.homework.DownloadLessonPlan:output_type -> essay.show.DownloadLessonPlanResp
+	79, // 98: essay.show.homework.GetHomeworkStatistics:output_type -> essay.show.GetHomeworkStatisticsResp
+	80, // 99: essay.show.question_bank.ListQuestionBanks:output_type -> essay.show.ListQuestionBanksResp
+	50, // [50:100] is the sub-list for method output_type
+	0,  // [0:50] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name

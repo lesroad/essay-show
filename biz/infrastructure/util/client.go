@@ -104,7 +104,7 @@ func (c *HttpClient) SendRequest(ctx context.Context, method, url string, header
 	var responseMap map[string]interface{}
 	if err := json.Unmarshal(responseBody, &responseMap); err != nil {
 		span.RecordError(err)
-		return nil, fmt.Errorf("反序列化响应失败: %w", err)
+		return nil, fmt.Errorf("反序列化响应失败: err:%w, data:%s", err, string(responseBody))
 	}
 
 	return responseMap, nil

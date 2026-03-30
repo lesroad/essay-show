@@ -430,3 +430,13 @@ func _reevaluatehomeworkMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _getusersubmissionsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _user0Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

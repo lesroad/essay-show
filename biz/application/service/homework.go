@@ -29,6 +29,7 @@ type IHomeworkService interface {
 	ListHomeworks(ctx context.Context, req *show.ListHomeworksReq) (*show.ListHomeworksResp, error)
 	SubmitHomework(ctx context.Context, req *show.SubmitHomeworkReq) (*show.SubmitHomeworkResp, error)
 	GetSubmissions(ctx context.Context, req *show.GetSubmissionsReq) (*show.GetSubmissionsResp, error)
+	GetUserSubmissions(ctx context.Context, req *show.GetUserSubmissionsReq) (*show.GetUserSubmissionsResp, error)
 	GetSubmissionEvaluate(ctx context.Context, req *show.GetSubmissionEvaluateReq) (*show.GetSubmissionEvaluateResp, error)
 	ModifySubmissionEvaluate(ctx context.Context, req *show.ModifySubmissionEvaluateReq) (*show.Response, error)
 	DownloadSubmissionEvaluate(ctx context.Context, req *show.DownloadSubmissionEvaluateReq) (*show.DownloadSubmissionEvaluateResp, error)
@@ -419,7 +420,7 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 			homeworkInfo.GradeCount = &gradeCount
 		} else {
 			// 获取提交状态
-			submission, err := s.SubmissionMapper.FindByMemberAndHomework(ctx, member.ID.Hex(), h.ID.Hex())
+			submission, err := s.SubmissionMapper.FindLatestByMemberAndHomework(ctx, member.ID.Hex(), h.ID.Hex())
 			switch {
 			case err == consts.ErrNotFound:
 				status := show.HomeworkStatus(consts.StatusNotSubmission)
@@ -511,6 +512,7 @@ func (s *HomeworkService) SubmitHomework(ctx context.Context, req *show.SubmitHo
 		TeacherID:  h.CreatorID,
 		Images:     req.Images,
 		Status:     consts.StatusInitialized,
+		SubmitType: consts.SubmitTypeFirst,
 	}
 
 	err = s.SubmissionMapper.Insert(ctx, submission)
@@ -576,7 +578,7 @@ func (s *HomeworkService) GetSubmissions(ctx context.Context, req *show.GetSubmi
 		sub := &show.SubmissionInfo{MemberId: m.ID.Hex(), MemberName: m.Name}
 
 		// 查询学生提交记录
-		userSubmission, err := s.SubmissionMapper.FindByMemberAndHomework(ctx, m.ID.Hex(), req.HomeworkId)
+		userSubmission, err := s.SubmissionMapper.FindLatestByMemberAndHomework(ctx, m.ID.Hex(), req.HomeworkId)
 		switch {
 		case err == consts.ErrNotFound:
 			sub.Status = consts.StatusNotSubmission
@@ -605,7 +607,45 @@ func (s *HomeworkService) GetSubmissions(ctx context.Context, req *show.GetSubmi
 	}, nil
 }
 
-// ReCorrectHomework 重批批改
+// GetUserSubmissions 获取用户在某作业下全部提交记录
+func (s *HomeworkService) GetUserSubmissions(ctx context.Context, req *show.GetUserSubmissionsReq) (*show.GetUserSubmissionsResp, error) {
+	// 获取用户信息
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	// 解析分页参数
+	page := int64(1)
+	pageSize := int64(10)
+	if req.PaginationOptions != nil {
+		if req.PaginationOptions.Page != nil {
+			page = *req.PaginationOptions.Page
+		}
+		if req.PaginationOptions.Limit != nil {
+			pageSize = *req.PaginationOptions.Limit
+		}
+	}
+
+	// 查询用户在某作业下全部提交记录
+	submissions, total, err := s.SubmissionMapper.FindByMemberAndHomework(ctx, req.MemberId, req.HomeworkId, page, pageSize)
+	if err != nil {
+		log.Error("获取提交记录失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+	ids := make([]string, 0, len(submissions))
+	for _, sub := range submissions {
+		if sub != nil {
+			ids = append(ids, sub.ID.Hex())
+		}
+	}
+	return &show.GetUserSubmissionsResp{
+		SubmissionIds: ids,
+		Total:         total,
+	}, nil
+}
+
+// ReCorrectHomework 批改重批
 func (s *HomeworkService) ReCorrectHomework(ctx context.Context, req *show.ReCorrectHomeworkReq) (*show.ReCorrectHomeworkResp, error) {
 	// 获取用户信息
 	userMeta := adaptor.ExtractUserMeta(ctx)
@@ -659,7 +699,7 @@ func (s *HomeworkService) ReCorrectHomework(ctx context.Context, req *show.ReCor
 		submissionIds = append(submissionIds, submissionId)
 	})
 
-	log.Info("作业重批完成: submissionIds=%v", submissionIds)
+	log.Info("批改重批完成: submissionIds=%v", submissionIds)
 
 	return &show.ReCorrectHomeworkResp{
 		SubmissionIds: submissionIds,
@@ -701,22 +741,34 @@ func (s *HomeworkService) ReEvaluateHomework(ctx context.Context, req *show.ReEv
 		return nil, consts.ErrNotFound
 	}
 
-	if submission.Status == consts.StatusInitialized || submission.Status == consts.StatusGrading {
-		log.Info("提交状态不允许重批: submissionId=%s, status=%d", submissionId, submission.Status)
-		return nil, consts.ErrNotFound
+	// 创建新的提交
+	newSubmission := &homework.HomeworkSubmission{
+		HomeworkID: submission.HomeworkID,
+		MemberId:   submission.MemberId,
+		TeacherID:  submission.TeacherID,
+		Status:     consts.StatusInitialized,
+		SubmitType: int(req.RecorrectType),
+		Response:   submission.Response, // 保留之前的批改结果，重批时需要用到
+	}
+	if req.RecorrectType == consts.RecorrectTypeImage {
+		newSubmission.Images = req.Images
+	}
+	if req.RecorrectType == consts.RecorrectTypeText {
+		newSubmission.Title = req.Title
+		newSubmission.Text = req.Text
 	}
 
-	// 重置为待批改状态
-	submission.Status = consts.StatusInitialized
-	submission.Response = "" // 清空之前的批改结果
-	submission.Message = ""
-	submission.UpdateTime = time.Now()
+	err = s.SubmissionMapper.Insert(ctx, newSubmission)
+	if err != nil {
+		log.Error("提交作业失败: %v", err)
+		return nil, consts.ErrSubmitHomework
+	}
 
-	// if err := s.SubmissionMapper.Update(ctx, submission); err != nil {
-	// 	log.Error("更新提交状态失败: submissionId=%s, error=%v", submissionId, err)
-	// 	return
-	// }
-	return nil, nil
+	log.Info("作业重批完成: submissionId=%s", newSubmission.ID.Hex())
+
+	return &show.ReEvaluateHomeworkResp{
+		SubmissionId: newSubmission.ID.Hex(),
+	}, nil
 }
 
 // StartGrader 启动作业批改定时器
