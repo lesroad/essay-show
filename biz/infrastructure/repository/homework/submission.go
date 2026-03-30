@@ -110,7 +110,7 @@ func (m *SubmissionMongoMapper) FindByHomeworkID(ctx context.Context, homeworkID
 }
 
 // 查询一条最新的提交记录
-func (m *SubmissionMongoMapper) FindByMemberAndHomework(ctx context.Context, memberID, homeworkID string) (*HomeworkSubmission, error) {
+func (m *SubmissionMongoMapper) FindLatestByMemberAndHomework(ctx context.Context, memberID, homeworkID string) (*HomeworkSubmission, error) {
 	var submission HomeworkSubmission
 	filter := bson.M{
 		"member_id":   memberID,
@@ -118,7 +118,7 @@ func (m *SubmissionMongoMapper) FindByMemberAndHomework(ctx context.Context, mem
 	}
 
 	err := m.conn.FindOneNoCache(ctx, &submission, filter, &options.FindOneOptions{
-		Sort: bson.M{"create_time": -1},
+		Sort: bson.M{"update_time": -1},
 	})
 	switch {
 	case err == nil:
@@ -128,6 +128,31 @@ func (m *SubmissionMongoMapper) FindByMemberAndHomework(ctx context.Context, mem
 	default:
 		return nil, err
 	}
+}
+
+// 查询用户在某作业下全部提交记录
+func (m *SubmissionMongoMapper) FindByMemberAndHomework(ctx context.Context, memberID, homeworkID string, page, pageSize int64) ([]*HomeworkSubmission, int64, error) {
+	var submissions = make([]*HomeworkSubmission, 0)
+	filter := bson.M{
+		"member_id":   memberID,
+		"homework_id": homeworkID,
+	}
+
+	total, err := m.conn.CountDocuments(ctx, filter)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	skip := (page - 1) * pageSize
+	err = m.conn.Find(ctx, &submissions, filter, &options.FindOptions{
+		Skip:  &skip,
+		Limit: &pageSize,
+		Sort:  bson.M{"update_time": -1},
+	})
+	if err != nil {
+		return nil, 0, err
+	}
+	return submissions, total, nil
 }
 
 // FindByStatus 根据状态查找作业提交

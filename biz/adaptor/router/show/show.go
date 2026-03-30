@@ -70,8 +70,8 @@ func Register(r *server.Hertz) {
 		_homework := root.Group("/homework", _homeworkMw()...)
 		_homework.POST("/create", append(_createhomeworkMw(), show.CreateHomework)...)
 		_homework.POST("/edit", append(_edithomeworkMw(), show.EditHomework)...)
-		_homework.POST("/evaluate", append(_reevaluatehomeworkMw(), show.ReEvaluateHomework)...)
 		_homework.GET("/list", append(_listhomeworksMw(), show.ListHomeworks)...)
+		_homework.POST("/re-evaluate", append(_reevaluatehomeworkMw(), show.ReEvaluateHomework)...)
 		_homework.POST("/recorrect", append(_recorrecthomeworkMw(), show.ReCorrectHomework)...)
 		_homework.GET("/statistics", append(_gethomeworkstatisticsMw(), show.GetHomeworkStatistics)...)
 		_homework.GET("/submission", append(_getsubmissionevaluateMw(), show.GetSubmissionEvaluate)...)
@@ -88,6 +88,10 @@ func Register(r *server.Hertz) {
 			_lesson_plan := _homework.Group("/lesson_plan", _lesson_planMw()...)
 			_lesson_plan.POST("/download", append(_downloadlessonplanMw(), show.DownloadLessonPlan)...)
 		}
+		{
+			_user := _homework.Group("/user", _userMw()...)
+			_user.GET("/submissions", append(_getusersubmissionsMw(), show.GetUserSubmissions)...)
+		}
 	}
 	{
 		_question_bank := root.Group("/question_bank", _question_bankMw()...)
@@ -100,17 +104,17 @@ func Register(r *server.Hertz) {
 		_sts.POST("/send_verify_code", append(_sendverifycodeMw(), show.SendVerifyCode)...)
 	}
 	{
-		_user := root.Group("/user", _userMw()...)
-		_user.POST("/bind_auth", append(_bindauthMw(), show.BindAuth)...)
-		_user.GET("/daily_attend", append(_dailyattendMw(), show.DailyAttend)...)
-		_daily_attend := _user.Group("/daily_attend", _daily_attendMw()...)
+		_user0 := root.Group("/user", _user0Mw()...)
+		_user0.POST("/bind_auth", append(_bindauthMw(), show.BindAuth)...)
+		_user0.GET("/daily_attend", append(_dailyattendMw(), show.DailyAttend)...)
+		_daily_attend := _user0.Group("/daily_attend", _daily_attendMw()...)
 		_daily_attend.GET("/get", append(_getdailyattendMw(), show.GetDailyAttend)...)
-		_user.POST("/generate_url_link", append(_generateurllinkMw(), show.GenerateUrlLink)...)
-		_user.GET("/info", append(_getuserinfoMw(), show.GetUserInfo)...)
-		_user.POST("/sign_in", append(_signinMw(), show.SignIn)...)
-		_user.POST("/update", append(_updateuserinfoMw(), show.UpdateUserInfo)...)
+		_user0.POST("/generate_url_link", append(_generateurllinkMw(), show.GenerateUrlLink)...)
+		_user0.GET("/info", append(_getuserinfoMw(), show.GetUserInfo)...)
+		_user0.POST("/sign_in", append(_signinMw(), show.SignIn)...)
+		_user0.POST("/update", append(_updateuserinfoMw(), show.UpdateUserInfo)...)
 		{
-			_invitation := _user.Group("/invitation", _invitationMw()...)
+			_invitation := _user0.Group("/invitation", _invitationMw()...)
 			_invitation.GET("/code", append(_getinvitationcodeMw(), show.GetInvitationCode)...)
 			_invitation.POST("/fill", append(_fillinvitationcodeMw(), show.FillInvitationCode)...)
 		}
