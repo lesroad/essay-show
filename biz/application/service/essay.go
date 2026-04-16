@@ -225,10 +225,10 @@ func (s *EssayService) DownloadEvaluate(ctx context.Context, req *show.DownloadE
 		return nil, consts.ErrNotAuthentication
 	}
 
-	if cachedResp, err := s.DownloadCacheMapper.Get(ctx, req.Id); err == nil {
-		logx.Info("缓存命中，直接返回下载链接, id: %s", req.Id)
-		return cachedResp, nil
-	}
+	// if cachedResp, err := s.DownloadCacheMapper.Get(ctx, req.Id); err == nil {
+	// 	logx.Info("缓存命中，直接返回下载链接, id: %s", req.Id)
+	// 	return cachedResp, nil
+	// }
 
 	l, err := s.LogMapper.FindOne(ctx, req.Id)
 	if err != nil {
@@ -246,8 +246,8 @@ func (s *EssayService) DownloadEvaluate(ctx context.Context, req *show.DownloadE
 		return nil, consts.ErrNotFound
 	}
 
-	var evaluateResult stateless.Evaluate
-	if err := json.Unmarshal([]byte(l.Response), &evaluateResult); err != nil {
+	exportResult, err := stateless.BuildExportEvaluateData(l.Response, req.GetExcludeOptions())
+	if err != nil {
 		logx.Error("解析批改结果失败: %v", err)
 		return nil, consts.ErrCall
 	}
@@ -255,7 +255,7 @@ func (s *EssayService) DownloadEvaluate(ctx context.Context, req *show.DownloadE
 	downloadData := map[string]any{
 		"essay_list": []map[string]any{
 			{
-				"data":    evaluateResult,
+				"data":    exportResult,
 				"user_id": user.Username,
 			},
 		},
@@ -274,7 +274,7 @@ func (s *EssayService) DownloadEvaluate(ctx context.Context, req *show.DownloadE
 	code := int64(_resp["code"].(float64))
 	if code != 200 {
 		msg := _resp["msg"].(string)
-		logx.Error("批改结果下载服务返回错误: %s", msg)
+		logx.Error("批改结果下载服务返回错误: %s, exportResult: %s", msg, exportResult.ToJson())
 		return nil, consts.ErrCall
 	}
 
@@ -293,12 +293,12 @@ func (s *EssayService) DownloadEvaluate(ctx context.Context, req *show.DownloadE
 	}
 
 	// 将结果存入缓存
-	if err := s.DownloadCacheMapper.Set(ctx, req.Id, result); err != nil {
-		logx.Error("存储缓存失败: %v", err)
-		// 缓存失败不影响正常返回结果
-	} else {
-		logx.Info("成功缓存下载链接, id: %s, 缓存时间: 1小时", req.Id)
-	}
+	// if err := s.DownloadCacheMapper.Set(ctx, req.Id, result); err != nil {
+	// 	logx.Error("存储缓存失败: %v", err)
+	// 	// 缓存失败不影响正常返回结果
+	// } else {
+	// 	logx.Info("成功缓存下载链接, id: %s, 缓存时间: 1小时", req.Id)
+	// }
 
 	return result, nil
 }
