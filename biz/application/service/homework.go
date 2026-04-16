@@ -512,7 +512,7 @@ func (s *HomeworkService) SubmitHomework(ctx context.Context, req *show.SubmitHo
 		TeacherID:  h.CreatorID,
 		Images:     req.Images,
 		Status:     consts.StatusInitialized,
-		SubmitType: consts.SubmitTypeFirst,
+		SubmitType: consts.RecorrectTypeFirst,
 	}
 
 	err = s.SubmissionMapper.Insert(ctx, submission)
@@ -743,19 +743,29 @@ func (s *HomeworkService) ReEvaluateHomework(ctx context.Context, req *show.ReEv
 
 	// 创建新的提交
 	newSubmission := &homework.HomeworkSubmission{
-		HomeworkID: submission.HomeworkID,
-		MemberId:   submission.MemberId,
-		TeacherID:  submission.TeacherID,
 		Status:     consts.StatusInitialized,
 		SubmitType: int(req.RecorrectType),
-		Response:   submission.Response, // 保留之前的批改结果，重批时需要用到
+
+		// 保留之前的批改结果
+		HomeworkID:  submission.HomeworkID,
+		MemberId:    submission.MemberId,
+		TeacherID:   submission.TeacherID,
+		GradeResult: submission.GradeResult,
+		Response:    submission.Response,
 	}
-	if req.RecorrectType == consts.RecorrectTypeImage {
+
+	switch req.RecorrectType {
+	case consts.RecorrectTypeImage:
 		newSubmission.Images = req.Images
-	}
-	if req.RecorrectType == consts.RecorrectTypeText {
+	case consts.RecorrectTypeText:
 		newSubmission.Title = req.Title
 		newSubmission.Text = req.Text
+	case consts.RecorrectTypeAspect:
+		newSubmission.Title = req.Title
+		newSubmission.Text = req.Text
+		newSubmission.Aspect = req.Aspect
+	default:
+		return nil, consts.ErrInvalidParams
 	}
 
 	err = s.SubmissionMapper.Insert(ctx, newSubmission)
@@ -930,8 +940,8 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 
 	var essayList []map[string]any
 	for _, submission := range submissions {
-		var evaluateResult stateless.Evaluate
-		if err := json.Unmarshal([]byte(submission.Response), &evaluateResult); err != nil {
+		exportResult, err := stateless.BuildExportEvaluateData(submission.Response, req.GetExcludeOptions())
+		if err != nil {
 			log.Error("解析批改结果失败, submissionId: %s, error: %v", submission.ID.Hex(), err)
 			continue
 		}
@@ -943,7 +953,7 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 		}
 
 		essayData := map[string]any{
-			"data":    evaluateResult,
+			"data":    exportResult,
 			"user_id": member.Name,
 		}
 		essayList = append(essayList, essayData)
@@ -1103,6 +1113,8 @@ func (s *HomeworkService) DownloadLessonPlan(ctx context.Context, req *show.Down
 }
 
 func (s *HomeworkService) processHomeworkSubmissions(ctx context.Context) {
+	defer s.processTimeoutSubmissions(ctx)
+
 	const maxConcurrency = 10
 	submissions, err := s.SubmissionMapper.FindByStatus(ctx, []int{consts.StatusInitialized})
 	if err != nil {
@@ -1145,9 +1157,6 @@ func (s *HomeworkService) processHomeworkSubmissions(ctx context.Context) {
 	}
 
 	wg.Wait()
-
-	// 处理超时任务
-	s.processTimeoutSubmissions(ctx)
 }
 
 // processOneSubmission 处理单个作业提交
@@ -1179,14 +1188,7 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 		return
 	}
 
-	var (
-		title string
-		text  string
-	)
-	if submission.SubmitType == consts.SubmitTypeText {
-		title = submission.Title
-		text = submission.Text
-	} else {
+	if submission.SubmitType == consts.RecorrectTypeFirst || submission.SubmitType == consts.RecorrectTypeImage {
 		ocrResp, err := util.GetHttpClient().TitleUrlOCR(ctx, submission.Images, "")
 		if err != nil {
 			markSubmissionFailed(ctx, submission, s.SubmissionMapper, err.Error())
@@ -1198,8 +1200,8 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 			return
 		}
 		data := ocrResp["data"].(map[string]any)
-		title = data["title"].(string)
-		text = data["content"].(string)
+		submission.Title = data["title"].(string)
+		submission.Text = data["content"].(string)
 	}
 
 	prompt := homework.Description
@@ -1207,7 +1209,6 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 	grade := homework.Grade
 	totalScore := homework.TotalScore
 
-	submission.Title = title
 	submission.UpdateTime = time.Now()
 	submission.Status = consts.StatusGrading
 	s.SubmissionMapper.Update(ctx, submission)
@@ -1225,23 +1226,28 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 		data := map[string]any{
 			"student_id":      member.ID,
 			"student_name":    member.Name,
-			"ocr_text":        text,
-			"title":           title,
+			"ocr_text":        submission.Text,
+			"title":           submission.Title,
 			"standard":        homework.Standard,
 			"categories_dict": homework.RubricCategories,
 			"description":     homework.Description,
 			"grade_type":      util.GetGradeType(homework.Grade),
 		}
-		if submission.SubmitType != consts.SubmitTypeFirst {
+		if submission.SubmitType != consts.RecorrectTypeFirst {
 			data["is_rewrite"] = 1
 			data["result_before"] = submission.Response
+		}
+		if submission.SubmitType == consts.RecorrectTypeAspect {
+			data["aspect"] = submission.Aspect
 		}
 		gradeSingleStudentResponse, err := httpClient.GradeSingleStudent(ctx, data)
 		if err != nil {
 			markSubmissionFailed(ctx, submission, s.SubmissionMapper, err.Error())
 			return
 		}
-		submission.GradeResult = cast.ToString(gradeSingleStudentResponse["score"].(float64))
+		if submission.SubmitType != consts.RecorrectTypeAspect {
+			submission.GradeResult = cast.ToString(gradeSingleStudentResponse["score"].(float64))
+		}
 		submission.Status = consts.StatusCompleted
 		submission.UpdateTime = time.Now()
 		resp, _ := json.Marshal(gradeSingleStudentResponse)
@@ -1275,7 +1281,7 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 	// 调用批改服务
 	go func() {
 		defer close(resultChan)
-		util.GetHttpClient().EvaluateStream(ctx, title, text, &grade, &totalScore, &essayType, &prompt, standard, ratio, resultChan)
+		util.GetHttpClient().EvaluateStream(ctx, submission.Title, submission.Text, &grade, &totalScore, &essayType, &prompt, standard, ratio, resultChan)
 	}()
 
 	for jsonMessage := range resultChan {

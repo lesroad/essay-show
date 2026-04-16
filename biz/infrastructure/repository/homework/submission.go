@@ -27,7 +27,8 @@ type HomeworkSubmission struct {
 	Response    string             `bson:"response" json:"response"`
 	Message     string             `bson:"message" json:"message"`
 	Status      int                `bson:"status" json:"status"`          // 0: 初始化, 1: 批改中, 2: 批改完成, 3: 批改已人工修改, 7:批改失败
-	SubmitType  int                `bson:"submit_type" json:"submitType"` // 0: 首次提交, 1: 重批：上传图片提交, 2: 重批：修改原文提交
+	SubmitType  int                `bson:"submit_type" json:"submitType"` // 0: 首次提交, 1: 重批：上传图片提交, 2: 重批：修改原文提交 3: 小项重批
+	Aspect      string             `bson:"aspect" json:"aspect"`
 	CreateTime  time.Time          `bson:"create_time" json:"createTime"`
 	UpdateTime  time.Time          `bson:"update_time" json:"updateTime"`
 }
