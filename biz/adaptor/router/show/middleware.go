@@ -440,3 +440,18 @@ func _user0Mw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _adminMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getadminhomeworkstatisticsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _homework0Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

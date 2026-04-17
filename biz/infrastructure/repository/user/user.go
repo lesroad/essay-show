@@ -1,8 +1,9 @@
 package user
 
 import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type User struct {
@@ -13,7 +14,7 @@ type User struct {
 	Status     int                `bson:"status" json:"status"`
 	School     string             `bson:"school" json:"school"`
 	Grade      int64              `bson:"grade" json:"grade"` // 默认0，从一开始依次递增
-	Role       string             `bson:"role" json:"role"`   // 用户角色：student/teacher
+	Role       string             `bson:"role" json:"role"`   // 用户角色：student/teacher/admin
 	CreateTime time.Time          `bson:"create_time,omitempty" json:"createTime"`
 	UpdateTime time.Time          `bson:"update_time,omitempty" json:"updateTime"`
 	DeleteTime time.Time          `bson:"delete_time,omitempty" json:"deleteTime"`

@@ -27,6 +27,7 @@ type UserRole int32
 const (
 	UserRole_STUDENT UserRole = 0 // 学生
 	UserRole_TEACHER UserRole = 1 // 教师
+	UserRole_ADMIN   UserRole = 2 // 管理员
 )
 
 // Enum value maps for UserRole.
@@ -34,10 +35,12 @@ var (
 	UserRole_name = map[int32]string{
 		0: "STUDENT",
 		1: "TEACHER",
+		2: "ADMIN",
 	}
 	UserRole_value = map[string]int32{
 		"STUDENT": 0,
 		"TEACHER": 1,
+		"ADMIN":   2,
 	}
 )
 
@@ -6288,6 +6291,298 @@ func (x *ListQuestionBanksResp) GetTotal() int64 {
 	return 0
 }
 
+type GetAdminHomeworkStatisticsReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions" query:"paginationOptions"`
+	Topic             *int64                   `protobuf:"varint,2,opt,name=topic,proto3,oneof" form:"topic" json:"topic" query:"topic"`
+	StartTime         *int64                   `protobuf:"varint,3,opt,name=startTime,proto3,oneof" form:"startTime" json:"startTime" query:"startTime"`
+	EndTime           *int64                   `protobuf:"varint,4,opt,name=endTime,proto3,oneof" form:"endTime" json:"endTime" query:"endTime"`
+}
+
+func (x *GetAdminHomeworkStatisticsReq) Reset() {
+	*x = GetAdminHomeworkStatisticsReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[96]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetAdminHomeworkStatisticsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAdminHomeworkStatisticsReq) ProtoMessage() {}
+
+func (x *GetAdminHomeworkStatisticsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[96]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAdminHomeworkStatisticsReq.ProtoReflect.Descriptor instead.
+func (*GetAdminHomeworkStatisticsReq) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{96}
+}
+
+func (x *GetAdminHomeworkStatisticsReq) GetPaginationOptions() *basic.PaginationOptions {
+	if x != nil {
+		return x.PaginationOptions
+	}
+	return nil
+}
+
+func (x *GetAdminHomeworkStatisticsReq) GetTopic() int64 {
+	if x != nil && x.Topic != nil {
+		return *x.Topic
+	}
+	return 0
+}
+
+func (x *GetAdminHomeworkStatisticsReq) GetStartTime() int64 {
+	if x != nil && x.StartTime != nil {
+		return *x.StartTime
+	}
+	return 0
+}
+
+func (x *GetAdminHomeworkStatisticsReq) GetEndTime() int64 {
+	if x != nil && x.EndTime != nil {
+		return *x.EndTime
+	}
+	return 0
+}
+
+type GetAdminHomeworkStatisticsResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Statistics []*HomeworkStatistics `protobuf:"bytes,1,rep,name=statistics,proto3" form:"statistics" json:"statistics" query:"statistics"`
+	Total      int64                 `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total" query:"total"`
+}
+
+func (x *GetAdminHomeworkStatisticsResp) Reset() {
+	*x = GetAdminHomeworkStatisticsResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[97]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetAdminHomeworkStatisticsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAdminHomeworkStatisticsResp) ProtoMessage() {}
+
+func (x *GetAdminHomeworkStatisticsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[97]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAdminHomeworkStatisticsResp.ProtoReflect.Descriptor instead.
+func (*GetAdminHomeworkStatisticsResp) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{97}
+}
+
+func (x *GetAdminHomeworkStatisticsResp) GetStatistics() []*HomeworkStatistics {
+	if x != nil {
+		return x.Statistics
+	}
+	return nil
+}
+
+func (x *GetAdminHomeworkStatisticsResp) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type HomeworkStatistics struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id          string                  `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Title       string                  `protobuf:"bytes,2,opt,name=title,proto3" form:"title" json:"title" query:"title"`
+	Description string                  `protobuf:"bytes,3,opt,name=description,proto3" form:"description" json:"description" query:"description"`
+	Standard    string                  `protobuf:"bytes,4,opt,name=standard,proto3" form:"standard" json:"standard" query:"standard"`
+	Submissions []*SubmissionStatistics `protobuf:"bytes,5,rep,name=submissions,proto3" form:"submissions" json:"submissions" query:"submissions"`
+}
+
+func (x *HomeworkStatistics) Reset() {
+	*x = HomeworkStatistics{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[98]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *HomeworkStatistics) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*HomeworkStatistics) ProtoMessage() {}
+
+func (x *HomeworkStatistics) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[98]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use HomeworkStatistics.ProtoReflect.Descriptor instead.
+func (*HomeworkStatistics) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{98}
+}
+
+func (x *HomeworkStatistics) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *HomeworkStatistics) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *HomeworkStatistics) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *HomeworkStatistics) GetStandard() string {
+	if x != nil {
+		return x.Standard
+	}
+	return ""
+}
+
+func (x *HomeworkStatistics) GetSubmissions() []*SubmissionStatistics {
+	if x != nil {
+		return x.Submissions
+	}
+	return nil
+}
+
+type SubmissionStatistics struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id               string   `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	MemberId         string   `protobuf:"bytes,2,opt,name=memberId,proto3" form:"memberId" json:"memberId" query:"memberId"`
+	Title            string   `protobuf:"bytes,3,opt,name=title,proto3" form:"title" json:"title" query:"title"`
+	Text             string   `protobuf:"bytes,4,opt,name=text,proto3" form:"text" json:"text" query:"text"`
+	Images           []string `protobuf:"bytes,5,rep,name=images,proto3" form:"images" json:"images" query:"images"`
+	CorrectionResult string   `protobuf:"bytes,6,opt,name=correctionResult,proto3" form:"correctionResult" json:"correctionResult" query:"correctionResult"`
+}
+
+func (x *SubmissionStatistics) Reset() {
+	*x = SubmissionStatistics{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[99]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SubmissionStatistics) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubmissionStatistics) ProtoMessage() {}
+
+func (x *SubmissionStatistics) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[99]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubmissionStatistics.ProtoReflect.Descriptor instead.
+func (*SubmissionStatistics) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{99}
+}
+
+func (x *SubmissionStatistics) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *SubmissionStatistics) GetMemberId() string {
+	if x != nil {
+		return x.MemberId
+	}
+	return ""
+}
+
+func (x *SubmissionStatistics) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *SubmissionStatistics) GetText() string {
+	if x != nil {
+		return x.Text
+	}
+	return ""
+}
+
+func (x *SubmissionStatistics) GetImages() []string {
+	if x != nil {
+		return x.Images
+	}
+	return nil
+}
+
+func (x *SubmissionStatistics) GetCorrectionResult() string {
+	if x != nil {
+		return x.CorrectionResult
+	}
+	return ""
+}
+
 type GetUserInfoResp_Payload struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -6302,7 +6597,7 @@ type GetUserInfoResp_Payload struct {
 func (x *GetUserInfoResp_Payload) Reset() {
 	*x = GetUserInfoResp_Payload{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[96]
+		mi := &file_essay_show_common_proto_msgTypes[100]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6315,7 +6610,7 @@ func (x *GetUserInfoResp_Payload) String() string {
 func (*GetUserInfoResp_Payload) ProtoMessage() {}
 
 func (x *GetUserInfoResp_Payload) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[96]
+	mi := &file_essay_show_common_proto_msgTypes[100]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6371,7 +6666,7 @@ type ListSimpleExercisesResp_Record struct {
 func (x *ListSimpleExercisesResp_Record) Reset() {
 	*x = ListSimpleExercisesResp_Record{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[97]
+		mi := &file_essay_show_common_proto_msgTypes[101]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6384,7 +6679,7 @@ func (x *ListSimpleExercisesResp_Record) String() string {
 func (*ListSimpleExercisesResp_Record) ProtoMessage() {}
 
 func (x *ListSimpleExercisesResp_Record) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[97]
+	mi := &file_essay_show_common_proto_msgTypes[101]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6429,7 +6724,7 @@ type ListSimpleExercisesResp_SimpleExercise struct {
 func (x *ListSimpleExercisesResp_SimpleExercise) Reset() {
 	*x = ListSimpleExercisesResp_SimpleExercise{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[98]
+		mi := &file_essay_show_common_proto_msgTypes[102]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6442,7 +6737,7 @@ func (x *ListSimpleExercisesResp_SimpleExercise) String() string {
 func (*ListSimpleExercisesResp_SimpleExercise) ProtoMessage() {}
 
 func (x *ListSimpleExercisesResp_SimpleExercise) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[98]
+	mi := &file_essay_show_common_proto_msgTypes[102]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -6505,7 +6800,7 @@ type DoExerciseReq_Record struct {
 func (x *DoExerciseReq_Record) Reset() {
 	*x = DoExerciseReq_Record{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[99]
+		mi := &file_essay_show_common_proto_msgTypes[103]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -6518,7 +6813,7 @@ func (x *DoExerciseReq_Record) String() string {
 func (*DoExerciseReq_Record) ProtoMessage() {}
 
 func (x *DoExerciseReq_Record) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[99]
+	mi := &file_essay_show_common_proto_msgTypes[103]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -7344,10 +7639,56 @@ var file_essay_show_common_proto_rawDesc = []byte{
 	0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x51, 0x75, 0x65, 0x73,
 	0x74, 0x69, 0x6f, 0x6e, 0x42, 0x61, 0x6e, 0x6b, 0x52, 0x0d, 0x71, 0x75, 0x65, 0x73, 0x74, 0x69,
 	0x6f, 0x6e, 0x42, 0x61, 0x6e, 0x6b, 0x73, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x2a, 0x24, 0x0a,
-	0x08, 0x55, 0x73, 0x65, 0x72, 0x52, 0x6f, 0x6c, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x53, 0x54, 0x55,
-	0x44, 0x45, 0x4e, 0x54, 0x10, 0x00, 0x12, 0x0b, 0x0a, 0x07, 0x54, 0x45, 0x41, 0x43, 0x48, 0x45,
-	0x52, 0x10, 0x01, 0x2a, 0x1f, 0x0a, 0x07, 0x53, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x14,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x22, 0xe8, 0x01,
+	0x0a, 0x1d, 0x47, 0x65, 0x74, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x48, 0x6f, 0x6d, 0x65, 0x77, 0x6f,
+	0x72, 0x6b, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x52, 0x65, 0x71, 0x12,
+	0x46, 0x0a, 0x11, 0x70, 0x61, 0x67, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x4f, 0x70, 0x74,
+	0x69, 0x6f, 0x6e, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x62, 0x61, 0x73,
+	0x69, 0x63, 0x2e, 0x50, 0x61, 0x67, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x4f, 0x70, 0x74,
+	0x69, 0x6f, 0x6e, 0x73, 0x52, 0x11, 0x70, 0x61, 0x67, 0x69, 0x6e, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x4f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x19, 0x0a, 0x05, 0x74, 0x6f, 0x70, 0x69, 0x63,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x48, 0x00, 0x52, 0x05, 0x74, 0x6f, 0x70, 0x69, 0x63, 0x88,
+	0x01, 0x01, 0x12, 0x21, 0x0a, 0x09, 0x73, 0x74, 0x61, 0x72, 0x74, 0x54, 0x69, 0x6d, 0x65, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x03, 0x48, 0x01, 0x52, 0x09, 0x73, 0x74, 0x61, 0x72, 0x74, 0x54, 0x69,
+	0x6d, 0x65, 0x88, 0x01, 0x01, 0x12, 0x1d, 0x0a, 0x07, 0x65, 0x6e, 0x64, 0x54, 0x69, 0x6d, 0x65,
+	0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x48, 0x02, 0x52, 0x07, 0x65, 0x6e, 0x64, 0x54, 0x69, 0x6d,
+	0x65, 0x88, 0x01, 0x01, 0x42, 0x08, 0x0a, 0x06, 0x5f, 0x74, 0x6f, 0x70, 0x69, 0x63, 0x42, 0x0c,
+	0x0a, 0x0a, 0x5f, 0x73, 0x74, 0x61, 0x72, 0x74, 0x54, 0x69, 0x6d, 0x65, 0x42, 0x0a, 0x0a, 0x08,
+	0x5f, 0x65, 0x6e, 0x64, 0x54, 0x69, 0x6d, 0x65, 0x22, 0x76, 0x0a, 0x1e, 0x47, 0x65, 0x74, 0x41,
+	0x64, 0x6d, 0x69, 0x6e, 0x48, 0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b, 0x53, 0x74, 0x61, 0x74,
+	0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x52, 0x65, 0x73, 0x70, 0x12, 0x3e, 0x0a, 0x0a, 0x73, 0x74,
+	0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1e,
+	0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x48, 0x6f, 0x6d, 0x65,
+	0x77, 0x6f, 0x72, 0x6b, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x52, 0x0a,
+	0x73, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f,
+	0x74, 0x61, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c,
+	0x22, 0xbc, 0x01, 0x0a, 0x12, 0x48, 0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b, 0x53, 0x74, 0x61,
+	0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x12, 0x20, 0x0a,
+	0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12,
+	0x1a, 0x0a, 0x08, 0x73, 0x74, 0x61, 0x6e, 0x64, 0x61, 0x72, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x08, 0x73, 0x74, 0x61, 0x6e, 0x64, 0x61, 0x72, 0x64, 0x12, 0x42, 0x0a, 0x0b, 0x73,
+	0x75, 0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x0b,
+	0x32, 0x20, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x53, 0x75,
+	0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74, 0x61, 0x74, 0x69, 0x73, 0x74, 0x69,
+	0x63, 0x73, 0x52, 0x0b, 0x73, 0x75, 0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x73, 0x22,
+	0xb0, 0x01, 0x0a, 0x14, 0x53, 0x75, 0x62, 0x6d, 0x69, 0x73, 0x73, 0x69, 0x6f, 0x6e, 0x53, 0x74,
+	0x61, 0x74, 0x69, 0x73, 0x74, 0x69, 0x63, 0x73, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x6d, 0x65, 0x6d, 0x62,
+	0x65, 0x72, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6d, 0x65, 0x6d, 0x62,
+	0x65, 0x72, 0x49, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x65,
+	0x78, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x65, 0x78, 0x74, 0x12, 0x16,
+	0x0a, 0x06, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x09, 0x52, 0x06,
+	0x69, 0x6d, 0x61, 0x67, 0x65, 0x73, 0x12, 0x2a, 0x0a, 0x10, 0x63, 0x6f, 0x72, 0x72, 0x65, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x75, 0x6c, 0x74, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x10, 0x63, 0x6f, 0x72, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x75,
+	0x6c, 0x74, 0x2a, 0x2f, 0x0a, 0x08, 0x55, 0x73, 0x65, 0x72, 0x52, 0x6f, 0x6c, 0x65, 0x12, 0x0b,
+	0x0a, 0x07, 0x53, 0x54, 0x55, 0x44, 0x45, 0x4e, 0x54, 0x10, 0x00, 0x12, 0x0b, 0x0a, 0x07, 0x54,
+	0x45, 0x41, 0x43, 0x48, 0x45, 0x52, 0x10, 0x01, 0x12, 0x09, 0x0a, 0x05, 0x41, 0x44, 0x4d, 0x49,
+	0x4e, 0x10, 0x02, 0x2a, 0x1f, 0x0a, 0x07, 0x53, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x14,
 	0x0a, 0x10, 0x53, 0x55, 0x42, 0x4a, 0x45, 0x43, 0x54, 0x5f, 0x43, 0x4e, 0x5f, 0x45, 0x53, 0x53,
 	0x41, 0x59, 0x10, 0x00, 0x2a, 0x75, 0x0a, 0x0e, 0x48, 0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b,
 	0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x0f, 0x0a, 0x0b, 0x49, 0x4e, 0x49, 0x54, 0x49, 0x41,
@@ -7381,7 +7722,7 @@ func file_essay_show_common_proto_rawDescGZIP() []byte {
 }
 
 var file_essay_show_common_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
-var file_essay_show_common_proto_msgTypes = make([]protoimpl.MessageInfo, 100)
+var file_essay_show_common_proto_msgTypes = make([]protoimpl.MessageInfo, 104)
 var file_essay_show_common_proto_goTypes = []interface{}{
 	(UserRole)(0),                                  // 0: essay.show.UserRole
 	(Subject)(0),                                   // 1: essay.show.Subject
@@ -7483,14 +7824,18 @@ var file_essay_show_common_proto_goTypes = []interface{}{
 	(*ListQuestionBanksReq)(nil),                   // 97: essay.show.ListQuestionBanksReq
 	(*QuestionBank)(nil),                           // 98: essay.show.QuestionBank
 	(*ListQuestionBanksResp)(nil),                  // 99: essay.show.ListQuestionBanksResp
-	(*GetUserInfoResp_Payload)(nil),                // 100: essay.show.GetUserInfoResp.Payload
-	(*ListSimpleExercisesResp_Record)(nil),         // 101: essay.show.ListSimpleExercisesResp.Record
-	(*ListSimpleExercisesResp_SimpleExercise)(nil), // 102: essay.show.ListSimpleExercisesResp.SimpleExercise
-	(*DoExerciseReq_Record)(nil),                   // 103: essay.show.DoExerciseReq.Record
-	(*basic.PaginationOptions)(nil),                // 104: basic.PaginationOptions
+	(*GetAdminHomeworkStatisticsReq)(nil),          // 100: essay.show.GetAdminHomeworkStatisticsReq
+	(*GetAdminHomeworkStatisticsResp)(nil),         // 101: essay.show.GetAdminHomeworkStatisticsResp
+	(*HomeworkStatistics)(nil),                     // 102: essay.show.HomeworkStatistics
+	(*SubmissionStatistics)(nil),                   // 103: essay.show.SubmissionStatistics
+	(*GetUserInfoResp_Payload)(nil),                // 104: essay.show.GetUserInfoResp.Payload
+	(*ListSimpleExercisesResp_Record)(nil),         // 105: essay.show.ListSimpleExercisesResp.Record
+	(*ListSimpleExercisesResp_SimpleExercise)(nil), // 106: essay.show.ListSimpleExercisesResp.SimpleExercise
+	(*DoExerciseReq_Record)(nil),                   // 107: essay.show.DoExerciseReq.Record
+	(*basic.PaginationOptions)(nil),                // 108: basic.PaginationOptions
 }
 var file_essay_show_common_proto_depIdxs = []int32{
-	100, // 0: essay.show.GetUserInfoResp.payload:type_name -> essay.show.GetUserInfoResp.Payload
+	104, // 0: essay.show.GetUserInfoResp.payload:type_name -> essay.show.GetUserInfoResp.Payload
 	0,   // 1: essay.show.UpdateUserInfoReq.role:type_name -> essay.show.UserRole
 	19,  // 2: essay.show.DownloadEvaluateReq.excludeOptions:type_name -> essay.show.EvaluateExcludeOptions
 	23,  // 3: essay.show.EvaluateModifyReq.content:type_name -> essay.show.ModifyItem
@@ -7498,13 +7843,13 @@ var file_essay_show_common_proto_depIdxs = []int32{
 	23,  // 5: essay.show.EvaluateModifyReq.structure:type_name -> essay.show.ModifyItem
 	23,  // 6: essay.show.EvaluateModifyReq.development:type_name -> essay.show.ModifyItem
 	23,  // 7: essay.show.EvaluateModifyReq.overallComment:type_name -> essay.show.ModifyItem
-	104, // 8: essay.show.GetEssayEvaluateLogsReq.paginationOptions:type_name -> basic.PaginationOptions
+	108, // 8: essay.show.GetEssayEvaluateLogsReq.paginationOptions:type_name -> basic.PaginationOptions
 	28,  // 9: essay.show.GetEssayEvaluateLogsResp.logs:type_name -> essay.show.Log
 	46,  // 10: essay.show.CreateExerciseResp.exercise:type_name -> essay.show.Exercise
-	104, // 11: essay.show.ListSimpleExercisesReq.paginationOptions:type_name -> basic.PaginationOptions
-	102, // 12: essay.show.ListSimpleExercisesResp.exercises:type_name -> essay.show.ListSimpleExercisesResp.SimpleExercise
+	108, // 11: essay.show.ListSimpleExercisesReq.paginationOptions:type_name -> basic.PaginationOptions
+	106, // 12: essay.show.ListSimpleExercisesResp.exercises:type_name -> essay.show.ListSimpleExercisesResp.SimpleExercise
 	46,  // 13: essay.show.GetExerciseResp.exercise:type_name -> essay.show.Exercise
-	103, // 14: essay.show.DoExerciseReq.records:type_name -> essay.show.DoExerciseReq.Record
+	107, // 14: essay.show.DoExerciseReq.records:type_name -> essay.show.DoExerciseReq.Record
 	51,  // 15: essay.show.DoExerciseResp.records:type_name -> essay.show.Records
 	47,  // 16: essay.show.Exercise.question:type_name -> essay.show.Question
 	50,  // 17: essay.show.Exercise.history:type_name -> essay.show.History
@@ -7512,18 +7857,18 @@ var file_essay_show_common_proto_depIdxs = []int32{
 	49,  // 19: essay.show.ChoiceQuestion.options:type_name -> essay.show.Option
 	51,  // 20: essay.show.History.records:type_name -> essay.show.Records
 	52,  // 21: essay.show.Records.records:type_name -> essay.show.Record
-	104, // 22: essay.show.ListClassesReq.paginationOptions:type_name -> basic.PaginationOptions
+	108, // 22: essay.show.ListClassesReq.paginationOptions:type_name -> basic.PaginationOptions
 	58,  // 23: essay.show.ListClassesResp.classes:type_name -> essay.show.ClassInfo
-	104, // 24: essay.show.GetClassMembersReq.paginationOptions:type_name -> basic.PaginationOptions
+	108, // 24: essay.show.GetClassMembersReq.paginationOptions:type_name -> basic.PaginationOptions
 	61,  // 25: essay.show.GetClassMembersResp.members:type_name -> essay.show.ClassMemberInfo
 	1,   // 26: essay.show.CreateHomeworkReq.subject:type_name -> essay.show.Subject
-	104, // 27: essay.show.ListHomeworksReq.paginationOptions:type_name -> basic.PaginationOptions
+	108, // 27: essay.show.ListHomeworksReq.paginationOptions:type_name -> basic.PaginationOptions
 	75,  // 28: essay.show.ListHomeworksResp.homeworks:type_name -> essay.show.HomeworkInfo
 	1,   // 29: essay.show.HomeworkInfo.subject:type_name -> essay.show.Subject
 	2,   // 30: essay.show.HomeworkInfo.status:type_name -> essay.show.HomeworkStatus
-	104, // 31: essay.show.GetSubmissionsReq.paginationOptions:type_name -> basic.PaginationOptions
+	108, // 31: essay.show.GetSubmissionsReq.paginationOptions:type_name -> basic.PaginationOptions
 	87,  // 32: essay.show.GetSubmissionsResp.submissions:type_name -> essay.show.SubmissionInfo
-	104, // 33: essay.show.GetUserSubmissionsReq.paginationOptions:type_name -> basic.PaginationOptions
+	108, // 33: essay.show.GetUserSubmissionsReq.paginationOptions:type_name -> basic.PaginationOptions
 	2,   // 34: essay.show.SubmissionInfo.status:type_name -> essay.show.HomeworkStatus
 	23,  // 35: essay.show.ModifySubmissionEvaluateReq.content:type_name -> essay.show.ModifyItem
 	23,  // 36: essay.show.ModifySubmissionEvaluateReq.expression:type_name -> essay.show.ModifyItem
@@ -7531,16 +7876,19 @@ var file_essay_show_common_proto_depIdxs = []int32{
 	23,  // 38: essay.show.ModifySubmissionEvaluateReq.development:type_name -> essay.show.ModifyItem
 	23,  // 39: essay.show.ModifySubmissionEvaluateReq.overallComment:type_name -> essay.show.ModifyItem
 	19,  // 40: essay.show.DownloadSubmissionEvaluateReq.excludeOptions:type_name -> essay.show.EvaluateExcludeOptions
-	104, // 41: essay.show.ListQuestionBanksReq.paginationOptions:type_name -> basic.PaginationOptions
+	108, // 41: essay.show.ListQuestionBanksReq.paginationOptions:type_name -> basic.PaginationOptions
 	3,   // 42: essay.show.ListQuestionBanksReq.type:type_name -> essay.show.QuestionBankType
 	98,  // 43: essay.show.ListQuestionBanksResp.questionBanks:type_name -> essay.show.QuestionBank
-	0,   // 44: essay.show.GetUserInfoResp.Payload.role:type_name -> essay.show.UserRole
-	101, // 45: essay.show.ListSimpleExercisesResp.SimpleExercise.records:type_name -> essay.show.ListSimpleExercisesResp.Record
-	46,  // [46:46] is the sub-list for method output_type
-	46,  // [46:46] is the sub-list for method input_type
-	46,  // [46:46] is the sub-list for extension type_name
-	46,  // [46:46] is the sub-list for extension extendee
-	0,   // [0:46] is the sub-list for field type_name
+	108, // 44: essay.show.GetAdminHomeworkStatisticsReq.paginationOptions:type_name -> basic.PaginationOptions
+	102, // 45: essay.show.GetAdminHomeworkStatisticsResp.statistics:type_name -> essay.show.HomeworkStatistics
+	103, // 46: essay.show.HomeworkStatistics.submissions:type_name -> essay.show.SubmissionStatistics
+	0,   // 47: essay.show.GetUserInfoResp.Payload.role:type_name -> essay.show.UserRole
+	105, // 48: essay.show.ListSimpleExercisesResp.SimpleExercise.records:type_name -> essay.show.ListSimpleExercisesResp.Record
+	49,  // [49:49] is the sub-list for method output_type
+	49,  // [49:49] is the sub-list for method input_type
+	49,  // [49:49] is the sub-list for extension type_name
+	49,  // [49:49] is the sub-list for extension extendee
+	0,   // [0:49] is the sub-list for field type_name
 }
 
 func init() { file_essay_show_common_proto_init() }
@@ -8702,7 +9050,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[96].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserInfoResp_Payload); i {
+			switch v := v.(*GetAdminHomeworkStatisticsReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -8714,7 +9062,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[97].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListSimpleExercisesResp_Record); i {
+			switch v := v.(*GetAdminHomeworkStatisticsResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -8726,7 +9074,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[98].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListSimpleExercisesResp_SimpleExercise); i {
+			switch v := v.(*HomeworkStatistics); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -8738,6 +9086,54 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[99].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SubmissionStatistics); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[100].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetUserInfoResp_Payload); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[101].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListSimpleExercisesResp_Record); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[102].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListSimpleExercisesResp_SimpleExercise); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[103].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DoExerciseReq_Record); i {
 			case 0:
 				return &v.state
@@ -8766,13 +9162,14 @@ func file_essay_show_common_proto_init() {
 	file_essay_show_common_proto_msgTypes[71].OneofWrappers = []interface{}{}
 	file_essay_show_common_proto_msgTypes[83].OneofWrappers = []interface{}{}
 	file_essay_show_common_proto_msgTypes[86].OneofWrappers = []interface{}{}
+	file_essay_show_common_proto_msgTypes[96].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_essay_show_common_proto_rawDesc,
 			NumEnums:      4,
-			NumMessages:   100,
+			NumMessages:   104,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

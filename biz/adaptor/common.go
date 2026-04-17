@@ -46,7 +46,7 @@ func (m *headerProvider) Keys() []string {
 func PostProcess(ctx context.Context, c *app.RequestContext, req, resp any, err error) {
 	path := string(c.Path())
 	if !shouldSkipLogging(path) {
-		log.CtxInfo(ctx, "[%s] req=%s, resp=%s, err=%v", path, util.JSONF(req), util.JSONF(resp), err)
+		log.CtxInfo(ctx, "[%s] req=%s, resp=%s, err=%v", path, util.JSONF(req), truncateLogContent(util.JSONF(resp), 1000), err)
 	}
 	b3.New().Inject(ctx, &headerProvider{headers: &c.Response.Header})
 
@@ -86,4 +86,12 @@ func shouldSkipLogging(path string) bool {
 		}
 	}
 	return false
+}
+
+func truncateLogContent(content string, limit int) string {
+	if limit <= 0 || len(content) <= limit {
+		return content
+	}
+
+	return content[:limit] + "...(truncated)"
 }

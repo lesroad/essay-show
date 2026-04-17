@@ -18,6 +18,13 @@ func Register(r *server.Hertz) {
 
 	root := r.Group("/", rootMw()...)
 	{
+		_admin := root.Group("/admin", _adminMw()...)
+		{
+			_homework := _admin.Group("/homework", _homeworkMw()...)
+			_homework.GET("/statistics", append(_getadminhomeworkstatisticsMw(), show.GetAdminHomeworkStatistics)...)
+		}
+	}
+	{
 		_class := root.Group("/class", _classMw()...)
 		_class.POST("/create", append(_createclassMw(), show.CreateClass)...)
 		_class.GET("/list", append(_listclassesMw(), show.ListClasses)...)
@@ -67,29 +74,29 @@ func Register(r *server.Hertz) {
 		_feedback.POST("/submit", append(_submitfeedbackMw(), show.SubmitFeedback)...)
 	}
 	{
-		_homework := root.Group("/homework", _homeworkMw()...)
-		_homework.POST("/create", append(_createhomeworkMw(), show.CreateHomework)...)
-		_homework.POST("/edit", append(_edithomeworkMw(), show.EditHomework)...)
-		_homework.GET("/list", append(_listhomeworksMw(), show.ListHomeworks)...)
-		_homework.POST("/re-evaluate", append(_reevaluatehomeworkMw(), show.ReEvaluateHomework)...)
-		_homework.POST("/recorrect", append(_recorrecthomeworkMw(), show.ReCorrectHomework)...)
-		_homework.GET("/statistics", append(_gethomeworkstatisticsMw(), show.GetHomeworkStatistics)...)
-		_homework.GET("/submission", append(_getsubmissionevaluateMw(), show.GetSubmissionEvaluate)...)
-		_submission := _homework.Group("/submission", _submissionMw()...)
+		_homework0 := root.Group("/homework", _homework0Mw()...)
+		_homework0.POST("/create", append(_createhomeworkMw(), show.CreateHomework)...)
+		_homework0.POST("/edit", append(_edithomeworkMw(), show.EditHomework)...)
+		_homework0.GET("/list", append(_listhomeworksMw(), show.ListHomeworks)...)
+		_homework0.POST("/re-evaluate", append(_reevaluatehomeworkMw(), show.ReEvaluateHomework)...)
+		_homework0.POST("/recorrect", append(_recorrecthomeworkMw(), show.ReCorrectHomework)...)
+		_homework0.GET("/statistics", append(_gethomeworkstatisticsMw(), show.GetHomeworkStatistics)...)
+		_homework0.GET("/submission", append(_getsubmissionevaluateMw(), show.GetSubmissionEvaluate)...)
+		_submission := _homework0.Group("/submission", _submissionMw()...)
 		_submission.POST("/download", append(_downloadsubmissionevaluateMw(), show.DownloadSubmissionEvaluate)...)
 		_submission.POST("/modify", append(_modifysubmissionevaluateMw(), show.ModifySubmissionEvaluate)...)
-		_homework.GET("/submissions", append(_getsubmissionsMw(), show.GetSubmissions)...)
-		_homework.POST("/submit", append(_submithomeworkMw(), show.SubmitHomework)...)
+		_homework0.GET("/submissions", append(_getsubmissionsMw(), show.GetSubmissions)...)
+		_homework0.POST("/submit", append(_submithomeworkMw(), show.SubmitHomework)...)
 		{
-			_delete1 := _homework.Group("/delete", _delete1Mw()...)
+			_delete1 := _homework0.Group("/delete", _delete1Mw()...)
 			_delete1.DELETE("/:homeworkId", append(_deletehomeworkMw(), show.DeleteHomework)...)
 		}
 		{
-			_lesson_plan := _homework.Group("/lesson_plan", _lesson_planMw()...)
+			_lesson_plan := _homework0.Group("/lesson_plan", _lesson_planMw()...)
 			_lesson_plan.POST("/download", append(_downloadlessonplanMw(), show.DownloadLessonPlan)...)
 		}
 		{
-			_user := _homework.Group("/user", _userMw()...)
+			_user := _homework0.Group("/user", _userMw()...)
 			_user.GET("/submissions", append(_getusersubmissionsMw(), show.GetUserSubmissions)...)
 		}
 	}

@@ -121,3 +121,35 @@ func (m *MongoMapper) Delete(ctx context.Context, id string) error {
 	_, err = m.conn.DeleteOneNoCache(ctx, bson.M{consts.ID: oid})
 	return err
 }
+
+func (m *MongoMapper) FindHomeworks(ctx context.Context, page, pageSize int64, topic *int64, startTime, endTime *int64) ([]*Homework, int64, error) {
+	var homeworks []*Homework
+	filter := bson.M{}
+	if startTime != nil {
+		filter["create_time"] = bson.M{"$gte": time.Unix(*startTime, 0)}
+	}
+	if endTime != nil {
+		filter["create_time"] = bson.M{"$lte": time.Unix(*endTime, 0)}
+	}
+	if topic != nil {
+		filter["topic"] = *topic
+	}
+
+	// 获取总数
+	total, err := m.conn.CountDocuments(ctx, filter)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	// 分页查询
+	skip := (page - 1) * pageSize
+	err = m.conn.Find(ctx, &homeworks, filter, &options.FindOptions{
+		Skip:  &skip,
+		Limit: &pageSize,
+		Sort:  bson.M{"create_time": -1},
+	})
+	if err != nil {
+		return nil, 0, err
+	}
+	return homeworks, total, nil
+}

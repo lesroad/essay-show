@@ -110,6 +110,22 @@ func (m *SubmissionMongoMapper) FindByHomeworkID(ctx context.Context, homeworkID
 	return submissions, nil
 }
 
+// 根据 homework_id 找所有作业列表
+func (m *SubmissionMongoMapper) FindAllByHomework(ctx context.Context, homeworkID string, status *[]int) ([]*HomeworkSubmission, error) {
+	var submissions []*HomeworkSubmission
+	filter := bson.M{"homework_id": homeworkID}
+	if status != nil {
+		filter["status"] = bson.M{"$in": *status}
+	}
+	err := m.conn.Find(ctx, &submissions, filter, &options.FindOptions{
+		Sort: bson.M{"update_time": -1},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return submissions, nil
+}
+
 // 查询一条最新的提交记录
 func (m *SubmissionMongoMapper) FindLatestByMemberAndHomework(ctx context.Context, memberID, homeworkID string) (*HomeworkSubmission, error) {
 	var submission HomeworkSubmission

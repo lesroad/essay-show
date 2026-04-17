@@ -160,9 +160,14 @@ func (s *UserService) GetUserInfo(ctx context.Context, req *show.GetUserInfoReq)
 	}
 
 	// 确定用户角色
-	role := show.UserRole_STUDENT // 默认为学生
-	if u.Role == consts.RoleTeacher {
+	var role show.UserRole
+	switch u.Role {
+	case consts.RoleTeacher:
 		role = show.UserRole_TEACHER
+	case consts.RoleAdmin:
+		role = show.UserRole_ADMIN
+	default:
+		role = show.UserRole_STUDENT
 	}
 
 	return &show.GetUserInfoResp{
@@ -199,9 +204,12 @@ func (s *UserService) UpdateUserInfo(ctx context.Context, req *show.UpdateUserIn
 	}
 
 	if req.Role != nil {
-		if *req.Role == show.UserRole_TEACHER {
+		switch *req.Role {
+		case show.UserRole_TEACHER:
 			u.Role = consts.RoleTeacher
-		} else if *req.Role == show.UserRole_STUDENT {
+		case show.UserRole_ADMIN:
+			u.Role = consts.RoleAdmin
+		default:
 			u.Role = consts.RoleStudent
 		}
 	}

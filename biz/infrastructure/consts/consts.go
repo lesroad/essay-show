@@ -18,6 +18,7 @@ const (
 	NotEqual     = "$ne"
 	RoleStudent  = "student"
 	RoleTeacher  = "teacher"
+	RoleAdmin    = "admin"
 )
 
 // http
