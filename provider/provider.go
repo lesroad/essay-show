@@ -38,6 +38,7 @@ type Provider struct {
 	ClassService        service.IClassService
 	HomeworkService     service.IHomeworkService
 	QuestionBankService service.IQuestionBankService
+	AdminService        service.IAdminService
 }
 
 func Get() *Provider {
@@ -57,6 +58,7 @@ var ApplicationSet = wire.NewSet(
 	service.ClassServiceSet,
 	service.HomeworkServiceSet,
 	service.QuestionBankServiceSet,
+	service.AdminServiceSet,
 )
 
 var InfrastructureSet = wire.NewSet(

@@ -88,6 +88,11 @@ func NewProvider() (*Provider, error) {
 	questionBankService := &service.QuestionBankService{
 		QuestionBankMapper: mySQLMapper,
 	}
+	adminService := &service.AdminService{
+		HomeworkMapper:   homeworkMongoMapper,
+		UserMapper:       mongoMapper,
+		SubmissionMapper: submissionMongoMapper,
+	}
 	providerProvider := &Provider{
 		Config:              configConfig,
 		UserService:         userService,
@@ -98,6 +103,7 @@ func NewProvider() (*Provider, error) {
 		ClassService:        classService,
 		HomeworkService:     homeworkService,
 		QuestionBankService: questionBankService,
+		AdminService:        adminService,
 	}
 	return providerProvider, nil
 }
