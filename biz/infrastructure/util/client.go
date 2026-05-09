@@ -611,3 +611,16 @@ func (c *HttpClient) GradeSingleStudent(ctx context.Context, data map[string]any
 	}
 	return resp, nil
 }
+
+func (c *HttpClient) OpencourseEssayExportPdf(ctx context.Context, data map[string]any) (map[string]any, error) {
+	header := make(map[string]string)
+	header["Content-Type"] = "application/json"
+	header["Charset"] = "utf-8"
+	url := config.GetConfig().Api.WebEndpointURL + "/opencourse_essay_export_pdf"
+	resp, err := c.SendRequest(ctx, consts.Post, url, header, data)
+	if err != nil {
+		log.Error("OpencourseEssayExportPdf error: %v, data: %v", err, data)
+		return nil, err
+	}
+	return resp, nil
+}
