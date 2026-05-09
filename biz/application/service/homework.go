@@ -924,10 +924,24 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 	}
 
 	var submissions []*homework.HomeworkSubmission
+	var batchTopic int64 = -1
 	for _, submissionId := range req.SubmissionIds {
 		submission, err := s.SubmissionMapper.FindOne(ctx, submissionId)
 		if err != nil {
 			log.Error("查询提交记录失败, submissionId: %s, error: %v", submissionId, err)
+			continue
+		}
+
+		hw, err := s.HomeworkMapper.FindOne(ctx, submission.HomeworkID)
+		if err != nil {
+			log.Error("查询作业失败, submissionId: %s, homeworkId: %s, error: %v", submissionId, submission.HomeworkID, err)
+			continue
+		}
+
+		if batchTopic == -1 {
+			batchTopic = hw.Topic
+		} else if hw.Topic != batchTopic {
+			log.Error("跳过 Topic 不一致的提交, submissionId: %s, expectTopic: %d, actualTopic: %d", submissionId, batchTopic, hw.Topic)
 			continue
 		}
 
@@ -938,11 +952,11 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 		return nil, consts.ErrNotFound
 	}
 
+	isWebTopic := batchTopic == consts.TopicTypeWeb
+
 	var essayList []map[string]any
 	for _, submission := range submissions {
-		exportResult, err := stateless.BuildExportEvaluateData(submission.Response, req.GetExcludeOptions())
-		if err != nil {
-			log.Error("解析批改结果失败, submissionId: %s, error: %v", submission.ID.Hex(), err)
+		if submission.Status != consts.StatusCompleted && submission.Status != consts.StatusModified {
 			continue
 		}
 
@@ -952,24 +966,47 @@ func (s *HomeworkService) DownloadSubmissionEvaluate(ctx context.Context, req *s
 			return nil, consts.ErrNotFound
 		}
 
-		essayData := map[string]any{
-			"data":    exportResult,
-			"user_id": member.Name,
+		var data any
+		if isWebTopic {
+			webData, err := stateless.BuildWebExportEvaluateData(submission.Response)
+			if err != nil {
+				log.Error("解析网页端批改结果失败, submissionId: %s, error: %v", submission.ID.Hex(), err)
+				continue
+			}
+			data = webData
+		} else {
+			exportResult, err := stateless.BuildExportEvaluateData(submission.Response, req.GetExcludeOptions())
+			if err != nil {
+				log.Error("解析批改结果失败, submissionId: %s, error: %v", submission.ID.Hex(), err)
+				continue
+			}
+			data = exportResult
 		}
-		essayList = append(essayList, essayData)
+
+		essayList = append(essayList, map[string]any{
+			"data":    data,
+			"user_id": member.Name,
+		})
 	}
 
 	if len(essayList) == 0 {
 		return nil, consts.ErrCall
 	}
 
+	client := util.GetHttpClient()
+	var (
+		_resp map[string]any
+		err   error
+	)
 	downloadData := map[string]any{
 		"essay_list": essayList,
-		"watermark":  true,
+		"watermark":  0,
 	}
-
-	client := util.GetHttpClient()
-	_resp, err := client.EssayPolish(ctx, downloadData)
+	if isWebTopic {
+		_resp, err = client.OpencourseEssayExportPdf(ctx, downloadData)
+	} else {
+		_resp, err = client.EssayPolish(ctx, downloadData)
+	}
 	if err != nil {
 		log.Error("调用批改结果下载服务失败: %v", err)
 		return nil, consts.ErrCall

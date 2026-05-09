@@ -58,3 +58,11 @@ func (e *ExportEvaluate) ToJson() string {
 	data, _ := json.Marshal(e)
 	return string(data)
 }
+
+func BuildWebExportEvaluateData(response string) (map[string]any, error) {
+	var raw map[string]any
+	if err := json.Unmarshal([]byte(response), &raw); err != nil {
+		return nil, err
+	}
+	return raw, nil
+}
