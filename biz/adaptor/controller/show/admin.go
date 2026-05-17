@@ -28,3 +28,19 @@ func GetAdminHomeworkStatistics(ctx context.Context, c *app.RequestContext) {
 	resp, err := p.AdminService.GetAdminHomeworkStatistics(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
+
+// AddGradeCount .
+// @router /admin/grade/count [POST]
+func AddGradeCount(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.AddGradeCountReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(show.Response)
+
+	c.JSON(consts.StatusOK, resp)
+}

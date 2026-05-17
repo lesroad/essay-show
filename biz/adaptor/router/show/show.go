@@ -20,6 +20,10 @@ func Register(r *server.Hertz) {
 	{
 		_admin := root.Group("/admin", _adminMw()...)
 		{
+			_grade := _admin.Group("/grade", _gradeMw()...)
+			_grade.POST("/count", append(_addgradecountMw(), show.AddGradeCount)...)
+		}
+		{
 			_homework := _admin.Group("/homework", _homeworkMw()...)
 			_homework.GET("/statistics", append(_getadminhomeworkstatisticsMw(), show.GetAdminHomeworkStatistics)...)
 		}
@@ -118,6 +122,7 @@ func Register(r *server.Hertz) {
 		_daily_attend.GET("/get", append(_getdailyattendMw(), show.GetDailyAttend)...)
 		_user0.POST("/generate_url_link", append(_generateurllinkMw(), show.GenerateUrlLink)...)
 		_user0.GET("/info", append(_getuserinfoMw(), show.GetUserInfo)...)
+		_user0.GET("/profile", append(_getuserprofileMw(), show.GetUserProfile)...)
 		_user0.POST("/sign_in", append(_signinMw(), show.SignIn)...)
 		_user0.POST("/update", append(_updateuserinfoMw(), show.UpdateUserInfo)...)
 		{

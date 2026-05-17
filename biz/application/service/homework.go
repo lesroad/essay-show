@@ -89,6 +89,11 @@ func (s *HomeworkService) CreateHomework(ctx context.Context, req *show.CreateHo
 			return
 		}
 
+		var grade int64
+		if req.Grade == nil {
+			grade = 3
+		}
+
 		// 创建作业
 		now := time.Now()
 		h := &homework.Homework{
@@ -97,7 +102,7 @@ func (s *HomeworkService) CreateHomework(ctx context.Context, req *show.CreateHo
 			Title:            req.Title,
 			Description:      req.Description,
 			ClassID:          classId,
-			Grade:            req.Grade,
+			Grade:            &grade,
 			TotalScore:       req.TotalScore,
 			EssayType:        req.EssayType,
 			CreatorID:        userMeta.GetUserId(),
@@ -106,6 +111,7 @@ func (s *HomeworkService) CreateHomework(ctx context.Context, req *show.CreateHo
 			ExpressionScore:  req.ExpressionScore,
 			StructureScore:   req.StructureScore,
 			DevelopmentScore: req.DevelopmentScore,
+			ReadingContent:   req.ReadingContent,
 			CreateTime:       now,
 			UpdateTime:       now,
 		}
@@ -115,7 +121,7 @@ func (s *HomeworkService) CreateHomework(ctx context.Context, req *show.CreateHo
 			httpClient := util.GetHttpClient()
 			extractRubricCategoriesResponse, err := httpClient.ExtractRubricCategories(ctx, map[string]any{
 				"rubric_text": req.Standard,
-				"grade_type":  util.GetGradeType(h.Grade),
+				"grade_type":  util.GetGradeType(req.Grade),
 			})
 			if err != nil {
 				return
@@ -202,8 +208,8 @@ func (s *HomeworkService) validateCustomScoring(req *show.CreateHomeworkReq) err
 	}
 
 	// 验证总分是否匹配
-	if scoreSum != req.TotalScore {
-		log.Error("自定义评分总和(%d)不等于总分(%d)", scoreSum, req.TotalScore)
+	if scoreSum != *req.TotalScore {
+		log.Error("自定义评分总和(%d)不等于总分(%d)", scoreSum, *req.TotalScore)
 		return consts.ErrScoreSumMismatch
 	}
 
@@ -303,10 +309,10 @@ func (s *HomeworkService) EditHomework(ctx context.Context, req *show.EditHomewo
 	}
 
 	h.Title = req.Title
-	h.Description = req.Description
-	h.EssayType = req.EssayType
-	h.Grade = req.Grade
-	h.TotalScore = req.TotalScore
+	h.Description = &req.Description
+	h.EssayType = &req.EssayType
+	h.Grade = &req.Grade
+	h.TotalScore = &req.TotalScore
 	h.Standard = req.Standard
 	h.ContentScore = req.ContentScore
 	h.ExpressionScore = req.ExpressionScore
@@ -384,7 +390,7 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 			Topic:            h.Topic,
 			Title:            h.Title,
 			Description:      h.Description,
-			Grade:            &h.Grade,
+			Grade:            h.Grade,
 			TotalScore:       h.TotalScore,
 			EssayType:        h.EssayType,
 			CreateTime:       h.CreateTime.Unix(),
@@ -393,6 +399,7 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 			ExpressionScore:  h.ExpressionScore,
 			StructureScore:   h.StructureScore,
 			DevelopmentScore: h.DevelopmentScore,
+			ReadingContent:   h.ReadingContent,
 		}
 
 		if u.Role == consts.RoleTeacher {
@@ -1225,6 +1232,10 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 		return
 	}
 
+	if !util.IsSupportHomeworkTopic(homework.Topic) {
+		return
+	}
+
 	if submission.SubmitType == consts.RecorrectTypeFirst || submission.SubmitType == consts.RecorrectTypeImage {
 		ocrResp, err := util.GetHttpClient().TitleUrlOCR(ctx, submission.Images, "")
 		if err != nil {
@@ -1241,10 +1252,11 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 		submission.Text = data["content"].(string)
 	}
 
-	prompt := homework.Description
-	essayType := homework.EssayType
-	grade := homework.Grade
-	totalScore := homework.TotalScore
+	prompt := *homework.Description
+	essayType := *homework.EssayType
+	grade := *homework.Grade
+	totalScore := *homework.TotalScore
+	standard := *homework.Standard
 
 	submission.UpdateTime = time.Now()
 	submission.Status = consts.StatusGrading
@@ -1252,10 +1264,6 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 
 	resultChan := make(chan string, 100)
 	var finalResult string
-	var standard *string
-	if homework.Standard != nil {
-		standard = homework.Standard
-	}
 
 	// 网页端提交作业，自定义批改标准
 	if homework.Topic == consts.TopicTypeWeb {
@@ -1318,7 +1326,7 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 	// 调用批改服务
 	go func() {
 		defer close(resultChan)
-		util.GetHttpClient().EvaluateStream(ctx, submission.Title, submission.Text, &grade, &totalScore, &essayType, &prompt, standard, ratio, resultChan)
+		util.GetHttpClient().EvaluateStream(ctx, submission.Title, submission.Text, &grade, &totalScore, &essayType, &prompt, &standard, ratio, resultChan)
 	}()
 
 	for jsonMessage := range resultChan {
