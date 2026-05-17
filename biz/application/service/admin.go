@@ -67,7 +67,7 @@ func (s *AdminService) GetAdminHomeworkStatistics(ctx context.Context, req *show
 		homeworkStatistics := &show.HomeworkStatistics{
 			Id:          homework.ID.Hex(),
 			Title:       homework.Title,
-			Description: homework.Description,
+			Description: *homework.Description,
 			Standard:    *homework.Standard,
 			Submissions: make([]*show.SubmissionStatistics, 0),
 		}

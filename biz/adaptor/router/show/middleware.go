@@ -455,3 +455,18 @@ func _homework0Mw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _gradeMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _addgradecountMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getuserprofileMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

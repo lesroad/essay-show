@@ -61,7 +61,8 @@ const (
 
 	TopicTypeCustom  = 0 // 自定义
 	TopicTypeLibrary = 1 // 题库
-	TopicTypeWeb     = 3 // 网页端
+	TopicTypeWeb     = 3 // 课堂练习
+	TopicTypeReading = 4 // 阅读作业
 )
 
 const (
