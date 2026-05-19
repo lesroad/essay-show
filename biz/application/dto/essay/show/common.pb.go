@@ -224,10 +224,10 @@ type SignInReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	AuthId     string  `protobuf:"bytes,1,opt,name=authId,proto3" form:"authId" json:"authId,omitempty" query:"authId"`
-	AuthType   string  `protobuf:"bytes,2,opt,name=authType,proto3" form:"authType" json:"authType,omitempty" query:"authType"`
-	VerifyCode *string `protobuf:"bytes,3,opt,name=verifyCode,proto3,oneof" form:"verifyCode" json:"verifyCode,omitempty" query:"verifyCode"`
-	Password   *string `protobuf:"bytes,4,opt,name=password,proto3,oneof" form:"password" json:"password,omitempty" query:"password"`
+	AuthId     string  `protobuf:"bytes,1,opt,name=authId,proto3" form:"authId" json:"authId" query:"authId"`
+	AuthType   string  `protobuf:"bytes,2,opt,name=authType,proto3" form:"authType" json:"authType" query:"authType"`
+	VerifyCode *string `protobuf:"bytes,3,opt,name=verifyCode,proto3,oneof" form:"verifyCode" json:"verifyCode" query:"verifyCode"`
+	Password   *string `protobuf:"bytes,4,opt,name=password,proto3,oneof" form:"password" json:"password" query:"password"`
 }
 
 func (x *SignInReq) Reset() {
@@ -296,11 +296,11 @@ type SignInResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id           string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	AccessToken  string `protobuf:"bytes,2,opt,name=accessToken,proto3" form:"accessToken" json:"accessToken,omitempty" query:"accessToken"`
-	AccessExpire int64  `protobuf:"varint,3,opt,name=accessExpire,proto3" form:"accessExpire" json:"accessExpire,omitempty" query:"accessExpire"`
-	Name         string `protobuf:"bytes,4,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`
-	IsNew        bool   `protobuf:"varint,5,opt,name=isNew,proto3" form:"isNew" json:"isNew,omitempty" query:"isNew"`
+	Id           string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	AccessToken  string `protobuf:"bytes,2,opt,name=accessToken,proto3" form:"accessToken" json:"accessToken" query:"accessToken"`
+	AccessExpire int64  `protobuf:"varint,3,opt,name=accessExpire,proto3" form:"accessExpire" json:"accessExpire" query:"accessExpire"`
+	Name         string `protobuf:"bytes,4,opt,name=name,proto3" form:"name" json:"name" query:"name"`
+	IsNew        bool   `protobuf:"varint,5,opt,name=isNew,proto3" form:"isNew" json:"isNew" query:"isNew"`
 }
 
 func (x *SignInResp) Reset() {
@@ -376,10 +376,10 @@ type BindAuthReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	AuthId     string  `protobuf:"bytes,1,opt,name=authId,proto3" form:"authId" json:"authId,omitempty" query:"authId"`
-	AuthType   string  `protobuf:"bytes,2,opt,name=authType,proto3" form:"authType" json:"authType,omitempty" query:"authType"`
-	VerifyCode *string `protobuf:"bytes,3,opt,name=verifyCode,proto3,oneof" form:"verifyCode" json:"verifyCode,omitempty" query:"verifyCode"`
-	Password   *string `protobuf:"bytes,4,opt,name=password,proto3,oneof" form:"password" json:"password,omitempty" query:"password"`
+	AuthId     string  `protobuf:"bytes,1,opt,name=authId,proto3" form:"authId" json:"authId" query:"authId"`
+	AuthType   string  `protobuf:"bytes,2,opt,name=authType,proto3" form:"authType" json:"authType" query:"authType"`
+	VerifyCode *string `protobuf:"bytes,3,opt,name=verifyCode,proto3,oneof" form:"verifyCode" json:"verifyCode" query:"verifyCode"`
+	Password   *string `protobuf:"bytes,4,opt,name=password,proto3,oneof" form:"password" json:"password" query:"password"`
 }
 
 func (x *BindAuthReq) Reset() {
@@ -448,8 +448,8 @@ type BindAuthResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
+	Code int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
 }
 
 func (x *BindAuthResp) Reset() {
@@ -543,9 +543,9 @@ type GetUserInfoResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code    int64                    `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg     string                   `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Payload *GetUserInfoResp_Payload `protobuf:"bytes,3,opt,name=payload,proto3" form:"payload" json:"payload,omitempty" query:"payload"`
+	Code    int64                    `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg     string                   `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Payload *GetUserInfoResp_Payload `protobuf:"bytes,3,opt,name=payload,proto3" form:"payload" json:"payload" query:"payload"`
 }
 
 func (x *GetUserInfoResp) Reset() {
@@ -607,10 +607,10 @@ type UpdateUserInfoReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name   *string   `protobuf:"bytes,1,opt,name=name,proto3,oneof" form:"name" json:"name,omitempty" query:"name"`
-	School *string   `protobuf:"bytes,2,opt,name=school,proto3,oneof" form:"school" json:"school,omitempty" query:"school"`
-	Grade  *int64    `protobuf:"varint,3,opt,name=grade,proto3,oneof" form:"grade" json:"grade,omitempty" query:"grade"`
-	Role   *UserRole `protobuf:"varint,4,opt,name=role,proto3,enum=essay.show.UserRole,oneof" form:"role" json:"role,omitempty" query:"role"`
+	Name   *string   `protobuf:"bytes,1,opt,name=name,proto3,oneof" form:"name" json:"name" query:"name"`
+	School *string   `protobuf:"bytes,2,opt,name=school,proto3,oneof" form:"school" json:"school" query:"school"`
+	Grade  *int64    `protobuf:"varint,3,opt,name=grade,proto3,oneof" form:"grade" json:"grade" query:"grade"`
+	Role   *UserRole `protobuf:"varint,4,opt,name=role,proto3,enum=essay.show.UserRole,oneof" form:"role" json:"role" query:"role"`
 }
 
 func (x *UpdateUserInfoReq) Reset() {
@@ -718,8 +718,8 @@ type GetDailyAttendReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Year  int32 `protobuf:"varint,1,opt,name=year,proto3" form:"year" json:"year,omitempty" query:"year"`     // 年
-	Month int32 `protobuf:"varint,2,opt,name=month,proto3" form:"month" json:"month,omitempty" query:"month"` // 月
+	Year  int32 `protobuf:"varint,1,opt,name=year,proto3" form:"year" json:"year" query:"year"`     // 年
+	Month int32 `protobuf:"varint,2,opt,name=month,proto3" form:"month" json:"month" query:"month"` // 月
 }
 
 func (x *GetDailyAttendReq) Reset() {
@@ -773,11 +773,11 @@ type GetDailyAttendResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code    int64   `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg     string  `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Attend  int64   `protobuf:"varint,3,opt,name=attend,proto3" form:"attend" json:"attend,omitempty" query:"attend"`            // 今日是否签到
-	Total   int64   `protobuf:"varint,4,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`                // 打卡总天数
-	History []int64 `protobuf:"varint,5,rep,packed,name=history,proto3" form:"history" json:"history,omitempty" query:"history"` // 指定月份的签到历史
+	Code    int64   `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg     string  `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Attend  int64   `protobuf:"varint,3,opt,name=attend,proto3" form:"attend" json:"attend" query:"attend"`            // 今日是否签到
+	Total   int64   `protobuf:"varint,4,opt,name=total,proto3" form:"total" json:"total" query:"total"`                // 打卡总天数
+	History []int64 `protobuf:"varint,5,rep,packed,name=history,proto3" form:"history" json:"history" query:"history"` // 指定月份的签到历史
 }
 
 func (x *GetDailyAttendResp) Reset() {
@@ -891,9 +891,9 @@ type GetInvitationCodeResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code           int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg            string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	InvitationCode string `protobuf:"bytes,3,opt,name=invitationCode,proto3" form:"invitationCode" json:"invitationCode,omitempty" query:"invitationCode"`
+	Code           int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg            string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	InvitationCode string `protobuf:"bytes,3,opt,name=invitationCode,proto3" form:"invitationCode" json:"invitationCode" query:"invitationCode"`
 }
 
 func (x *GetInvitationCodeResp) Reset() {
@@ -955,8 +955,8 @@ type FillInvitationCodeReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	InvitationCode string  `protobuf:"bytes,1,opt,name=invitationCode,proto3" form:"invitationCode" json:"invitationCode,omitempty" query:"invitationCode"`
-	Source         *string `protobuf:"bytes,2,opt,name=source,proto3,oneof" form:"source" json:"source,omitempty" query:"source"`
+	InvitationCode string  `protobuf:"bytes,1,opt,name=invitationCode,proto3" form:"invitationCode" json:"invitationCode" query:"invitationCode"`
+	Source         *string `protobuf:"bytes,2,opt,name=source,proto3,oneof" form:"source" json:"source" query:"source"`
 }
 
 func (x *FillInvitationCodeReq) Reset() {
@@ -1011,13 +1011,13 @@ type EssayEvaluateReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Title       string   `protobuf:"bytes,1,opt,name=title,proto3" form:"title" json:"title,omitempty" query:"title"`
-	Text        string   `protobuf:"bytes,2,opt,name=text,proto3" form:"text" json:"text,omitempty" query:"text"`
-	Grade       *int64   `protobuf:"varint,3,opt,name=grade,proto3,oneof" form:"grade" json:"grade,omitempty" query:"grade"`
-	EssayType   *string  `protobuf:"bytes,4,opt,name=essayType,proto3,oneof" form:"essayType" json:"essayType,omitempty" query:"essayType"`
-	Ocr         []string `protobuf:"bytes,5,rep,name=ocr,proto3" form:"ocr" json:"ocr,omitempty" query:"ocr"`
-	TotalScore  int64    `protobuf:"varint,6,opt,name=totalScore,proto3" form:"totalScore" json:"totalScore,omitempty" query:"totalScore"`
-	Description *string  `protobuf:"bytes,7,opt,name=description,proto3,oneof" form:"description" json:"description,omitempty" query:"description"`
+	Title       string   `protobuf:"bytes,1,opt,name=title,proto3" form:"title" json:"title" query:"title"`
+	Text        string   `protobuf:"bytes,2,opt,name=text,proto3" form:"text" json:"text" query:"text"`
+	Grade       *int64   `protobuf:"varint,3,opt,name=grade,proto3,oneof" form:"grade" json:"grade" query:"grade"`
+	EssayType   *string  `protobuf:"bytes,4,opt,name=essayType,proto3,oneof" form:"essayType" json:"essayType" query:"essayType"`
+	Ocr         []string `protobuf:"bytes,5,rep,name=ocr,proto3" form:"ocr" json:"ocr" query:"ocr"`
+	TotalScore  int64    `protobuf:"varint,6,opt,name=totalScore,proto3" form:"totalScore" json:"totalScore" query:"totalScore"`
+	Description *string  `protobuf:"bytes,7,opt,name=description,proto3,oneof" form:"description" json:"description" query:"description"`
 }
 
 func (x *EssayEvaluateReq) Reset() {
@@ -1107,10 +1107,10 @@ type EssayEvaluateResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code     int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg      string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Response string `protobuf:"bytes,3,opt,name=response,proto3" form:"response" json:"response,omitempty" query:"response"`
-	Id       string `protobuf:"bytes,4,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
+	Code     int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg      string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Response string `protobuf:"bytes,3,opt,name=response,proto3" form:"response" json:"response" query:"response"`
+	Id       string `protobuf:"bytes,4,opt,name=id,proto3" form:"id" json:"id" query:"id"`
 }
 
 func (x *EssayEvaluateResp) Reset() {
@@ -1179,12 +1179,12 @@ type EvaluateExcludeOptions struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	WrittenMistake bool `protobuf:"varint,1,opt,name=writtenMistake,proto3" form:"writtenMistake" json:"writtenMistake,omitempty" query:"writtenMistake"`
-	WordSentence   bool `protobuf:"varint,2,opt,name=wordSentence,proto3" form:"wordSentence" json:"wordSentence,omitempty" query:"wordSentence"`
-	Paragraph      bool `protobuf:"varint,3,opt,name=paragraph,proto3" form:"paragraph" json:"paragraph,omitempty" query:"paragraph"`
-	Polishing      bool `protobuf:"varint,4,opt,name=polishing,proto3" form:"polishing" json:"polishing,omitempty" query:"polishing"`
-	Score          bool `protobuf:"varint,5,opt,name=score,proto3" form:"score" json:"score,omitempty" query:"score"`
-	Suggestion     bool `protobuf:"varint,6,opt,name=suggestion,proto3" form:"suggestion" json:"suggestion,omitempty" query:"suggestion"`
+	WrittenMistake bool `protobuf:"varint,1,opt,name=writtenMistake,proto3" form:"writtenMistake" json:"writtenMistake" query:"writtenMistake"`
+	WordSentence   bool `protobuf:"varint,2,opt,name=wordSentence,proto3" form:"wordSentence" json:"wordSentence" query:"wordSentence"`
+	Paragraph      bool `protobuf:"varint,3,opt,name=paragraph,proto3" form:"paragraph" json:"paragraph" query:"paragraph"`
+	Polishing      bool `protobuf:"varint,4,opt,name=polishing,proto3" form:"polishing" json:"polishing" query:"polishing"`
+	Score          bool `protobuf:"varint,5,opt,name=score,proto3" form:"score" json:"score" query:"score"`
+	Suggestion     bool `protobuf:"varint,6,opt,name=suggestion,proto3" form:"suggestion" json:"suggestion" query:"suggestion"`
 }
 
 func (x *EvaluateExcludeOptions) Reset() {
@@ -1267,8 +1267,8 @@ type DownloadEvaluateReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id             string                  `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	ExcludeOptions *EvaluateExcludeOptions `protobuf:"bytes,2,opt,name=excludeOptions,proto3" form:"excludeOptions" json:"excludeOptions,omitempty" query:"excludeOptions"`
+	Id             string                  `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	ExcludeOptions *EvaluateExcludeOptions `protobuf:"bytes,2,opt,name=excludeOptions,proto3" form:"excludeOptions" json:"excludeOptions" query:"excludeOptions"`
 }
 
 func (x *DownloadEvaluateReq) Reset() {
@@ -1323,8 +1323,8 @@ type DownloadEvaluateResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Url          string `protobuf:"bytes,1,opt,name=url,proto3" form:"url" json:"url,omitempty" query:"url"`
-	SessionToken string `protobuf:"bytes,2,opt,name=sessionToken,proto3" form:"sessionToken" json:"sessionToken,omitempty" query:"sessionToken"`
+	Url          string `protobuf:"bytes,1,opt,name=url,proto3" form:"url" json:"url" query:"url"`
+	SessionToken string `protobuf:"bytes,2,opt,name=sessionToken,proto3" form:"sessionToken" json:"sessionToken" query:"sessionToken"`
 }
 
 func (x *DownloadEvaluateResp) Reset() {
@@ -1378,13 +1378,13 @@ type EvaluateModifyReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id             string      `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Content        *ModifyItem `protobuf:"bytes,2,opt,name=content,proto3,oneof" form:"content" json:"content,omitempty" query:"content"`
-	Expression     *ModifyItem `protobuf:"bytes,3,opt,name=expression,proto3,oneof" form:"expression" json:"expression,omitempty" query:"expression"`
-	Structure      *ModifyItem `protobuf:"bytes,4,opt,name=structure,proto3,oneof" form:"structure" json:"structure,omitempty" query:"structure"`
-	Development    *ModifyItem `protobuf:"bytes,5,opt,name=development,proto3,oneof" form:"development" json:"development,omitempty" query:"development"`
-	OverallComment *ModifyItem `protobuf:"bytes,6,opt,name=overallComment,proto3,oneof" form:"overallComment" json:"overallComment,omitempty" query:"overallComment"`
-	Suggestion     *string     `protobuf:"bytes,7,opt,name=suggestion,proto3,oneof" form:"suggestion" json:"suggestion,omitempty" query:"suggestion"`
+	Id             string      `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Content        *ModifyItem `protobuf:"bytes,2,opt,name=content,proto3,oneof" form:"content" json:"content" query:"content"`
+	Expression     *ModifyItem `protobuf:"bytes,3,opt,name=expression,proto3,oneof" form:"expression" json:"expression" query:"expression"`
+	Structure      *ModifyItem `protobuf:"bytes,4,opt,name=structure,proto3,oneof" form:"structure" json:"structure" query:"structure"`
+	Development    *ModifyItem `protobuf:"bytes,5,opt,name=development,proto3,oneof" form:"development" json:"development" query:"development"`
+	OverallComment *ModifyItem `protobuf:"bytes,6,opt,name=overallComment,proto3,oneof" form:"overallComment" json:"overallComment" query:"overallComment"`
+	Suggestion     *string     `protobuf:"bytes,7,opt,name=suggestion,proto3,oneof" form:"suggestion" json:"suggestion" query:"suggestion"`
 }
 
 func (x *EvaluateModifyReq) Reset() {
@@ -1473,8 +1473,8 @@ type ModifyItem struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Text  *string `protobuf:"bytes,1,opt,name=text,proto3,oneof" form:"text" json:"text,omitempty" query:"text"`
-	Score *int64  `protobuf:"varint,2,opt,name=score,proto3,oneof" form:"score" json:"score,omitempty" query:"score"`
+	Text  *string `protobuf:"bytes,1,opt,name=text,proto3,oneof" form:"text" json:"text" query:"text"`
+	Score *int64  `protobuf:"varint,2,opt,name=score,proto3,oneof" form:"score" json:"score" query:"score"`
 }
 
 func (x *ModifyItem) Reset() {
@@ -1529,8 +1529,8 @@ type LikeEvaluateReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id   string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Like int64  `protobuf:"varint,2,opt,name=like,proto3" form:"like" json:"like,omitempty" query:"like"`
+	Id   string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Like int64  `protobuf:"varint,2,opt,name=like,proto3" form:"like" json:"like" query:"like"`
 }
 
 func (x *LikeEvaluateReq) Reset() {
@@ -1585,7 +1585,7 @@ type GetEssayEvaluateLogsReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions,omitempty" query:"paginationOptions"`
+	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions" query:"paginationOptions"`
 }
 
 func (x *GetEssayEvaluateLogsReq) Reset() {
@@ -1633,8 +1633,8 @@ type GetEssayEvaluateLogsResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Total int64  `protobuf:"varint,1,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`
-	Logs  []*Log `protobuf:"bytes,2,rep,name=logs,proto3" form:"logs" json:"logs,omitempty" query:"logs"`
+	Total int64  `protobuf:"varint,1,opt,name=total,proto3" form:"total" json:"total" query:"total"`
+	Logs  []*Log `protobuf:"bytes,2,rep,name=logs,proto3" form:"logs" json:"logs" query:"logs"`
 }
 
 func (x *GetEssayEvaluateLogsResp) Reset() {
@@ -1688,7 +1688,7 @@ type DeleteEvaluateReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty" path:"evaluateId"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id" path:"evaluateId"`
 }
 
 func (x *DeleteEvaluateReq) Reset() {
@@ -1735,12 +1735,12 @@ type Log struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id         string   `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Grade      int64    `protobuf:"varint,2,opt,name=grade,proto3" form:"grade" json:"grade,omitempty" query:"grade"`
-	Ocr        []string `protobuf:"bytes,3,rep,name=ocr,proto3" form:"ocr" json:"ocr,omitempty" query:"ocr"`
-	Response   string   `protobuf:"bytes,4,opt,name=response,proto3" form:"response" json:"response,omitempty" query:"response"`
-	Like       int64    `protobuf:"varint,6,opt,name=like,proto3" form:"like" json:"like,omitempty" query:"like"`
-	CreateTime int64    `protobuf:"varint,5,opt,name=createTime,proto3" form:"createTime" json:"createTime,omitempty" query:"createTime"`
+	Id         string   `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Grade      int64    `protobuf:"varint,2,opt,name=grade,proto3" form:"grade" json:"grade" query:"grade"`
+	Ocr        []string `protobuf:"bytes,3,rep,name=ocr,proto3" form:"ocr" json:"ocr" query:"ocr"`
+	Response   string   `protobuf:"bytes,4,opt,name=response,proto3" form:"response" json:"response" query:"response"`
+	Like       int64    `protobuf:"varint,6,opt,name=like,proto3" form:"like" json:"like" query:"like"`
+	CreateTime int64    `protobuf:"varint,5,opt,name=createTime,proto3" form:"createTime" json:"createTime" query:"createTime"`
 }
 
 func (x *Log) Reset() {
@@ -1823,8 +1823,8 @@ type ApplySignedUrlReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Prefix *string `protobuf:"bytes,1,opt,name=prefix,proto3,oneof" form:"prefix" json:"prefix,omitempty" query:"prefix"`
-	Suffix *string `protobuf:"bytes,2,opt,name=suffix,proto3,oneof" form:"suffix" json:"suffix,omitempty" query:"suffix"`
+	Prefix *string `protobuf:"bytes,1,opt,name=prefix,proto3,oneof" form:"prefix" json:"prefix" query:"prefix"`
+	Suffix *string `protobuf:"bytes,2,opt,name=suffix,proto3,oneof" form:"suffix" json:"suffix" query:"suffix"`
 }
 
 func (x *ApplySignedUrlReq) Reset() {
@@ -1878,8 +1878,8 @@ type ApplySignedUrlResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Url          string `protobuf:"bytes,1,opt,name=url,proto3" form:"url" json:"url,omitempty" query:"url"`
-	SessionToken string `protobuf:"bytes,2,opt,name=sessionToken,proto3" form:"sessionToken" json:"sessionToken,omitempty" query:"sessionToken"`
+	Url          string `protobuf:"bytes,1,opt,name=url,proto3" form:"url" json:"url" query:"url"`
+	SessionToken string `protobuf:"bytes,2,opt,name=sessionToken,proto3" form:"sessionToken" json:"sessionToken" query:"sessionToken"`
 }
 
 func (x *ApplySignedUrlResp) Reset() {
@@ -1934,8 +1934,8 @@ type OCRReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Ocr      []string `protobuf:"bytes,1,rep,name=ocr,proto3" form:"ocr" json:"ocr,omitempty" query:"ocr"`
-	LeftType *string  `protobuf:"bytes,2,opt,name=leftType,proto3,oneof" form:"leftType" json:"leftType,omitempty" query:"leftType"`
+	Ocr      []string `protobuf:"bytes,1,rep,name=ocr,proto3" form:"ocr" json:"ocr" query:"ocr"`
+	LeftType *string  `protobuf:"bytes,2,opt,name=leftType,proto3,oneof" form:"leftType" json:"leftType" query:"leftType"`
 }
 
 func (x *OCRReq) Reset() {
@@ -1989,11 +1989,11 @@ type OCRResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Title      string `protobuf:"bytes,1,opt,name=title,proto3" form:"title" json:"title,omitempty" query:"title"`
-	Text       string `protobuf:"bytes,2,opt,name=text,proto3" form:"text" json:"text,omitempty" query:"text"`
-	EssayType  string `protobuf:"bytes,3,opt,name=essayType,proto3" form:"essayType" json:"essayType,omitempty" query:"essayType"`
-	Grade      int64  `protobuf:"varint,4,opt,name=grade,proto3" form:"grade" json:"grade,omitempty" query:"grade"`
-	TotalScore int64  `protobuf:"varint,5,opt,name=totalScore,proto3" form:"totalScore" json:"totalScore,omitempty" query:"totalScore"`
+	Title      string `protobuf:"bytes,1,opt,name=title,proto3" form:"title" json:"title" query:"title"`
+	Text       string `protobuf:"bytes,2,opt,name=text,proto3" form:"text" json:"text" query:"text"`
+	EssayType  string `protobuf:"bytes,3,opt,name=essayType,proto3" form:"essayType" json:"essayType" query:"essayType"`
+	Grade      int64  `protobuf:"varint,4,opt,name=grade,proto3" form:"grade" json:"grade" query:"grade"`
+	TotalScore int64  `protobuf:"varint,5,opt,name=totalScore,proto3" form:"totalScore" json:"totalScore" query:"totalScore"`
 }
 
 func (x *OCRResp) Reset() {
@@ -2069,8 +2069,8 @@ type Response struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg  string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
+	Code int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg  string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
 }
 
 func (x *Response) Reset() {
@@ -2125,8 +2125,8 @@ type SendVerifyCodeReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	AuthType string `protobuf:"bytes,1,opt,name=authType,proto3" form:"authType" json:"authType,omitempty" query:"authType"`
-	AuthId   string `protobuf:"bytes,2,opt,name=authId,proto3" form:"authId" json:"authId,omitempty" query:"authId"`
+	AuthType string `protobuf:"bytes,1,opt,name=authType,proto3" form:"authType" json:"authType" query:"authType"`
+	AuthId   string `protobuf:"bytes,2,opt,name=authId,proto3" form:"authId" json:"authId" query:"authId"`
 }
 
 func (x *SendVerifyCodeReq) Reset() {
@@ -2180,8 +2180,8 @@ type GenerateUrlLinkReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Path  *string `protobuf:"bytes,1,opt,name=path,proto3,oneof" form:"path" json:"path,omitempty" query:"path"`
-	Query *string `protobuf:"bytes,2,opt,name=query,proto3,oneof" form:"query" json:"query,omitempty" query:"query"`
+	Path  *string `protobuf:"bytes,1,opt,name=path,proto3,oneof" form:"path" json:"path" query:"path"`
+	Query *string `protobuf:"bytes,2,opt,name=query,proto3,oneof" form:"query" json:"query" query:"query"`
 }
 
 func (x *GenerateUrlLinkReq) Reset() {
@@ -2235,7 +2235,7 @@ type GenerateUrlLinkResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UrlLink string `protobuf:"bytes,1,opt,name=urlLink,proto3" form:"urlLink" json:"urlLink,omitempty" query:"urlLink"`
+	UrlLink string `protobuf:"bytes,1,opt,name=urlLink,proto3" form:"urlLink" json:"urlLink" query:"urlLink"`
 }
 
 func (x *GenerateUrlLinkResp) Reset() {
@@ -2283,7 +2283,7 @@ type CreateExerciseReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	LogId string `protobuf:"bytes,1,opt,name=logId,proto3" form:"logId" json:"logId,omitempty" query:"logId"`
+	LogId string `protobuf:"bytes,1,opt,name=logId,proto3" form:"logId" json:"logId" query:"logId"`
 }
 
 func (x *CreateExerciseReq) Reset() {
@@ -2330,9 +2330,9 @@ type CreateExerciseResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code     int64     `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg      string    `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Exercise *Exercise `protobuf:"bytes,3,opt,name=exercise,proto3" form:"exercise" json:"exercise,omitempty" query:"exercise"`
+	Code     int64     `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg      string    `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Exercise *Exercise `protobuf:"bytes,3,opt,name=exercise,proto3" form:"exercise" json:"exercise" query:"exercise"`
 }
 
 func (x *CreateExerciseResp) Reset() {
@@ -2394,8 +2394,8 @@ type ListSimpleExercisesReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	LogId             string                   `protobuf:"bytes,1,opt,name=logId,proto3" form:"logId" json:"logId,omitempty" query:"logId"`
-	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,2,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions,omitempty" query:"paginationOptions"`
+	LogId             string                   `protobuf:"bytes,1,opt,name=logId,proto3" form:"logId" json:"logId" query:"logId"`
+	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,2,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions" query:"paginationOptions"`
 }
 
 func (x *ListSimpleExercisesReq) Reset() {
@@ -2449,10 +2449,10 @@ type ListSimpleExercisesResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code      int64                                     `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg       string                                    `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Exercises []*ListSimpleExercisesResp_SimpleExercise `protobuf:"bytes,3,rep,name=exercises,proto3" form:"exercises" json:"exercises,omitempty" query:"exercises"`
-	Total     int64                                     `protobuf:"varint,4,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`
+	Code      int64                                     `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg       string                                    `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Exercises []*ListSimpleExercisesResp_SimpleExercise `protobuf:"bytes,3,rep,name=exercises,proto3" form:"exercises" json:"exercises" query:"exercises"`
+	Total     int64                                     `protobuf:"varint,4,opt,name=total,proto3" form:"total" json:"total" query:"total"`
 }
 
 func (x *ListSimpleExercisesResp) Reset() {
@@ -2521,7 +2521,7 @@ type GetExerciseReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
 }
 
 func (x *GetExerciseReq) Reset() {
@@ -2568,9 +2568,9 @@ type GetExerciseResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code     int64     `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg      string    `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Exercise *Exercise `protobuf:"bytes,3,opt,name=exercise,proto3" form:"exercise" json:"exercise,omitempty" query:"exercise"`
+	Code     int64     `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg      string    `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Exercise *Exercise `protobuf:"bytes,3,opt,name=exercise,proto3" form:"exercise" json:"exercise" query:"exercise"`
 }
 
 func (x *GetExerciseResp) Reset() {
@@ -2632,8 +2632,8 @@ type DoExerciseReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id      string                  `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Records []*DoExerciseReq_Record `protobuf:"bytes,2,rep,name=records,proto3" form:"records" json:"records,omitempty" query:"records"`
+	Id      string                  `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Records []*DoExerciseReq_Record `protobuf:"bytes,2,rep,name=records,proto3" form:"records" json:"records" query:"records"`
 }
 
 func (x *DoExerciseReq) Reset() {
@@ -2687,9 +2687,9 @@ type DoExerciseResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Code    int64    `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code,omitempty" query:"code"`
-	Msg     string   `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg,omitempty" query:"msg"`
-	Records *Records `protobuf:"bytes,3,opt,name=records,proto3" form:"records" json:"records,omitempty" query:"records"`
+	Code    int64    `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg     string   `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Records *Records `protobuf:"bytes,3,opt,name=records,proto3" form:"records" json:"records" query:"records"`
 }
 
 func (x *DoExerciseResp) Reset() {
@@ -2751,8 +2751,8 @@ type LikeExerciseReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id   string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Like int64  `protobuf:"varint,2,opt,name=like,proto3" form:"like" json:"like,omitempty" query:"like"`
+	Id   string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Like int64  `protobuf:"varint,2,opt,name=like,proto3" form:"like" json:"like" query:"like"`
 }
 
 func (x *LikeExerciseReq) Reset() {
@@ -2807,15 +2807,15 @@ type Exercise struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id         string    `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`                                  // 练习 ID
-	UserId     string    `protobuf:"bytes,2,opt,name=userId,proto3" form:"userId" json:"userId,omitempty" query:"userId"`                  // 归属用户 ID
-	LogId      string    `protobuf:"bytes,3,opt,name=logId,proto3" form:"logId" json:"logId,omitempty" query:"logId"`                      // 批改记录 ID
-	Question   *Question `protobuf:"bytes,4,opt,name=question,proto3" form:"question" json:"question,omitempty" query:"question"`          // 题目内容
-	History    *History  `protobuf:"bytes,5,opt,name=history,proto3" form:"history" json:"history,omitempty" query:"history"`              // 用户做题记录
-	Like       int64     `protobuf:"varint,6,opt,name=like,proto3" form:"like" json:"like,omitempty" query:"like"`                         // 点赞状态，-1: 不喜欢, 1: 喜欢
-	CreateTime int64     `protobuf:"varint,7,opt,name=createTime,proto3" form:"createTime" json:"createTime,omitempty" query:"createTime"` // 创建时间
-	UpdateTime int64     `protobuf:"varint,8,opt,name=updateTime,proto3" form:"updateTime" json:"updateTime,omitempty" query:"updateTime"` // 更新时间
-	Status     int64     `protobuf:"varint,10,opt,name=status,proto3" form:"status" json:"status,omitempty" query:"status"`                // 练习状态
+	Id         string    `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`                                  // 练习 ID
+	UserId     string    `protobuf:"bytes,2,opt,name=userId,proto3" form:"userId" json:"userId" query:"userId"`                  // 归属用户 ID
+	LogId      string    `protobuf:"bytes,3,opt,name=logId,proto3" form:"logId" json:"logId" query:"logId"`                      // 批改记录 ID
+	Question   *Question `protobuf:"bytes,4,opt,name=question,proto3" form:"question" json:"question" query:"question"`          // 题目内容
+	History    *History  `protobuf:"bytes,5,opt,name=history,proto3" form:"history" json:"history" query:"history"`              // 用户做题记录
+	Like       int64     `protobuf:"varint,6,opt,name=like,proto3" form:"like" json:"like" query:"like"`                         // 点赞状态，-1: 不喜欢, 1: 喜欢
+	CreateTime int64     `protobuf:"varint,7,opt,name=createTime,proto3" form:"createTime" json:"createTime" query:"createTime"` // 创建时间
+	UpdateTime int64     `protobuf:"varint,8,opt,name=updateTime,proto3" form:"updateTime" json:"updateTime" query:"updateTime"` // 更新时间
+	Status     int64     `protobuf:"varint,10,opt,name=status,proto3" form:"status" json:"status" query:"status"`                // 练习状态
 }
 
 func (x *Exercise) Reset() {
@@ -2919,7 +2919,7 @@ type Question struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ChoiceQuestions []*ChoiceQuestion `protobuf:"bytes,1,rep,name=choiceQuestions,proto3" form:"choiceQuestions" json:"choiceQuestions,omitempty" query:"choiceQuestions"` // 选择题列表
+	ChoiceQuestions []*ChoiceQuestion `protobuf:"bytes,1,rep,name=choiceQuestions,proto3" form:"choiceQuestions" json:"choiceQuestions" query:"choiceQuestions"` // 选择题列表
 }
 
 func (x *Question) Reset() {
@@ -2967,10 +2967,10 @@ type ChoiceQuestion struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id          string    `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`                                     // 题目 ID
-	Question    string    `protobuf:"bytes,2,opt,name=question,proto3" form:"question" json:"question,omitempty" query:"question"`             // 问题描述
-	Explanation string    `protobuf:"bytes,3,opt,name=explanation,proto3" form:"explanation" json:"explanation,omitempty" query:"explanation"` // 题目解答
-	Options     []*Option `protobuf:"bytes,4,rep,name=options,proto3" form:"options" json:"options,omitempty" query:"options"`                 // 题目选项
+	Id          string    `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`                                     // 题目 ID
+	Question    string    `protobuf:"bytes,2,opt,name=question,proto3" form:"question" json:"question" query:"question"`             // 问题描述
+	Explanation string    `protobuf:"bytes,3,opt,name=explanation,proto3" form:"explanation" json:"explanation" query:"explanation"` // 题目解答
+	Options     []*Option `protobuf:"bytes,4,rep,name=options,proto3" form:"options" json:"options" query:"options"`                 // 题目选项
 }
 
 func (x *ChoiceQuestion) Reset() {
@@ -3039,9 +3039,9 @@ type Option struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Option  string `protobuf:"bytes,1,opt,name=option,proto3" form:"option" json:"option,omitempty" query:"option"`     // 选项，如 'A'
-	Content string `protobuf:"bytes,2,opt,name=content,proto3" form:"content" json:"content,omitempty" query:"content"` // 选项内容
-	Score   int64  `protobuf:"varint,3,opt,name=score,proto3" form:"score" json:"score,omitempty" query:"score"`        // 选项得分
+	Option  string `protobuf:"bytes,1,opt,name=option,proto3" form:"option" json:"option" query:"option"`     // 选项，如 'A'
+	Content string `protobuf:"bytes,2,opt,name=content,proto3" form:"content" json:"content" query:"content"` // 选项内容
+	Score   int64  `protobuf:"varint,3,opt,name=score,proto3" form:"score" json:"score" query:"score"`        // 选项得分
 }
 
 func (x *Option) Reset() {
@@ -3103,7 +3103,7 @@ type History struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Records []*Records `protobuf:"bytes,1,rep,name=records,proto3" form:"records" json:"records,omitempty" query:"records"` // 记录列表
+	Records []*Records `protobuf:"bytes,1,rep,name=records,proto3" form:"records" json:"records" query:"records"` // 记录列表
 }
 
 func (x *History) Reset() {
@@ -3151,9 +3151,9 @@ type Records struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Records    []*Record `protobuf:"bytes,1,rep,name=records,proto3" form:"records" json:"records,omitempty" query:"records"`              // 作答记录
-	Score      int64     `protobuf:"varint,2,opt,name=score,proto3" form:"score" json:"score,omitempty" query:"score"`                     // 总得分
-	CreateTime int64     `protobuf:"varint,3,opt,name=createTime,proto3" form:"createTime" json:"createTime,omitempty" query:"createTime"` // 提交时间
+	Records    []*Record `protobuf:"bytes,1,rep,name=records,proto3" form:"records" json:"records" query:"records"`              // 作答记录
+	Score      int64     `protobuf:"varint,2,opt,name=score,proto3" form:"score" json:"score" query:"score"`                     // 总得分
+	CreateTime int64     `protobuf:"varint,3,opt,name=createTime,proto3" form:"createTime" json:"createTime" query:"createTime"` // 提交时间
 }
 
 func (x *Records) Reset() {
@@ -3215,9 +3215,9 @@ type Record struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id     string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`                 // 题目 ID
-	Option string `protobuf:"bytes,2,opt,name=option,proto3" form:"option" json:"option,omitempty" query:"option"` // 用户选择的选项
-	Score  int64  `protobuf:"varint,3,opt,name=score,proto3" form:"score" json:"score,omitempty" query:"score"`    // 得分
+	Id     string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`                 // 题目 ID
+	Option string `protobuf:"bytes,2,opt,name=option,proto3" form:"option" json:"option" query:"option"` // 用户选择的选项
+	Score  int64  `protobuf:"varint,3,opt,name=score,proto3" form:"score" json:"score" query:"score"`    // 得分
 }
 
 func (x *Record) Reset() {
@@ -3279,9 +3279,9 @@ type SubmitFeedbackReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type    int64    `protobuf:"varint,1,opt,name=type,proto3" form:"type" json:"type,omitempty" query:"type"`            // 反馈类型：1系统功能，2功能建议，3界面建议，4批改信度，5题目内容，6素材内容
-	Content string   `protobuf:"bytes,2,opt,name=content,proto3" form:"content" json:"content,omitempty" query:"content"` // 反馈内容
-	Images  []string `protobuf:"bytes,4,rep,name=images,proto3" form:"images" json:"images,omitempty" query:"images"`     // 图片URL列表（可选）
+	Type    int64    `protobuf:"varint,1,opt,name=type,proto3" form:"type" json:"type" query:"type"`            // 反馈类型：1系统功能，2功能建议，3界面建议，4批改信度，5题目内容，6素材内容
+	Content string   `protobuf:"bytes,2,opt,name=content,proto3" form:"content" json:"content" query:"content"` // 反馈内容
+	Images  []string `protobuf:"bytes,4,rep,name=images,proto3" form:"images" json:"images" query:"images"`     // 图片URL列表（可选）
 }
 
 func (x *SubmitFeedbackReq) Reset() {
@@ -3342,8 +3342,8 @@ type CreateClassReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name        string `protobuf:"bytes,1,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`                             // 班级名称
-	Description string `protobuf:"bytes,2,opt,name=description,proto3" form:"description" json:"description,omitempty" query:"description"` // 班级描述
+	Name        string `protobuf:"bytes,1,opt,name=name,proto3" form:"name" json:"name" query:"name"`                             // 班级名称
+	Description string `protobuf:"bytes,2,opt,name=description,proto3" form:"description" json:"description" query:"description"` // 班级描述
 }
 
 func (x *CreateClassReq) Reset() {
@@ -3397,7 +3397,7 @@ type CreateClassResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ClassId string `protobuf:"bytes,1,opt,name=classId,proto3" form:"classId" json:"classId,omitempty" query:"classId"`
+	ClassId string `protobuf:"bytes,1,opt,name=classId,proto3" form:"classId" json:"classId" query:"classId"`
 }
 
 func (x *CreateClassResp) Reset() {
@@ -3444,7 +3444,7 @@ type ListClassesReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions,omitempty" query:"paginationOptions"`
+	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions" query:"paginationOptions"`
 }
 
 func (x *ListClassesReq) Reset() {
@@ -3491,8 +3491,8 @@ type ListClassesResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Classes []*ClassInfo `protobuf:"bytes,1,rep,name=classes,proto3" form:"classes" json:"classes,omitempty" query:"classes"`
-	Total   int64        `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`
+	Classes []*ClassInfo `protobuf:"bytes,1,rep,name=classes,proto3" form:"classes" json:"classes" query:"classes"`
+	Total   int64        `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total" query:"total"`
 }
 
 func (x *ListClassesResp) Reset() {
@@ -3546,13 +3546,13 @@ type ClassInfo struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id          string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Name        string `protobuf:"bytes,2,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`
-	Description string `protobuf:"bytes,3,opt,name=description,proto3" form:"description" json:"description,omitempty" query:"description"`
-	MemberCount int64  `protobuf:"varint,4,opt,name=memberCount,proto3" form:"memberCount" json:"memberCount,omitempty" query:"memberCount"`
-	CreateTime  int64  `protobuf:"varint,5,opt,name=createTime,proto3" form:"createTime" json:"createTime,omitempty" query:"createTime"`
-	CreatorId   string `protobuf:"bytes,6,opt,name=creatorId,proto3" form:"creatorId" json:"creatorId,omitempty" query:"creatorId"`
-	CreatorName string `protobuf:"bytes,7,opt,name=creatorName,proto3" form:"creatorName" json:"creatorName,omitempty" query:"creatorName"`
+	Id          string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Name        string `protobuf:"bytes,2,opt,name=name,proto3" form:"name" json:"name" query:"name"`
+	Description string `protobuf:"bytes,3,opt,name=description,proto3" form:"description" json:"description" query:"description"`
+	MemberCount int64  `protobuf:"varint,4,opt,name=memberCount,proto3" form:"memberCount" json:"memberCount" query:"memberCount"`
+	CreateTime  int64  `protobuf:"varint,5,opt,name=createTime,proto3" form:"createTime" json:"createTime" query:"createTime"`
+	CreatorId   string `protobuf:"bytes,6,opt,name=creatorId,proto3" form:"creatorId" json:"creatorId" query:"creatorId"`
+	CreatorName string `protobuf:"bytes,7,opt,name=creatorName,proto3" form:"creatorName" json:"creatorName" query:"creatorName"`
 }
 
 func (x *ClassInfo) Reset() {
@@ -3641,8 +3641,8 @@ type GetClassMembersReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ClassId           string                   `protobuf:"bytes,1,opt,name=classId,proto3" form:"classId" json:"classId,omitempty" query:"classId"`
-	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,2,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions,omitempty" query:"paginationOptions"`
+	ClassId           string                   `protobuf:"bytes,1,opt,name=classId,proto3" form:"classId" json:"classId" query:"classId"`
+	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,2,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions" query:"paginationOptions"`
 }
 
 func (x *GetClassMembersReq) Reset() {
@@ -3696,8 +3696,8 @@ type GetClassMembersResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Members []*ClassMemberInfo `protobuf:"bytes,1,rep,name=members,proto3" form:"members" json:"members,omitempty" query:"members"`
-	Total   int64              `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`
+	Members []*ClassMemberInfo `protobuf:"bytes,1,rep,name=members,proto3" form:"members" json:"members" query:"members"`
+	Total   int64              `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total" query:"total"`
 }
 
 func (x *GetClassMembersResp) Reset() {
@@ -3751,10 +3751,10 @@ type ClassMemberInfo struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	MemberId string  `protobuf:"bytes,1,opt,name=memberId,proto3" form:"memberId" json:"memberId,omitempty" query:"memberId"`
-	Name     string  `protobuf:"bytes,2,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`
-	UserId   *string `protobuf:"bytes,3,opt,name=userId,proto3,oneof" form:"userId" json:"userId,omitempty" query:"userId"`
-	JoinTime *int64  `protobuf:"varint,4,opt,name=joinTime,proto3,oneof" form:"joinTime" json:"joinTime,omitempty" query:"joinTime"`
+	MemberId string  `protobuf:"bytes,1,opt,name=memberId,proto3" form:"memberId" json:"memberId" query:"memberId"`
+	Name     string  `protobuf:"bytes,2,opt,name=name,proto3" form:"name" json:"name" query:"name"`
+	UserId   *string `protobuf:"bytes,3,opt,name=userId,proto3,oneof" form:"userId" json:"userId" query:"userId"`
+	JoinTime *int64  `protobuf:"varint,4,opt,name=joinTime,proto3,oneof" form:"joinTime" json:"joinTime" query:"joinTime"`
 }
 
 func (x *ClassMemberInfo) Reset() {
@@ -3822,8 +3822,8 @@ type CreateClassMembersReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ClassId string   `protobuf:"bytes,1,opt,name=classId,proto3" form:"classId" json:"classId,omitempty" query:"classId"`
-	Names   []string `protobuf:"bytes,2,rep,name=names,proto3" form:"names" json:"names,omitempty" query:"names"`
+	ClassId string   `protobuf:"bytes,1,opt,name=classId,proto3" form:"classId" json:"classId" query:"classId"`
+	Names   []string `protobuf:"bytes,2,rep,name=names,proto3" form:"names" json:"names" query:"names"`
 }
 
 func (x *CreateClassMembersReq) Reset() {
@@ -3877,7 +3877,7 @@ type CreateClassMembersResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Success []bool `protobuf:"varint,1,rep,packed,name=success,proto3" form:"success" json:"success,omitempty" query:"success"`
+	Success []bool `protobuf:"varint,1,rep,packed,name=success,proto3" form:"success" json:"success" query:"success"`
 }
 
 func (x *CreateClassMembersResp) Reset() {
@@ -3924,8 +3924,8 @@ type BindClassMemberReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ClassId  string `protobuf:"bytes,1,opt,name=classId,proto3" form:"classId" json:"classId,omitempty" query:"classId"`
-	MemberId string `protobuf:"bytes,2,opt,name=memberId,proto3" form:"memberId" json:"memberId,omitempty" query:"memberId"`
+	ClassId  string `protobuf:"bytes,1,opt,name=classId,proto3" form:"classId" json:"classId" query:"classId"`
+	MemberId string `protobuf:"bytes,2,opt,name=memberId,proto3" form:"memberId" json:"memberId" query:"memberId"`
 }
 
 func (x *BindClassMemberReq) Reset() {
@@ -3979,7 +3979,7 @@ type UnbindClassMemberReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	MemberId string `protobuf:"bytes,1,opt,name=memberId,proto3" form:"memberId" json:"memberId,omitempty" query:"memberId"`
+	MemberId string `protobuf:"bytes,1,opt,name=memberId,proto3" form:"memberId" json:"memberId" query:"memberId"`
 }
 
 func (x *UnbindClassMemberReq) Reset() {
@@ -4026,8 +4026,8 @@ type EditClassMemberNameReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	MemberId string `protobuf:"bytes,1,opt,name=memberId,proto3" form:"memberId" json:"memberId,omitempty" query:"memberId"`
-	Name     string `protobuf:"bytes,2,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`
+	MemberId string `protobuf:"bytes,1,opt,name=memberId,proto3" form:"memberId" json:"memberId" query:"memberId"`
+	Name     string `protobuf:"bytes,2,opt,name=name,proto3" form:"name" json:"name" query:"name"`
 }
 
 func (x *EditClassMemberNameReq) Reset() {
@@ -4081,7 +4081,7 @@ type DeleteClassMemberReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	MemberId string `protobuf:"bytes,1,opt,name=memberId,proto3" json:"memberId,omitempty" path:"memberId"`
+	MemberId string `protobuf:"bytes,1,opt,name=memberId,proto3" json:"memberId" path:"memberId"`
 }
 
 func (x *DeleteClassMemberReq) Reset() {
@@ -4128,7 +4128,7 @@ type GetClassMemberInfoReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ClassId string `protobuf:"bytes,1,opt,name=classId,proto3" form:"classId" json:"classId,omitempty" query:"classId"`
+	ClassId string `protobuf:"bytes,1,opt,name=classId,proto3" form:"classId" json:"classId" query:"classId"`
 }
 
 func (x *GetClassMemberInfoReq) Reset() {
@@ -4175,9 +4175,9 @@ type GetClassMemberInfoResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name     string `protobuf:"bytes,1,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`
-	MemberId string `protobuf:"bytes,2,opt,name=memberId,proto3" form:"memberId" json:"memberId,omitempty" query:"memberId"`
-	JoinTime int64  `protobuf:"varint,3,opt,name=joinTime,proto3" form:"joinTime" json:"joinTime,omitempty" query:"joinTime"`
+	Name     string `protobuf:"bytes,1,opt,name=name,proto3" form:"name" json:"name" query:"name"`
+	MemberId string `protobuf:"bytes,2,opt,name=memberId,proto3" form:"memberId" json:"memberId" query:"memberId"`
+	JoinTime int64  `protobuf:"varint,3,opt,name=joinTime,proto3" form:"joinTime" json:"joinTime" query:"joinTime"`
 }
 
 func (x *GetClassMemberInfoResp) Reset() {
@@ -4239,9 +4239,9 @@ type ScoringRubricItem struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Key         string `protobuf:"bytes,1,opt,name=key,proto3" form:"key" json:"key,omitempty" query:"key"`                                 // 评分要点
-	Description string `protobuf:"bytes,2,opt,name=description,proto3" form:"description" json:"description,omitempty" query:"description"` // 说明
-	Score       int32  `protobuf:"varint,3,opt,name=score,proto3" form:"score" json:"score,omitempty" query:"score"`                        // 该条得分
+	Key         string `protobuf:"bytes,1,opt,name=key,proto3" form:"key" json:"key" query:"key"`                                 // 评分要点
+	Description string `protobuf:"bytes,2,opt,name=description,proto3" form:"description" json:"description" query:"description"` // 说明
+	Score       int32  `protobuf:"varint,3,opt,name=score,proto3" form:"score" json:"score" query:"score"`                        // 该条得分
 }
 
 func (x *ScoringRubricItem) Reset() {
@@ -4303,18 +4303,18 @@ type ReadingQuestion struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id                  string               `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`                                                                                                             // 题目 ID，如 "q_001"
-	Type                string               `protobuf:"bytes,2,opt,name=type,proto3" form:"type" json:"type,omitempty" query:"type"`                                                                                                     // 题目类型:fill_blank/single_choice/essay
-	AiGenerated         int32                `protobuf:"varint,3,opt,name=ai_generated,json=aiGenerated,proto3" form:"ai_generated" json:"ai_generated,omitempty" query:"ai_generated"`                                                   // 出题来源：1 AI出题，0 教师手动出题
-	Stem                string               `protobuf:"bytes,4,opt,name=stem,proto3" form:"stem" json:"stem,omitempty" query:"stem"`                                                                                                     // 题干
-	Options             map[string]string    `protobuf:"bytes,5,rep,name=options,proto3" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3" form:"options" json:"options,omitempty" query:"options"` // 选项（单选题有值，其他为空 map）
-	Answer              string               `protobuf:"bytes,6,opt,name=answer,proto3" form:"answer" json:"answer,omitempty" query:"answer"`                                                                                             // 标准答案
-	Score               int32                `protobuf:"varint,7,opt,name=score,proto3" form:"score" json:"score,omitempty" query:"score"`                                                                                                // 满分
-	Explanation         string               `protobuf:"bytes,8,opt,name=explanation,proto3" form:"explanation" json:"explanation,omitempty" query:"explanation"`                                                                         // 解析
-	AbilityLevel        string               `protobuf:"bytes,9,opt,name=ability_level,json=abilityLevel,proto3" form:"ability_level" json:"ability_level,omitempty" query:"ability_level"`                                               // 能力层级标识，如 "A"
-	AbilityLevelName    string               `protobuf:"bytes,10,opt,name=ability_level_name,json=abilityLevelName,proto3" form:"ability_level_name" json:"ability_level_name,omitempty" query:"ability_level_name"`                      // 能力层级名称，如 "积累与定位"
-	CurriculumStandards []string             `protobuf:"bytes,11,rep,name=curriculum_standards,json=curriculumStandards,proto3" form:"curriculum_standards" json:"curriculum_standards,omitempty" query:"curriculum_standards"`           // 课程标准标签列表
-	ScoringRubric       []*ScoringRubricItem `protobuf:"bytes,12,rep,name=scoring_rubric,json=scoringRubric,proto3" form:"scoring_rubric" json:"scoring_rubric,omitempty" query:"scoring_rubric"`                                         // 评分细则
+	Id                  string               `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`                                                                                                             // 题目 ID，如 "q_001"
+	Type                string               `protobuf:"bytes,2,opt,name=type,proto3" form:"type" json:"type" query:"type"`                                                                                                     // 题目类型:fill_blank/single_choice/essay
+	AiGenerated         int32                `protobuf:"varint,3,opt,name=ai_generated,json=aiGenerated,proto3" form:"ai_generated" json:"ai_generated" query:"ai_generated"`                                                   // 出题来源：1 AI出题，0 教师手动出题
+	Stem                string               `protobuf:"bytes,4,opt,name=stem,proto3" form:"stem" json:"stem" query:"stem"`                                                                                                     // 题干
+	Options             map[string]string    `protobuf:"bytes,5,rep,name=options,proto3" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3" form:"options" json:"options" query:"options"` // 选项（单选题有值，其他为空 map）
+	Answer              string               `protobuf:"bytes,6,opt,name=answer,proto3" form:"answer" json:"answer" query:"answer"`                                                                                             // 标准答案
+	Score               int32                `protobuf:"varint,7,opt,name=score,proto3" form:"score" json:"score" query:"score"`                                                                                                // 满分
+	Explanation         string               `protobuf:"bytes,8,opt,name=explanation,proto3" form:"explanation" json:"explanation" query:"explanation"`                                                                         // 解析
+	AbilityLevel        string               `protobuf:"bytes,9,opt,name=ability_level,json=abilityLevel,proto3" form:"ability_level" json:"ability_level" query:"ability_level"`                                               // 能力层级标识，如 "A"
+	AbilityLevelName    string               `protobuf:"bytes,10,opt,name=ability_level_name,json=abilityLevelName,proto3" form:"ability_level_name" json:"ability_level_name" query:"ability_level_name"`                      // 能力层级名称，如 "积累与定位"
+	CurriculumStandards []string             `protobuf:"bytes,11,rep,name=curriculum_standards,json=curriculumStandards,proto3" form:"curriculum_standards" json:"curriculum_standards" query:"curriculum_standards"`           // 课程标准标签列表
+	ScoringRubric       []*ScoringRubricItem `protobuf:"bytes,12,rep,name=scoring_rubric,json=scoringRubric,proto3" form:"scoring_rubric" json:"scoring_rubric" query:"scoring_rubric"`                                         // 评分细则
 }
 
 func (x *ReadingQuestion) Reset() {
@@ -4439,8 +4439,8 @@ type ReadingContent struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ReadingMaterial string             `protobuf:"bytes,1,opt,name=reading_material,json=readingMaterial,proto3" form:"reading_material" json:"reading_material,omitempty" query:"reading_material"`
-	Questions       []*ReadingQuestion `protobuf:"bytes,2,rep,name=questions,proto3" form:"questions" json:"questions,omitempty" query:"questions"` // 题目列表
+	ReadingMaterial string             `protobuf:"bytes,1,opt,name=reading_material,json=readingMaterial,proto3" form:"reading_material" json:"reading_material" query:"reading_material"`
+	Questions       []*ReadingQuestion `protobuf:"bytes,2,rep,name=questions,proto3" form:"questions" json:"questions" query:"questions"` // 题目列表
 }
 
 func (x *ReadingContent) Reset() {
@@ -4494,20 +4494,20 @@ type CreateHomeworkReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Subject          Subject         `protobuf:"varint,1,opt,name=subject,proto3,enum=essay.show.Subject" form:"subject" json:"subject,omitempty" query:"subject"`
-	Topic            int64           `protobuf:"varint,2,opt,name=topic,proto3" form:"topic" json:"topic,omitempty" query:"topic"`                              // 作业类型
-	Title            string          `protobuf:"bytes,3,opt,name=title,proto3" form:"title" json:"title,omitempty" query:"title"`                               // 作业标题
-	ClassIds         []string        `protobuf:"bytes,4,rep,name=classIds,proto3" form:"classIds" json:"classIds,omitempty" query:"classIds"`                   // 目标班级ID
-	Description      *string         `protobuf:"bytes,5,opt,name=description,proto3,oneof" form:"description" json:"description,omitempty" query:"description"` // 作业描述
-	EssayType        *string         `protobuf:"bytes,6,opt,name=essayType,proto3,oneof" form:"essayType" json:"essayType,omitempty" query:"essayType"`         // 作文类型
-	Grade            *int64          `protobuf:"varint,7,opt,name=grade,proto3,oneof" form:"grade" json:"grade,omitempty" query:"grade"`                        // 年级
-	TotalScore       *int64          `protobuf:"varint,8,opt,name=totalScore,proto3,oneof" form:"totalScore" json:"totalScore,omitempty" query:"totalScore"`    // 总分
-	ContentScore     *int64          `protobuf:"varint,9,opt,name=contentScore,proto3,oneof" form:"contentScore" json:"contentScore,omitempty" query:"contentScore"`
-	ExpressionScore  *int64          `protobuf:"varint,10,opt,name=expressionScore,proto3,oneof" form:"expressionScore" json:"expressionScore,omitempty" query:"expressionScore"`
-	StructureScore   *int64          `protobuf:"varint,11,opt,name=structureScore,proto3,oneof" form:"structureScore" json:"structureScore,omitempty" query:"structureScore"`
-	DevelopmentScore *int64          `protobuf:"varint,12,opt,name=developmentScore,proto3,oneof" form:"developmentScore" json:"developmentScore,omitempty" query:"developmentScore"`
-	Standard         *string         `protobuf:"bytes,13,opt,name=standard,proto3,oneof" form:"standard" json:"standard,omitempty" query:"standard"`                         // 批改标准
-	ReadingContent   *ReadingContent `protobuf:"bytes,14,opt,name=readingContent,proto3,oneof" form:"readingContent" json:"readingContent,omitempty" query:"readingContent"` // 阅读作业内容
+	Subject          Subject         `protobuf:"varint,1,opt,name=subject,proto3,enum=essay.show.Subject" form:"subject" json:"subject" query:"subject"`
+	Topic            int64           `protobuf:"varint,2,opt,name=topic,proto3" form:"topic" json:"topic" query:"topic"`                              // 作业类型
+	Title            string          `protobuf:"bytes,3,opt,name=title,proto3" form:"title" json:"title" query:"title"`                               // 作业标题
+	ClassIds         []string        `protobuf:"bytes,4,rep,name=classIds,proto3" form:"classIds" json:"classIds" query:"classIds"`                   // 目标班级ID
+	Description      *string         `protobuf:"bytes,5,opt,name=description,proto3,oneof" form:"description" json:"description" query:"description"` // 作业描述
+	EssayType        *string         `protobuf:"bytes,6,opt,name=essayType,proto3,oneof" form:"essayType" json:"essayType" query:"essayType"`         // 作文类型
+	Grade            *int64          `protobuf:"varint,7,opt,name=grade,proto3,oneof" form:"grade" json:"grade" query:"grade"`                        // 年级
+	TotalScore       *int64          `protobuf:"varint,8,opt,name=totalScore,proto3,oneof" form:"totalScore" json:"totalScore" query:"totalScore"`    // 总分
+	ContentScore     *int64          `protobuf:"varint,9,opt,name=contentScore,proto3,oneof" form:"contentScore" json:"contentScore" query:"contentScore"`
+	ExpressionScore  *int64          `protobuf:"varint,10,opt,name=expressionScore,proto3,oneof" form:"expressionScore" json:"expressionScore" query:"expressionScore"`
+	StructureScore   *int64          `protobuf:"varint,11,opt,name=structureScore,proto3,oneof" form:"structureScore" json:"structureScore" query:"structureScore"`
+	DevelopmentScore *int64          `protobuf:"varint,12,opt,name=developmentScore,proto3,oneof" form:"developmentScore" json:"developmentScore" query:"developmentScore"`
+	Standard         *string         `protobuf:"bytes,13,opt,name=standard,proto3,oneof" form:"standard" json:"standard" query:"standard"`                         // 批改标准
+	ReadingContent   *ReadingContent `protobuf:"bytes,14,opt,name=readingContent,proto3,oneof" form:"readingContent" json:"readingContent" query:"readingContent"` // 阅读作业内容
 }
 
 func (x *CreateHomeworkReq) Reset() {
@@ -4645,7 +4645,7 @@ type CreateHomeworkResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	HomeworkIds []string `protobuf:"bytes,1,rep,name=homeworkIds,proto3" form:"homeworkIds" json:"homeworkIds,omitempty" query:"homeworkIds"`
+	HomeworkIds []string `protobuf:"bytes,1,rep,name=homeworkIds,proto3" form:"homeworkIds" json:"homeworkIds" query:"homeworkIds"`
 }
 
 func (x *CreateHomeworkResp) Reset() {
@@ -4692,17 +4692,17 @@ type EditHomeworkReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	HomeworkId       string  `protobuf:"bytes,1,opt,name=homeworkId,proto3" form:"homeworkId" json:"homeworkId,omitempty" query:"homeworkId"`
-	Title            string  `protobuf:"bytes,2,opt,name=title,proto3" form:"title" json:"title,omitempty" query:"title"`
-	Description      string  `protobuf:"bytes,3,opt,name=description,proto3" form:"description" json:"description,omitempty" query:"description"`
-	EssayType        string  `protobuf:"bytes,4,opt,name=essayType,proto3" form:"essayType" json:"essayType,omitempty" query:"essayType"`
-	Grade            int64   `protobuf:"varint,5,opt,name=grade,proto3" form:"grade" json:"grade,omitempty" query:"grade"`
-	TotalScore       int64   `protobuf:"varint,6,opt,name=totalScore,proto3" form:"totalScore" json:"totalScore,omitempty" query:"totalScore"`
-	ContentScore     *int64  `protobuf:"varint,7,opt,name=contentScore,proto3,oneof" form:"contentScore" json:"contentScore,omitempty" query:"contentScore"`
-	ExpressionScore  *int64  `protobuf:"varint,8,opt,name=expressionScore,proto3,oneof" form:"expressionScore" json:"expressionScore,omitempty" query:"expressionScore"`
-	StructureScore   *int64  `protobuf:"varint,9,opt,name=structureScore,proto3,oneof" form:"structureScore" json:"structureScore,omitempty" query:"structureScore"`
-	DevelopmentScore *int64  `protobuf:"varint,10,opt,name=developmentScore,proto3,oneof" form:"developmentScore" json:"developmentScore,omitempty" query:"developmentScore"`
-	Standard         *string `protobuf:"bytes,11,opt,name=standard,proto3,oneof" form:"standard" json:"standard,omitempty" query:"standard"`
+	HomeworkId       string  `protobuf:"bytes,1,opt,name=homeworkId,proto3" form:"homeworkId" json:"homeworkId" query:"homeworkId"`
+	Title            string  `protobuf:"bytes,2,opt,name=title,proto3" form:"title" json:"title" query:"title"`
+	Description      string  `protobuf:"bytes,3,opt,name=description,proto3" form:"description" json:"description" query:"description"`
+	EssayType        string  `protobuf:"bytes,4,opt,name=essayType,proto3" form:"essayType" json:"essayType" query:"essayType"`
+	Grade            int64   `protobuf:"varint,5,opt,name=grade,proto3" form:"grade" json:"grade" query:"grade"`
+	TotalScore       int64   `protobuf:"varint,6,opt,name=totalScore,proto3" form:"totalScore" json:"totalScore" query:"totalScore"`
+	ContentScore     *int64  `protobuf:"varint,7,opt,name=contentScore,proto3,oneof" form:"contentScore" json:"contentScore" query:"contentScore"`
+	ExpressionScore  *int64  `protobuf:"varint,8,opt,name=expressionScore,proto3,oneof" form:"expressionScore" json:"expressionScore" query:"expressionScore"`
+	StructureScore   *int64  `protobuf:"varint,9,opt,name=structureScore,proto3,oneof" form:"structureScore" json:"structureScore" query:"structureScore"`
+	DevelopmentScore *int64  `protobuf:"varint,10,opt,name=developmentScore,proto3,oneof" form:"developmentScore" json:"developmentScore" query:"developmentScore"`
+	Standard         *string `protobuf:"bytes,11,opt,name=standard,proto3,oneof" form:"standard" json:"standard" query:"standard"`
 }
 
 func (x *EditHomeworkReq) Reset() {
@@ -4819,8 +4819,8 @@ type ListHomeworksReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions,omitempty" query:"paginationOptions"`
-	ClassId           string                   `protobuf:"bytes,2,opt,name=classId,proto3" form:"classId" json:"classId,omitempty" query:"classId"`
+	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions" query:"paginationOptions"`
+	ClassId           string                   `protobuf:"bytes,2,opt,name=classId,proto3" form:"classId" json:"classId" query:"classId"`
 }
 
 func (x *ListHomeworksReq) Reset() {
@@ -4874,8 +4874,8 @@ type ListHomeworksResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Homeworks []*HomeworkInfo `protobuf:"bytes,1,rep,name=homeworks,proto3" form:"homeworks" json:"homeworks,omitempty" query:"homeworks"`
-	Total     int64           `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`
+	Homeworks []*HomeworkInfo `protobuf:"bytes,1,rep,name=homeworks,proto3" form:"homeworks" json:"homeworks" query:"homeworks"`
+	Total     int64           `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total" query:"total"`
 }
 
 func (x *ListHomeworksResp) Reset() {
@@ -4929,30 +4929,30 @@ type HomeworkInfo struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id               string          `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Subject          Subject         `protobuf:"varint,2,opt,name=subject,proto3,enum=essay.show.Subject" form:"subject" json:"subject,omitempty" query:"subject"`
-	Topic            int64           `protobuf:"varint,3,opt,name=topic,proto3" form:"topic" json:"topic,omitempty" query:"topic"`
-	Title            string          `protobuf:"bytes,4,opt,name=title,proto3" form:"title" json:"title,omitempty" query:"title"`
-	CreateTime       int64           `protobuf:"varint,5,opt,name=createTime,proto3" form:"createTime" json:"createTime,omitempty" query:"createTime"`
-	Description      *string         `protobuf:"bytes,6,opt,name=description,proto3,oneof" form:"description" json:"description,omitempty" query:"description"`
-	TotalScore       *int64          `protobuf:"varint,7,opt,name=totalScore,proto3,oneof" form:"totalScore" json:"totalScore,omitempty" query:"totalScore"`
-	EssayType        *string         `protobuf:"bytes,8,opt,name=essayType,proto3,oneof" form:"essayType" json:"essayType,omitempty" query:"essayType"`
-	Grade            *int64          `protobuf:"varint,9,opt,name=grade,proto3,oneof" form:"grade" json:"grade,omitempty" query:"grade"`             // 年级
-	Standard         *string         `protobuf:"bytes,10,opt,name=standard,proto3,oneof" form:"standard" json:"standard,omitempty" query:"standard"` // 批改标准
-	ContentScore     *int64          `protobuf:"varint,11,opt,name=contentScore,proto3,oneof" form:"contentScore" json:"contentScore,omitempty" query:"contentScore"`
-	ExpressionScore  *int64          `protobuf:"varint,12,opt,name=expressionScore,proto3,oneof" form:"expressionScore" json:"expressionScore,omitempty" query:"expressionScore"`
-	StructureScore   *int64          `protobuf:"varint,13,opt,name=structureScore,proto3,oneof" form:"structureScore" json:"structureScore,omitempty" query:"structureScore"`
-	DevelopmentScore *int64          `protobuf:"varint,14,opt,name=developmentScore,proto3,oneof" form:"developmentScore" json:"developmentScore,omitempty" query:"developmentScore"`
-	ReadingContent   *ReadingContent `protobuf:"bytes,15,opt,name=readingContent,proto3,oneof" form:"readingContent" json:"readingContent,omitempty" query:"readingContent"` // 阅读作业内容
+	Id               string          `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Subject          Subject         `protobuf:"varint,2,opt,name=subject,proto3,enum=essay.show.Subject" form:"subject" json:"subject" query:"subject"`
+	Topic            int64           `protobuf:"varint,3,opt,name=topic,proto3" form:"topic" json:"topic" query:"topic"`
+	Title            string          `protobuf:"bytes,4,opt,name=title,proto3" form:"title" json:"title" query:"title"`
+	CreateTime       int64           `protobuf:"varint,5,opt,name=createTime,proto3" form:"createTime" json:"createTime" query:"createTime"`
+	Description      *string         `protobuf:"bytes,6,opt,name=description,proto3,oneof" form:"description" json:"description" query:"description"`
+	TotalScore       *int64          `protobuf:"varint,7,opt,name=totalScore,proto3,oneof" form:"totalScore" json:"totalScore" query:"totalScore"`
+	EssayType        *string         `protobuf:"bytes,8,opt,name=essayType,proto3,oneof" form:"essayType" json:"essayType" query:"essayType"`
+	Grade            *int64          `protobuf:"varint,9,opt,name=grade,proto3,oneof" form:"grade" json:"grade" query:"grade"`             // 年级
+	Standard         *string         `protobuf:"bytes,10,opt,name=standard,proto3,oneof" form:"standard" json:"standard" query:"standard"` // 批改标准
+	ContentScore     *int64          `protobuf:"varint,11,opt,name=contentScore,proto3,oneof" form:"contentScore" json:"contentScore" query:"contentScore"`
+	ExpressionScore  *int64          `protobuf:"varint,12,opt,name=expressionScore,proto3,oneof" form:"expressionScore" json:"expressionScore" query:"expressionScore"`
+	StructureScore   *int64          `protobuf:"varint,13,opt,name=structureScore,proto3,oneof" form:"structureScore" json:"structureScore" query:"structureScore"`
+	DevelopmentScore *int64          `protobuf:"varint,14,opt,name=developmentScore,proto3,oneof" form:"developmentScore" json:"developmentScore" query:"developmentScore"`
+	ReadingContent   *ReadingContent `protobuf:"bytes,15,opt,name=readingContent,proto3,oneof" form:"readingContent" json:"readingContent" query:"readingContent"` // 阅读作业内容
 	// 仅教师端有以下字段
-	SubmissionCount   *int64 `protobuf:"varint,16,opt,name=submissionCount,proto3,oneof" form:"submissionCount" json:"submissionCount,omitempty" query:"submissionCount"`         // 提交数量
-	NotSubmittedCount *int64 `protobuf:"varint,17,opt,name=notSubmittedCount,proto3,oneof" form:"notSubmittedCount" json:"notSubmittedCount,omitempty" query:"notSubmittedCount"` // 未提交数量
-	GradeCount        *int64 `protobuf:"varint,18,opt,name=gradeCount,proto3,oneof" form:"gradeCount" json:"gradeCount,omitempty" query:"gradeCount"`                             // 已批改数量
+	SubmissionCount   *int64 `protobuf:"varint,16,opt,name=submissionCount,proto3,oneof" form:"submissionCount" json:"submissionCount" query:"submissionCount"`         // 提交数量
+	NotSubmittedCount *int64 `protobuf:"varint,17,opt,name=notSubmittedCount,proto3,oneof" form:"notSubmittedCount" json:"notSubmittedCount" query:"notSubmittedCount"` // 未提交数量
+	GradeCount        *int64 `protobuf:"varint,18,opt,name=gradeCount,proto3,oneof" form:"gradeCount" json:"gradeCount" query:"gradeCount"`                             // 已批改数量
 	// 仅学生端有以下字段
-	Status       *HomeworkStatus `protobuf:"varint,19,opt,name=status,proto3,enum=essay.show.HomeworkStatus,oneof" form:"status" json:"status,omitempty" query:"status"`               // 作业状态
-	SubmissionId *string         `protobuf:"bytes,20,opt,name=submission_id,json=submissionId,proto3,oneof" form:"submission_id" json:"submission_id,omitempty" query:"submission_id"` // 提交id
-	SubmitTime   *int64          `protobuf:"varint,21,opt,name=submitTime,proto3,oneof" form:"submitTime" json:"submitTime,omitempty" query:"submitTime"`                              // 提交时间
-	GradeResult  *string         `protobuf:"bytes,22,opt,name=gradeResult,proto3,oneof" form:"gradeResult" json:"gradeResult,omitempty" query:"gradeResult"`                           // 批改得分
+	Status       *HomeworkStatus `protobuf:"varint,19,opt,name=status,proto3,enum=essay.show.HomeworkStatus,oneof" form:"status" json:"status" query:"status"`               // 作业状态
+	SubmissionId *string         `protobuf:"bytes,20,opt,name=submission_id,json=submissionId,proto3,oneof" form:"submission_id" json:"submission_id" query:"submission_id"` // 提交id
+	SubmitTime   *int64          `protobuf:"varint,21,opt,name=submitTime,proto3,oneof" form:"submitTime" json:"submitTime" query:"submitTime"`                              // 提交时间
+	GradeResult  *string         `protobuf:"bytes,22,opt,name=gradeResult,proto3,oneof" form:"gradeResult" json:"gradeResult" query:"gradeResult"`                           // 批改得分
 }
 
 func (x *HomeworkInfo) Reset() {
@@ -5146,9 +5146,9 @@ type SubmitHomeworkReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	HomeworkId string   `protobuf:"bytes,1,opt,name=homeworkId,proto3" form:"homeworkId" json:"homeworkId,omitempty" query:"homeworkId"`
-	MemberId   string   `protobuf:"bytes,2,opt,name=memberId,proto3" form:"memberId" json:"memberId,omitempty" query:"memberId"`
-	Images     []string `protobuf:"bytes,3,rep,name=images,proto3" form:"images" json:"images,omitempty" query:"images"` // 图片URL列表
+	HomeworkId string   `protobuf:"bytes,1,opt,name=homeworkId,proto3" form:"homeworkId" json:"homeworkId" query:"homeworkId"`
+	MemberId   string   `protobuf:"bytes,2,opt,name=memberId,proto3" form:"memberId" json:"memberId" query:"memberId"`
+	Images     []string `protobuf:"bytes,3,rep,name=images,proto3" form:"images" json:"images" query:"images"` // 图片URL列表
 }
 
 func (x *SubmitHomeworkReq) Reset() {
@@ -5209,7 +5209,7 @@ type SubmitHomeworkResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	SubmissionId string `protobuf:"bytes,1,opt,name=submissionId,proto3" form:"submissionId" json:"submissionId,omitempty" query:"submissionId"`
+	SubmissionId string `protobuf:"bytes,1,opt,name=submissionId,proto3" form:"submissionId" json:"submissionId" query:"submissionId"`
 }
 
 func (x *SubmitHomeworkResp) Reset() {
@@ -5257,7 +5257,7 @@ type ReCorrectHomeworkReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	SubmissionIds []string `protobuf:"bytes,1,rep,name=submissionIds,proto3" form:"submissionIds" json:"submissionIds,omitempty" query:"submissionIds"`
+	SubmissionIds []string `protobuf:"bytes,1,rep,name=submissionIds,proto3" form:"submissionIds" json:"submissionIds" query:"submissionIds"`
 }
 
 func (x *ReCorrectHomeworkReq) Reset() {
@@ -5304,7 +5304,7 @@ type ReCorrectHomeworkResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	SubmissionIds []string `protobuf:"bytes,1,rep,name=submissionIds,proto3" form:"submissionIds" json:"submissionIds,omitempty" query:"submissionIds"`
+	SubmissionIds []string `protobuf:"bytes,1,rep,name=submissionIds,proto3" form:"submissionIds" json:"submissionIds" query:"submissionIds"`
 }
 
 func (x *ReCorrectHomeworkResp) Reset() {
@@ -5352,12 +5352,12 @@ type ReEvaluateHomeworkReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	SubmissionId  string   `protobuf:"bytes,1,opt,name=submissionId,proto3" form:"submissionId" json:"submissionId,omitempty" query:"submissionId"`
-	RecorrectType int64    `protobuf:"varint,2,opt,name=recorrectType,proto3" form:"recorrectType" json:"recorrectType,omitempty" query:"recorrectType"` // 1: 上传图片重批 2: 编辑原文重批 3: 小项重批
-	Images        []string `protobuf:"bytes,3,rep,name=images,proto3" form:"images" json:"images,omitempty" query:"images"`                              // 图片URL列表
-	Aspect        string   `protobuf:"bytes,4,opt,name=aspect,proto3" form:"aspect" json:"aspect,omitempty" query:"aspect"`                              // 小项
-	Title         string   `protobuf:"bytes,5,opt,name=title,proto3" form:"title" json:"title,omitempty" query:"title"`
-	Text          string   `protobuf:"bytes,6,opt,name=text,proto3" form:"text" json:"text,omitempty" query:"text"`
+	SubmissionId  string   `protobuf:"bytes,1,opt,name=submissionId,proto3" form:"submissionId" json:"submissionId" query:"submissionId"`
+	RecorrectType int64    `protobuf:"varint,2,opt,name=recorrectType,proto3" form:"recorrectType" json:"recorrectType" query:"recorrectType"` // 1: 上传图片重批 2: 编辑原文重批 3: 小项重批
+	Images        []string `protobuf:"bytes,3,rep,name=images,proto3" form:"images" json:"images" query:"images"`                              // 图片URL列表
+	Aspect        string   `protobuf:"bytes,4,opt,name=aspect,proto3" form:"aspect" json:"aspect" query:"aspect"`                              // 小项
+	Title         string   `protobuf:"bytes,5,opt,name=title,proto3" form:"title" json:"title" query:"title"`
+	Text          string   `protobuf:"bytes,6,opt,name=text,proto3" form:"text" json:"text" query:"text"`
 }
 
 func (x *ReEvaluateHomeworkReq) Reset() {
@@ -5439,7 +5439,7 @@ type ReEvaluateHomeworkResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	SubmissionId string `protobuf:"bytes,1,opt,name=submissionId,proto3" form:"submissionId" json:"submissionId,omitempty" query:"submissionId"`
+	SubmissionId string `protobuf:"bytes,1,opt,name=submissionId,proto3" form:"submissionId" json:"submissionId" query:"submissionId"`
 }
 
 func (x *ReEvaluateHomeworkResp) Reset() {
@@ -5486,7 +5486,7 @@ type DeleteHomeworkReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	HomeworkId string `protobuf:"bytes,1,opt,name=homeworkId,proto3" json:"homeworkId,omitempty" path:"homeworkId"`
+	HomeworkId string `protobuf:"bytes,1,opt,name=homeworkId,proto3" json:"homeworkId" path:"homeworkId"`
 }
 
 func (x *DeleteHomeworkReq) Reset() {
@@ -5533,8 +5533,8 @@ type GetSubmissionsReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	HomeworkId        string                   `protobuf:"bytes,1,opt,name=homeworkId,proto3" form:"homeworkId" json:"homeworkId,omitempty" query:"homeworkId"`
-	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,2,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions,omitempty" query:"paginationOptions"`
+	HomeworkId        string                   `protobuf:"bytes,1,opt,name=homeworkId,proto3" form:"homeworkId" json:"homeworkId" query:"homeworkId"`
+	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,2,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions" query:"paginationOptions"`
 }
 
 func (x *GetSubmissionsReq) Reset() {
@@ -5588,8 +5588,8 @@ type GetSubmissionsResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Submissions []*SubmissionInfo `protobuf:"bytes,1,rep,name=submissions,proto3" form:"submissions" json:"submissions,omitempty" query:"submissions"`
-	Total       int64             `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`
+	Submissions []*SubmissionInfo `protobuf:"bytes,1,rep,name=submissions,proto3" form:"submissions" json:"submissions" query:"submissions"`
+	Total       int64             `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total" query:"total"`
 }
 
 func (x *GetSubmissionsResp) Reset() {
@@ -5643,9 +5643,9 @@ type GetUserSubmissionsReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	HomeworkId        string                   `protobuf:"bytes,1,opt,name=homeworkId,proto3" form:"homeworkId" json:"homeworkId,omitempty" query:"homeworkId"`
-	MemberId          string                   `protobuf:"bytes,2,opt,name=memberId,proto3" form:"memberId" json:"memberId,omitempty" query:"memberId"`
-	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,3,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions,omitempty" query:"paginationOptions"`
+	HomeworkId        string                   `protobuf:"bytes,1,opt,name=homeworkId,proto3" form:"homeworkId" json:"homeworkId" query:"homeworkId"`
+	MemberId          string                   `protobuf:"bytes,2,opt,name=memberId,proto3" form:"memberId" json:"memberId" query:"memberId"`
+	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,3,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions" query:"paginationOptions"`
 }
 
 func (x *GetUserSubmissionsReq) Reset() {
@@ -5706,8 +5706,8 @@ type GetUserSubmissionsResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	SubmissionIds []string `protobuf:"bytes,1,rep,name=submissionIds,proto3" form:"submissionIds" json:"submissionIds,omitempty" query:"submissionIds"`
-	Total         int64    `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`
+	SubmissionIds []string `protobuf:"bytes,1,rep,name=submissionIds,proto3" form:"submissionIds" json:"submissionIds" query:"submissionIds"`
+	Total         int64    `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total" query:"total"`
 }
 
 func (x *GetUserSubmissionsResp) Reset() {
@@ -5761,14 +5761,14 @@ type SubmissionInfo struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	MemberId   string         `protobuf:"bytes,1,opt,name=memberId,proto3" form:"memberId" json:"memberId,omitempty" query:"memberId"`
-	MemberName string         `protobuf:"bytes,2,opt,name=memberName,proto3" form:"memberName" json:"memberName,omitempty" query:"memberName"`
-	Status     HomeworkStatus `protobuf:"varint,3,opt,name=status,proto3,enum=essay.show.HomeworkStatus" form:"status" json:"status,omitempty" query:"status"`
+	MemberId   string         `protobuf:"bytes,1,opt,name=memberId,proto3" form:"memberId" json:"memberId" query:"memberId"`
+	MemberName string         `protobuf:"bytes,2,opt,name=memberName,proto3" form:"memberName" json:"memberName" query:"memberName"`
+	Status     HomeworkStatus `protobuf:"varint,3,opt,name=status,proto3,enum=essay.show.HomeworkStatus" form:"status" json:"status" query:"status"`
 	// 提交后有以下字段
-	Id          *string `protobuf:"bytes,4,opt,name=id,proto3,oneof" form:"id" json:"id,omitempty" query:"id"` // 提交id
-	Title       *string `protobuf:"bytes,5,opt,name=title,proto3,oneof" form:"title" json:"title,omitempty" query:"title"`
-	SubmitTime  *int64  `protobuf:"varint,6,opt,name=submitTime,proto3,oneof" form:"submitTime" json:"submitTime,omitempty" query:"submitTime"`    // 提交时间
-	GradeResult *string `protobuf:"bytes,7,opt,name=gradeResult,proto3,oneof" form:"gradeResult" json:"gradeResult,omitempty" query:"gradeResult"` // 批改得分
+	Id          *string `protobuf:"bytes,4,opt,name=id,proto3,oneof" form:"id" json:"id" query:"id"` // 提交id
+	Title       *string `protobuf:"bytes,5,opt,name=title,proto3,oneof" form:"title" json:"title" query:"title"`
+	SubmitTime  *int64  `protobuf:"varint,6,opt,name=submitTime,proto3,oneof" form:"submitTime" json:"submitTime" query:"submitTime"`    // 提交时间
+	GradeResult *string `protobuf:"bytes,7,opt,name=gradeResult,proto3,oneof" form:"gradeResult" json:"gradeResult" query:"gradeResult"` // 批改得分
 }
 
 func (x *SubmissionInfo) Reset() {
@@ -5857,7 +5857,7 @@ type GetSubmissionEvaluateReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	SubmissionId string `protobuf:"bytes,1,opt,name=submissionId,proto3" form:"submissionId" json:"submissionId,omitempty" query:"submissionId"`
+	SubmissionId string `protobuf:"bytes,1,opt,name=submissionId,proto3" form:"submissionId" json:"submissionId" query:"submissionId"`
 }
 
 func (x *GetSubmissionEvaluateReq) Reset() {
@@ -5904,8 +5904,8 @@ type GetSubmissionEvaluateResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id       string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Response string `protobuf:"bytes,2,opt,name=response,proto3" form:"response" json:"response,omitempty" query:"response"`
+	Id       string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Response string `protobuf:"bytes,2,opt,name=response,proto3" form:"response" json:"response" query:"response"`
 }
 
 func (x *GetSubmissionEvaluateResp) Reset() {
@@ -5959,13 +5959,13 @@ type ModifySubmissionEvaluateReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	SubmissionId   string      `protobuf:"bytes,1,opt,name=submissionId,proto3" form:"submissionId" json:"submissionId,omitempty" query:"submissionId"`
-	Content        *ModifyItem `protobuf:"bytes,2,opt,name=content,proto3,oneof" form:"content" json:"content,omitempty" query:"content"`
-	Expression     *ModifyItem `protobuf:"bytes,3,opt,name=expression,proto3,oneof" form:"expression" json:"expression,omitempty" query:"expression"`
-	Structure      *ModifyItem `protobuf:"bytes,4,opt,name=structure,proto3,oneof" form:"structure" json:"structure,omitempty" query:"structure"`
-	Development    *ModifyItem `protobuf:"bytes,5,opt,name=development,proto3,oneof" form:"development" json:"development,omitempty" query:"development"`
-	OverallComment *ModifyItem `protobuf:"bytes,6,opt,name=overallComment,proto3,oneof" form:"overallComment" json:"overallComment,omitempty" query:"overallComment"`
-	Suggestion     *string     `protobuf:"bytes,7,opt,name=suggestion,proto3,oneof" form:"suggestion" json:"suggestion,omitempty" query:"suggestion"`
+	SubmissionId   string      `protobuf:"bytes,1,opt,name=submissionId,proto3" form:"submissionId" json:"submissionId" query:"submissionId"`
+	Content        *ModifyItem `protobuf:"bytes,2,opt,name=content,proto3,oneof" form:"content" json:"content" query:"content"`
+	Expression     *ModifyItem `protobuf:"bytes,3,opt,name=expression,proto3,oneof" form:"expression" json:"expression" query:"expression"`
+	Structure      *ModifyItem `protobuf:"bytes,4,opt,name=structure,proto3,oneof" form:"structure" json:"structure" query:"structure"`
+	Development    *ModifyItem `protobuf:"bytes,5,opt,name=development,proto3,oneof" form:"development" json:"development" query:"development"`
+	OverallComment *ModifyItem `protobuf:"bytes,6,opt,name=overallComment,proto3,oneof" form:"overallComment" json:"overallComment" query:"overallComment"`
+	Suggestion     *string     `protobuf:"bytes,7,opt,name=suggestion,proto3,oneof" form:"suggestion" json:"suggestion" query:"suggestion"`
 }
 
 func (x *ModifySubmissionEvaluateReq) Reset() {
@@ -6054,8 +6054,8 @@ type DownloadSubmissionEvaluateReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	SubmissionIds  []string                `protobuf:"bytes,1,rep,name=submissionIds,proto3" form:"submissionIds" json:"submissionIds,omitempty" query:"submissionIds"`
-	ExcludeOptions *EvaluateExcludeOptions `protobuf:"bytes,2,opt,name=excludeOptions,proto3" form:"excludeOptions" json:"excludeOptions,omitempty" query:"excludeOptions"`
+	SubmissionIds  []string                `protobuf:"bytes,1,rep,name=submissionIds,proto3" form:"submissionIds" json:"submissionIds" query:"submissionIds"`
+	ExcludeOptions *EvaluateExcludeOptions `protobuf:"bytes,2,opt,name=excludeOptions,proto3" form:"excludeOptions" json:"excludeOptions" query:"excludeOptions"`
 }
 
 func (x *DownloadSubmissionEvaluateReq) Reset() {
@@ -6109,8 +6109,8 @@ type DownloadSubmissionEvaluateResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Url          string `protobuf:"bytes,1,opt,name=url,proto3" form:"url" json:"url,omitempty" query:"url"`
-	SessionToken string `protobuf:"bytes,2,opt,name=sessionToken,proto3" form:"sessionToken" json:"sessionToken,omitempty" query:"sessionToken"`
+	Url          string `protobuf:"bytes,1,opt,name=url,proto3" form:"url" json:"url" query:"url"`
+	SessionToken string `protobuf:"bytes,2,opt,name=sessionToken,proto3" form:"sessionToken" json:"sessionToken" query:"sessionToken"`
 }
 
 func (x *DownloadSubmissionEvaluateResp) Reset() {
@@ -6165,7 +6165,7 @@ type DownloadLessonPlanReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	HomeworkId string `protobuf:"bytes,1,opt,name=homeworkId,proto3" form:"homeworkId" json:"homeworkId,omitempty" query:"homeworkId"`
+	HomeworkId string `protobuf:"bytes,1,opt,name=homeworkId,proto3" form:"homeworkId" json:"homeworkId" query:"homeworkId"`
 }
 
 func (x *DownloadLessonPlanReq) Reset() {
@@ -6212,8 +6212,8 @@ type DownloadLessonPlanResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Url          string `protobuf:"bytes,1,opt,name=url,proto3" form:"url" json:"url,omitempty" query:"url"`
-	SessionToken string `protobuf:"bytes,2,opt,name=sessionToken,proto3" form:"sessionToken" json:"sessionToken,omitempty" query:"sessionToken"`
+	Url          string `protobuf:"bytes,1,opt,name=url,proto3" form:"url" json:"url" query:"url"`
+	SessionToken string `protobuf:"bytes,2,opt,name=sessionToken,proto3" form:"sessionToken" json:"sessionToken" query:"sessionToken"`
 }
 
 func (x *DownloadLessonPlanResp) Reset() {
@@ -6267,7 +6267,7 @@ type GetHomeworkStatisticsReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	HomeworkId string `protobuf:"bytes,1,opt,name=homeworkId,proto3" form:"homeworkId" json:"homeworkId,omitempty" query:"homeworkId"`
+	HomeworkId string `protobuf:"bytes,1,opt,name=homeworkId,proto3" form:"homeworkId" json:"homeworkId" query:"homeworkId"`
 }
 
 func (x *GetHomeworkStatisticsReq) Reset() {
@@ -6314,7 +6314,7 @@ type GetHomeworkStatisticsResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Statistics string `protobuf:"bytes,1,opt,name=statistics,proto3" form:"statistics" json:"statistics,omitempty" query:"statistics"`
+	Statistics string `protobuf:"bytes,1,opt,name=statistics,proto3" form:"statistics" json:"statistics" query:"statistics"`
 }
 
 func (x *GetHomeworkStatisticsResp) Reset() {
@@ -6362,9 +6362,9 @@ type ListQuestionBanksReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions,omitempty" query:"paginationOptions"`
-	Type              QuestionBankType         `protobuf:"varint,2,opt,name=type,proto3,enum=essay.show.QuestionBankType" form:"type" json:"type,omitempty" query:"type"` // 按类型筛选
-	Grade             []int64                  `protobuf:"varint,3,rep,packed,name=grade,proto3" form:"grade" json:"grade,omitempty" query:"grade"`                       // 按年级筛选
+	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions" query:"paginationOptions"`
+	Type              QuestionBankType         `protobuf:"varint,2,opt,name=type,proto3,enum=essay.show.QuestionBankType" form:"type" json:"type" query:"type"` // 按类型筛选
+	Grade             []int64                  `protobuf:"varint,3,rep,packed,name=grade,proto3" form:"grade" json:"grade" query:"grade"`                       // 按年级筛选
 }
 
 func (x *ListQuestionBanksReq) Reset() {
@@ -6426,12 +6426,12 @@ type QuestionBank struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id          string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`                                     // 题库ID
-	Name        string `protobuf:"bytes,2,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`                             // 题库名称
-	Description string `protobuf:"bytes,3,opt,name=description,proto3" form:"description" json:"description,omitempty" query:"description"` // 题库描述
-	Grade       int64  `protobuf:"varint,4,opt,name=grade,proto3" form:"grade" json:"grade,omitempty" query:"grade"`                        // 适用年级
-	Unit        int64  `protobuf:"varint,5,opt,name=unit,proto3" form:"unit" json:"unit,omitempty" query:"unit"`                            // 单元
-	EssayType   string `protobuf:"bytes,6,opt,name=essayType,proto3" form:"essayType" json:"essayType,omitempty" query:"essayType"`         // 文体
+	Id          string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`                                     // 题库ID
+	Name        string `protobuf:"bytes,2,opt,name=name,proto3" form:"name" json:"name" query:"name"`                             // 题库名称
+	Description string `protobuf:"bytes,3,opt,name=description,proto3" form:"description" json:"description" query:"description"` // 题库描述
+	Grade       int64  `protobuf:"varint,4,opt,name=grade,proto3" form:"grade" json:"grade" query:"grade"`                        // 适用年级
+	Unit        int64  `protobuf:"varint,5,opt,name=unit,proto3" form:"unit" json:"unit" query:"unit"`                            // 单元
+	EssayType   string `protobuf:"bytes,6,opt,name=essayType,proto3" form:"essayType" json:"essayType" query:"essayType"`         // 文体
 }
 
 func (x *QuestionBank) Reset() {
@@ -6513,8 +6513,8 @@ type ListQuestionBanksResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	QuestionBanks []*QuestionBank `protobuf:"bytes,1,rep,name=questionBanks,proto3" form:"questionBanks" json:"questionBanks,omitempty" query:"questionBanks"`
-	Total         int64           `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`
+	QuestionBanks []*QuestionBank `protobuf:"bytes,1,rep,name=questionBanks,proto3" form:"questionBanks" json:"questionBanks" query:"questionBanks"`
+	Total         int64           `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total" query:"total"`
 }
 
 func (x *ListQuestionBanksResp) Reset() {
@@ -6568,10 +6568,10 @@ type GetAdminHomeworkStatisticsReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions,omitempty" query:"paginationOptions"`
-	Topic             *int64                   `protobuf:"varint,2,opt,name=topic,proto3,oneof" form:"topic" json:"topic,omitempty" query:"topic"`
-	StartTime         *int64                   `protobuf:"varint,3,opt,name=startTime,proto3,oneof" form:"startTime" json:"startTime,omitempty" query:"startTime"`
-	EndTime           *int64                   `protobuf:"varint,4,opt,name=endTime,proto3,oneof" form:"endTime" json:"endTime,omitempty" query:"endTime"`
+	PaginationOptions *basic.PaginationOptions `protobuf:"bytes,1,opt,name=paginationOptions,proto3" form:"paginationOptions" json:"paginationOptions" query:"paginationOptions"`
+	Topic             *int64                   `protobuf:"varint,2,opt,name=topic,proto3,oneof" form:"topic" json:"topic" query:"topic"`
+	StartTime         *int64                   `protobuf:"varint,3,opt,name=startTime,proto3,oneof" form:"startTime" json:"startTime" query:"startTime"`
+	EndTime           *int64                   `protobuf:"varint,4,opt,name=endTime,proto3,oneof" form:"endTime" json:"endTime" query:"endTime"`
 }
 
 func (x *GetAdminHomeworkStatisticsReq) Reset() {
@@ -6639,8 +6639,8 @@ type GetAdminHomeworkStatisticsResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Statistics []*HomeworkStatistics `protobuf:"bytes,1,rep,name=statistics,proto3" form:"statistics" json:"statistics,omitempty" query:"statistics"`
-	Total      int64                 `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total,omitempty" query:"total"`
+	Statistics []*HomeworkStatistics `protobuf:"bytes,1,rep,name=statistics,proto3" form:"statistics" json:"statistics" query:"statistics"`
+	Total      int64                 `protobuf:"varint,2,opt,name=total,proto3" form:"total" json:"total" query:"total"`
 }
 
 func (x *GetAdminHomeworkStatisticsResp) Reset() {
@@ -6694,11 +6694,11 @@ type HomeworkStatistics struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id          string                  `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Title       string                  `protobuf:"bytes,2,opt,name=title,proto3" form:"title" json:"title,omitempty" query:"title"`
-	Description string                  `protobuf:"bytes,3,opt,name=description,proto3" form:"description" json:"description,omitempty" query:"description"`
-	Standard    string                  `protobuf:"bytes,4,opt,name=standard,proto3" form:"standard" json:"standard,omitempty" query:"standard"`
-	Submissions []*SubmissionStatistics `protobuf:"bytes,5,rep,name=submissions,proto3" form:"submissions" json:"submissions,omitempty" query:"submissions"`
+	Id          string                  `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Title       string                  `protobuf:"bytes,2,opt,name=title,proto3" form:"title" json:"title" query:"title"`
+	Description string                  `protobuf:"bytes,3,opt,name=description,proto3" form:"description" json:"description" query:"description"`
+	Standard    string                  `protobuf:"bytes,4,opt,name=standard,proto3" form:"standard" json:"standard" query:"standard"`
+	Submissions []*SubmissionStatistics `protobuf:"bytes,5,rep,name=submissions,proto3" form:"submissions" json:"submissions" query:"submissions"`
 }
 
 func (x *HomeworkStatistics) Reset() {
@@ -6773,12 +6773,12 @@ type SubmissionStatistics struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id               string   `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	MemberId         string   `protobuf:"bytes,2,opt,name=memberId,proto3" form:"memberId" json:"memberId,omitempty" query:"memberId"`
-	Title            string   `protobuf:"bytes,3,opt,name=title,proto3" form:"title" json:"title,omitempty" query:"title"`
-	Text             string   `protobuf:"bytes,4,opt,name=text,proto3" form:"text" json:"text,omitempty" query:"text"`
-	Images           []string `protobuf:"bytes,5,rep,name=images,proto3" form:"images" json:"images,omitempty" query:"images"`
-	CorrectionResult string   `protobuf:"bytes,6,opt,name=correctionResult,proto3" form:"correctionResult" json:"correctionResult,omitempty" query:"correctionResult"`
+	Id               string   `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	MemberId         string   `protobuf:"bytes,2,opt,name=memberId,proto3" form:"memberId" json:"memberId" query:"memberId"`
+	Title            string   `protobuf:"bytes,3,opt,name=title,proto3" form:"title" json:"title" query:"title"`
+	Text             string   `protobuf:"bytes,4,opt,name=text,proto3" form:"text" json:"text" query:"text"`
+	Images           []string `protobuf:"bytes,5,rep,name=images,proto3" form:"images" json:"images" query:"images"`
+	CorrectionResult string   `protobuf:"bytes,6,opt,name=correctionResult,proto3" form:"correctionResult" json:"correctionResult" query:"correctionResult"`
 }
 
 func (x *SubmissionStatistics) Reset() {
@@ -6860,8 +6860,8 @@ type AddGradeCountReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Phone string `protobuf:"bytes,1,opt,name=phone,proto3" form:"phone" json:"phone,omitempty" query:"phone"`
-	Count int64  `protobuf:"varint,2,opt,name=count,proto3" form:"count" json:"count,omitempty" query:"count"`
+	Phone string `protobuf:"bytes,1,opt,name=phone,proto3" form:"phone" json:"phone" query:"phone"`
+	Count int64  `protobuf:"varint,2,opt,name=count,proto3" form:"count" json:"count" query:"count"`
 }
 
 func (x *AddGradeCountReq) Reset() {
@@ -6953,11 +6953,11 @@ type GetUserProfileResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserId           string    `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" form:"user_id" json:"user_id,omitempty" query:"user_id"`
-	WeaknessTags     []string  `protobuf:"bytes,2,rep,name=weakness_tags,json=weaknessTags,proto3" form:"weakness_tags" json:"weakness_tags,omitempty" query:"weakness_tags"`
-	WeaknessWeights  []float64 `protobuf:"fixed64,3,rep,packed,name=weakness_weights,json=weaknessWeights,proto3" form:"weakness_weights" json:"weakness_weights,omitempty" query:"weakness_weights"`
-	RecentEssayTexts []string  `protobuf:"bytes,4,rep,name=recent_essay_texts,json=recentEssayTexts,proto3" form:"recent_essay_texts" json:"recent_essay_texts,omitempty" query:"recent_essay_texts"`
-	RecentEssayGrade *string   `protobuf:"bytes,5,opt,name=recent_essay_grade,json=recentEssayGrade,proto3,oneof" form:"recent_essay_grade" json:"recent_essay_grade,omitempty" query:"recent_essay_grade"`
+	UserId           string    `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" form:"user_id" json:"user_id" query:"user_id"`
+	WeaknessTags     []string  `protobuf:"bytes,2,rep,name=weakness_tags,json=weaknessTags,proto3" form:"weakness_tags" json:"weakness_tags" query:"weakness_tags"`
+	WeaknessWeights  []float64 `protobuf:"fixed64,3,rep,packed,name=weakness_weights,json=weaknessWeights,proto3" form:"weakness_weights" json:"weakness_weights" query:"weakness_weights"`
+	RecentEssayTexts []string  `protobuf:"bytes,4,rep,name=recent_essay_texts,json=recentEssayTexts,proto3" form:"recent_essay_texts" json:"recent_essay_texts" query:"recent_essay_texts"`
+	RecentEssayGrade *string   `protobuf:"bytes,5,opt,name=recent_essay_grade,json=recentEssayGrade,proto3,oneof" form:"recent_essay_grade" json:"recent_essay_grade" query:"recent_essay_grade"`
 }
 
 func (x *GetUserProfileResp) Reset() {
@@ -7032,10 +7032,10 @@ type GetUserInfoResp_Payload struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name  string   `protobuf:"bytes,1,opt,name=name,proto3" form:"name" json:"name,omitempty" query:"name"`
-	Count int64    `protobuf:"varint,2,opt,name=count,proto3" form:"count" json:"count,omitempty" query:"count"`
-	Phone string   `protobuf:"bytes,3,opt,name=phone,proto3" form:"phone" json:"phone,omitempty" query:"phone"`
-	Role  UserRole `protobuf:"varint,4,opt,name=role,proto3,enum=essay.show.UserRole" form:"role" json:"role,omitempty" query:"role"`
+	Name  string   `protobuf:"bytes,1,opt,name=name,proto3" form:"name" json:"name" query:"name"`
+	Count int64    `protobuf:"varint,2,opt,name=count,proto3" form:"count" json:"count" query:"count"`
+	Phone string   `protobuf:"bytes,3,opt,name=phone,proto3" form:"phone" json:"phone" query:"phone"`
+	Role  UserRole `protobuf:"varint,4,opt,name=role,proto3,enum=essay.show.UserRole" form:"role" json:"role" query:"role"`
 }
 
 func (x *GetUserInfoResp_Payload) Reset() {
@@ -7103,8 +7103,8 @@ type ListSimpleExercisesResp_Record struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id    string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`              // 题目id
-	Score int64  `protobuf:"varint,2,opt,name=score,proto3" form:"score" json:"score,omitempty" query:"score"` // 得分
+	Id    string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`              // 题目id
+	Score int64  `protobuf:"varint,2,opt,name=score,proto3" form:"score" json:"score" query:"score"` // 得分
 }
 
 func (x *ListSimpleExercisesResp_Record) Reset() {
@@ -7158,11 +7158,11 @@ type ListSimpleExercisesResp_SimpleExercise struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id         string                            `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`                                  // 练习id
-	TotalScore int64                             `protobuf:"varint,2,opt,name=totalScore,proto3" form:"totalScore" json:"totalScore,omitempty" query:"totalScore"` // 总得分
-	Records    []*ListSimpleExercisesResp_Record `protobuf:"bytes,3,rep,name=records,proto3" form:"records" json:"records,omitempty" query:"records"`              // 题目id及其对应得分
-	FinishTime int64                             `protobuf:"varint,4,opt,name=finishTime,proto3" form:"finishTime" json:"finishTime,omitempty" query:"finishTime"` // 完成时间
-	Like       int64                             `protobuf:"varint,5,opt,name=like,proto3" form:"like" json:"like,omitempty" query:"like"`                         // 是否评价
+	Id         string                            `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`                                  // 练习id
+	TotalScore int64                             `protobuf:"varint,2,opt,name=totalScore,proto3" form:"totalScore" json:"totalScore" query:"totalScore"` // 总得分
+	Records    []*ListSimpleExercisesResp_Record `protobuf:"bytes,3,rep,name=records,proto3" form:"records" json:"records" query:"records"`              // 题目id及其对应得分
+	FinishTime int64                             `protobuf:"varint,4,opt,name=finishTime,proto3" form:"finishTime" json:"finishTime" query:"finishTime"` // 完成时间
+	Like       int64                             `protobuf:"varint,5,opt,name=like,proto3" form:"like" json:"like" query:"like"`                         // 是否评价
 }
 
 func (x *ListSimpleExercisesResp_SimpleExercise) Reset() {
@@ -7237,8 +7237,8 @@ type DoExerciseReq_Record struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id     string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id,omitempty" query:"id"`
-	Option string `protobuf:"bytes,2,opt,name=option,proto3" form:"option" json:"option,omitempty" query:"option"`
+	Id     string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Option string `protobuf:"bytes,2,opt,name=option,proto3" form:"option" json:"option" query:"option"`
 }
 
 func (x *DoExerciseReq_Record) Reset() {

@@ -25,11 +25,11 @@ type PaginationOptions struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Page      *int64  `protobuf:"varint,1,opt,name=page,proto3,oneof" form:"page" json:"page,omitempty" query:"page"`
-	Limit     *int64  `protobuf:"varint,2,opt,name=limit,proto3,oneof" form:"limit" json:"limit,omitempty" query:"limit"`
-	LastToken *string `protobuf:"bytes,3,opt,name=lastToken,proto3,oneof" form:"lastToken" json:"lastToken,omitempty" query:"lastToken"`
-	Backward  *bool   `protobuf:"varint,4,opt,name=backward,proto3,oneof" form:"backward" json:"backward,omitempty" query:"backward"`
-	Offset    *int64  `protobuf:"varint,5,opt,name=offset,proto3,oneof" form:"offset" json:"offset,omitempty" query:"offset"`
+	Page      *int64  `protobuf:"varint,1,opt,name=page,proto3,oneof" form:"page" json:"page" query:"page"`
+	Limit     *int64  `protobuf:"varint,2,opt,name=limit,proto3,oneof" form:"limit" json:"limit" query:"limit"`
+	LastToken *string `protobuf:"bytes,3,opt,name=lastToken,proto3,oneof" form:"lastToken" json:"lastToken" query:"lastToken"`
+	Backward  *bool   `protobuf:"varint,4,opt,name=backward,proto3,oneof" form:"backward" json:"backward" query:"backward"`
+	Offset    *int64  `protobuf:"varint,5,opt,name=offset,proto3,oneof" form:"offset" json:"offset" query:"offset"`
 }
 
 func (x *PaginationOptions) Reset() {
