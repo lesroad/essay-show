@@ -32,6 +32,7 @@ type IHomeworkService interface {
 	GetUserSubmissions(ctx context.Context, req *show.GetUserSubmissionsReq) (*show.GetUserSubmissionsResp, error)
 	GetSubmissionEvaluate(ctx context.Context, req *show.GetSubmissionEvaluateReq) (*show.GetSubmissionEvaluateResp, error)
 	ModifySubmissionEvaluate(ctx context.Context, req *show.ModifySubmissionEvaluateReq) (*show.Response, error)
+	ModifySubmissionEvaluateSaveHistory(ctx context.Context, req *show.ModifySubmissionEvaluateSaveHistoryReq) (*show.ModifySubmissionEvaluateSaveHistoryResp, error)
 	DownloadSubmissionEvaluate(ctx context.Context, req *show.DownloadSubmissionEvaluateReq) (*show.DownloadSubmissionEvaluateResp, error)
 	DownloadLessonPlan(ctx context.Context, req *show.DownloadLessonPlanReq) (*show.DownloadLessonPlanResp, error)
 	ReCorrectHomework(ctx context.Context, req *show.ReCorrectHomeworkReq) (*show.ReCorrectHomeworkResp, error)
@@ -748,7 +749,16 @@ func (s *HomeworkService) ReEvaluateHomework(ctx context.Context, req *show.ReEv
 		return nil, consts.ErrNotFound
 	}
 
-	// 创建新的提交
+	submissions, err := s.SubmissionMapper.FindAllByMemberAndHomework(ctx, submission.MemberId, submission.HomeworkID)
+	if err != nil {
+		log.Error("查询提交历史失败: memberId=%s, homeworkId=%s, error=%v", submission.MemberId, submission.HomeworkID, err)
+		return nil, consts.ErrCall
+	}
+
+	if err := s.keepOnlyOriginalSubmission(ctx, submissions); err != nil {
+		return nil, err
+	}
+
 	newSubmission := &homework.HomeworkSubmission{
 		Status:     consts.StatusInitialized,
 		SubmitType: int(req.RecorrectType),
@@ -775,8 +785,7 @@ func (s *HomeworkService) ReEvaluateHomework(ctx context.Context, req *show.ReEv
 		return nil, consts.ErrInvalidParams
 	}
 
-	err = s.SubmissionMapper.Insert(ctx, newSubmission)
-	if err != nil {
+	if err := s.SubmissionMapper.Insert(ctx, newSubmission); err != nil {
 		log.Error("提交作业失败: %v", err)
 		return nil, consts.ErrSubmitHomework
 	}
@@ -786,6 +795,20 @@ func (s *HomeworkService) ReEvaluateHomework(ctx context.Context, req *show.ReEv
 	return &show.ReEvaluateHomeworkResp{
 		SubmissionId: newSubmission.ID.Hex(),
 	}, nil
+}
+
+func (s *HomeworkService) keepOnlyOriginalSubmission(ctx context.Context, submissions []*homework.HomeworkSubmission) error {
+	if len(submissions) <= 1 {
+		return nil
+	}
+
+	for _, historySubmission := range submissions[1:] {
+		if err := s.SubmissionMapper.Delete(ctx, historySubmission.ID.Hex()); err != nil {
+			log.Error("删除历史提交记录失败: submissionId=%s, error=%v", historySubmission.ID.Hex(), err)
+			return consts.ErrCall
+		}
+	}
+	return nil
 }
 
 // StartGrader 启动作业批改定时器
@@ -921,6 +944,84 @@ func (s *HomeworkService) ModifySubmissionEvaluate(ctx context.Context, req *sho
 	}
 
 	return util.Succeed("修改成功")
+}
+
+// ModifySubmissionEvaluateSaveHistory 修改作业提交的批改结果-留痕
+func (s *HomeworkService) ModifySubmissionEvaluateSaveHistory(ctx context.Context, req *show.ModifySubmissionEvaluateSaveHistoryReq) (*show.ModifySubmissionEvaluateSaveHistoryResp, error) {
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	user, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+	if user.Role != consts.RoleTeacher {
+		log.Error("用户不是教师，无权修改批改结果, userId: %s, role: %d", userMeta.GetUserId(), user.Role)
+		return nil, consts.ErrNotAuthentication
+	}
+
+	if req.Topic != consts.TopicTypeWeb {
+		log.Error("仅支持课堂练习留痕修改, submissionId: %s, topic: %d", req.SubmissionId, req.Topic)
+		return nil, consts.ErrInvalidParams
+	}
+
+	submission, err := s.SubmissionMapper.FindOne(ctx, req.SubmissionId)
+	if err != nil {
+		log.Error("查询提交记录失败: submissionId=%s, error=%v", req.SubmissionId, err)
+		return nil, consts.ErrNotFound
+	}
+
+	if submission.TeacherID != userMeta.GetUserId() {
+		log.Error("提交记录不属于当前教师, teacherId: %s, userId: %s", submission.TeacherID, userMeta.GetUserId())
+		return nil, consts.ErrNotFound
+	}
+
+	hw, err := s.HomeworkMapper.FindOne(ctx, submission.HomeworkID)
+	if err != nil {
+		log.Error("查询作业失败: homeworkId=%s, error=%v", submission.HomeworkID, err)
+		return nil, consts.ErrNotFound
+	}
+	if hw.Topic != consts.TopicTypeWeb {
+		log.Error("作业类型不支持留痕修改, homeworkId: %s, topic: %d", submission.HomeworkID, hw.Topic)
+		return nil, consts.ErrInvalidParams
+	}
+
+	submissions, err := s.SubmissionMapper.FindAllByMemberAndHomework(ctx, submission.MemberId, submission.HomeworkID)
+	if err != nil {
+		log.Error("查询提交历史失败: memberId=%s, homeworkId=%s, error=%v", submission.MemberId, submission.HomeworkID, err)
+		return nil, consts.ErrCall
+	}
+
+	if err := s.keepOnlyOriginalSubmission(ctx, submissions); err != nil {
+		return nil, err
+	}
+
+	newSubmission := &homework.HomeworkSubmission{
+		HomeworkID:  submission.HomeworkID,
+		MemberId:    submission.MemberId,
+		TeacherID:   submission.TeacherID,
+		Images:      submission.Images,
+		GradeResult: submission.GradeResult,
+		Title:       submission.Title,
+		Text:        submission.Text,
+		Response:    req.CorrectionContent,
+		Message:     submission.Message,
+		Status:      consts.StatusModified,
+		SubmitType:  submission.SubmitType,
+		Aspect:      submission.Aspect,
+	}
+
+	if err := s.SubmissionMapper.Insert(ctx, newSubmission); err != nil {
+		log.Error("创建留痕提交记录失败: submissionId=%s, error=%v", req.SubmissionId, err)
+		return nil, consts.ErrSubmitHomework
+	}
+
+	return &show.ModifySubmissionEvaluateSaveHistoryResp{
+		Id: newSubmission.ID.Hex(),
+	}, nil
 }
 
 // DownloadSubmissionEvaluate 下载作业提交的批改结果
@@ -1237,19 +1338,13 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 	}
 
 	if submission.SubmitType == consts.RecorrectTypeFirst || submission.SubmitType == consts.RecorrectTypeImage {
-		ocrResp, err := util.GetHttpClient().TitleUrlOCR(ctx, submission.Images, "")
+		title, content, err := util.GetHttpClient().OcrExtract(ctx, submission.Images)
 		if err != nil {
 			markSubmissionFailed(ctx, submission, s.SubmissionMapper, err.Error())
 			return
 		}
-
-		if ocrResp["code"].(float64) != 0 {
-			markSubmissionFailed(ctx, submission, s.SubmissionMapper, "OCR失败")
-			return
-		}
-		data := ocrResp["data"].(map[string]any)
-		submission.Title = data["title"].(string)
-		submission.Text = data["content"].(string)
+		submission.Title = title
+		submission.Text = content
 	}
 
 	prompt := *homework.Description

@@ -38,6 +38,9 @@ func main() {
 	homeworkService := p.HomeworkService
 	homeworkService.StartGrader(context.Background())
 
+	// 启动 MBA 批改定时器
+	p.MbaService.StartGrader(context.Background())
+
 	// hertz接入optl: https://www.volcengine.com/docs/6431/1439035
 	tracer, cfg := tracing.NewServerTracer()
 	h := server.New(

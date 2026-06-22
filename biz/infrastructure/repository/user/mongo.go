@@ -88,3 +88,18 @@ func (m *MongoMapper) UpdateCount(ctx context.Context, id string, increment int6
 	})
 	return err
 }
+
+// UpdateMbaMemory 更新某用户某 essay_type 下的 memory_summary
+func (m *MongoMapper) UpdateMbaMemory(ctx context.Context, id, essayType, memorySummary string) error {
+	oid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return consts.ErrInvalidObjectId
+	}
+	_, err = m.conn.UpdateByIDNoCache(ctx, oid, bson.M{
+		"$set": bson.M{
+			"mba_memory." + essayType: memorySummary,
+			"update_time":             time.Now(),
+		},
+	})
+	return err
+}

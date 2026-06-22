@@ -66,6 +66,15 @@ func (m *SubmissionMongoMapper) Update(ctx context.Context, submission *Homework
 	return err
 }
 
+func (m *SubmissionMongoMapper) Delete(ctx context.Context, id string) error {
+	oid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return consts.ErrInvalidObjectId
+	}
+	_, err = m.conn.DeleteOneNoCache(ctx, bson.M{consts.ID: oid})
+	return err
+}
+
 func (m *SubmissionMongoMapper) FindOne(ctx context.Context, id string) (*HomeworkSubmission, error) {
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -170,6 +179,22 @@ func (m *SubmissionMongoMapper) FindByMemberAndHomework(ctx context.Context, mem
 		return nil, 0, err
 	}
 	return submissions, total, nil
+}
+
+func (m *SubmissionMongoMapper) FindAllByMemberAndHomework(ctx context.Context, memberID, homeworkID string) ([]*HomeworkSubmission, error) {
+	var submissions = make([]*HomeworkSubmission, 0)
+	filter := bson.M{
+		"member_id":   memberID,
+		"homework_id": homeworkID,
+	}
+
+	err := m.conn.Find(ctx, &submissions, filter, &options.FindOptions{
+		Sort: bson.M{"create_time": 1},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return submissions, nil
 }
 
 // FindByStatus 根据状态查找作业提交

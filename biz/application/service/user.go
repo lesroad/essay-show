@@ -166,6 +166,10 @@ func (s *UserService) GetUserInfo(ctx context.Context, req *show.GetUserInfoReq)
 		role = show.UserRole_TEACHER
 	case consts.RoleAdmin:
 		role = show.UserRole_ADMIN
+	case consts.Role199th:
+		role = show.UserRole_EXAM_199
+	case consts.Role396th:
+		role = show.UserRole_EXAM_396
 	default:
 		role = show.UserRole_STUDENT
 	}
@@ -209,6 +213,10 @@ func (s *UserService) UpdateUserInfo(ctx context.Context, req *show.UpdateUserIn
 			u.Role = consts.RoleTeacher
 		case show.UserRole_ADMIN:
 			u.Role = consts.RoleAdmin
+		case show.UserRole_EXAM_199:
+			u.Role = consts.Role199th
+		case show.UserRole_EXAM_396:
+			u.Role = consts.Role396th
 		default:
 			u.Role = consts.RoleStudent
 		}

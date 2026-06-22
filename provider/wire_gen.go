@@ -17,6 +17,7 @@ import (
 	"essay-show/biz/infrastructure/repository/homework"
 	"essay-show/biz/infrastructure/repository/invitation"
 	"essay-show/biz/infrastructure/repository/log"
+	mbaRepo "essay-show/biz/infrastructure/repository/mba"
 	"essay-show/biz/infrastructure/repository/question_bank"
 	"essay-show/biz/infrastructure/repository/user"
 )
@@ -93,6 +94,13 @@ func NewProvider() (*Provider, error) {
 		UserMapper:       mongoMapper,
 		SubmissionMapper: submissionMongoMapper,
 	}
+	mbaQuestionMapper := mbaRepo.NewQuestionMongoMapper(configConfig)
+	mbaRecordMapper := mbaRepo.NewRecordMongoMapper(configConfig)
+	mbaService := &service.MbaService{
+		QuestionMapper: mbaQuestionMapper,
+		RecordMapper:   mbaRecordMapper,
+		UserMapper:     mongoMapper,
+	}
 	providerProvider := &Provider{
 		Config:              configConfig,
 		UserService:         userService,
@@ -104,6 +112,7 @@ func NewProvider() (*Provider, error) {
 		HomeworkService:     homeworkService,
 		QuestionBankService: questionBankService,
 		AdminService:        adminService,
+		MbaService:          mbaService,
 	}
 	return providerProvider, nil
 }

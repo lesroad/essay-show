@@ -347,6 +347,26 @@ func (c *HttpClient) TitleUrlOCR(ctx context.Context, images []string, left stri
 	return resp, nil
 }
 
+// OcrExtract 调用 OCR 接口并提取 title / content，供 homework 和 MBA 批改共用。
+// 返回 (title, content, error)。
+func (c *HttpClient) OcrExtract(ctx context.Context, images []string) (title, content string, err error) {
+	resp, err := c.TitleUrlOCR(ctx, images, "")
+	if err != nil {
+		return "", "", err
+	}
+	code, _ := resp["code"].(float64)
+	if code != 0 {
+		return "", "", fmt.Errorf("OCR 接口返回错误码 %.0f", code)
+	}
+	data, ok := resp["data"].(map[string]any)
+	if !ok {
+		return "", "", fmt.Errorf("OCR 响应 data 字段格式非法")
+	}
+	title, _ = data["title"].(string)
+	content, _ = data["content"].(string)
+	return title, content, nil
+}
+
 func (c *HttpClient) GetEssayInfo(ctx context.Context, essay string, title string) (map[string]interface{}, error) {
 	body := make(map[string]interface{})
 	body["essay"] = essay
@@ -610,6 +630,21 @@ func (c *HttpClient) GradeSingleStudent(ctx context.Context, data map[string]any
 		return nil, err
 	}
 	return resp, nil
+}
+
+func (c *HttpClient) MbaGrade(ctx context.Context, essayType, material, perspectives, essay, memorySummary string) (map[string]interface{}, error) {
+	body := map[string]interface{}{
+		"essay_type":       essayType,
+		"material":         material,
+		"reference_answer": perspectives,
+		"essay":            essay,
+		"memory_summary":   memorySummary,
+	}
+	header := map[string]string{
+		"Content-Type": consts.ContentTypeJson,
+		"Charset":      consts.CharSetUTF8,
+	}
+	return c.SendRequest(ctx, consts.Post, config.GetConfig().Api.AlgorithmURL+"/mba_grade", header, body)
 }
 
 func (c *HttpClient) OpencourseEssayExportPdf(ctx context.Context, data map[string]any) (map[string]any, error) {

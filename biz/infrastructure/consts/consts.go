@@ -19,6 +19,8 @@ const (
 	RoleStudent  = "student"
 	RoleTeacher  = "teacher"
 	RoleAdmin    = "admin"
+	Role199th    = "exam_199"
+	Role396th    = "exam_396"
 )
 
 // http

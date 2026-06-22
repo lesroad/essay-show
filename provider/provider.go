@@ -11,6 +11,7 @@ import (
 	"essay-show/biz/infrastructure/repository/homework"
 	"essay-show/biz/infrastructure/repository/invitation"
 	"essay-show/biz/infrastructure/repository/log"
+	mbaRepo "essay-show/biz/infrastructure/repository/mba"
 	"essay-show/biz/infrastructure/repository/question_bank"
 	"essay-show/biz/infrastructure/repository/user"
 
@@ -39,6 +40,7 @@ type Provider struct {
 	HomeworkService     service.IHomeworkService
 	QuestionBankService service.IQuestionBankService
 	AdminService        service.IAdminService
+	MbaService          service.IMbaService
 }
 
 func Get() *Provider {
@@ -59,6 +61,7 @@ var ApplicationSet = wire.NewSet(
 	service.HomeworkServiceSet,
 	service.QuestionBankServiceSet,
 	service.AdminServiceSet,
+	service.MbaServiceSet,
 )
 
 var InfrastructureSet = wire.NewSet(
@@ -78,6 +81,8 @@ var InfrastructureSet = wire.NewSet(
 	homework.NewMongoMapper,
 	homework.NewSubmissionMongoMapper,
 	question_bank.NewMySQLMapperFromConfig,
+	mbaRepo.NewQuestionMongoMapper,
+	mbaRepo.NewRecordMongoMapper,
 
 	// Cache Layer
 	cache.NewDownloadCacheMapper,
