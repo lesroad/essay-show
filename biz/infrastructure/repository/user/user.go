@@ -15,6 +15,8 @@ type User struct {
 	School     string             `bson:"school" json:"school"`
 	Grade      int64              `bson:"grade" json:"grade"` // 默认0，从一开始依次递增
 	Role       string             `bson:"role" json:"role"`   // 用户角色：student/teacher/admin
+	// MBA 记忆摘要，key 为 essay_type（如 "199_lunxiao"），value 为上次批改后更新的 memory_summary
+	MbaMemory  map[string]string  `bson:"mba_memory,omitempty" json:"mbaMemory"`
 	CreateTime time.Time          `bson:"create_time,omitempty" json:"createTime"`
 	UpdateTime time.Time          `bson:"update_time,omitempty" json:"updateTime"`
 	DeleteTime time.Time          `bson:"delete_time,omitempty" json:"deleteTime"`

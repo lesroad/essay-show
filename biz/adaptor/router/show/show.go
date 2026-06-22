@@ -89,6 +89,8 @@ func Register(r *server.Hertz) {
 		_submission := _homework0.Group("/submission", _submissionMw()...)
 		_submission.POST("/download", append(_downloadsubmissionevaluateMw(), show.DownloadSubmissionEvaluate)...)
 		_submission.POST("/modify", append(_modifysubmissionevaluateMw(), show.ModifySubmissionEvaluate)...)
+		_modify := _submission.Group("/modify", _modifyMw()...)
+		_modify.POST("/save_history", append(_modifysubmissionevaluatesavehistoryMw(), show.ModifySubmissionEvaluateSaveHistory)...)
 		_homework0.GET("/submissions", append(_getsubmissionsMw(), show.GetSubmissions)...)
 		_homework0.POST("/submit", append(_submithomeworkMw(), show.SubmitHomework)...)
 		{
@@ -102,6 +104,29 @@ func Register(r *server.Hertz) {
 		{
 			_user := _homework0.Group("/user", _userMw()...)
 			_user.GET("/submissions", append(_getusersubmissionsMw(), show.GetUserSubmissions)...)
+		}
+	}
+	{
+		_mba := root.Group("/mba", _mbaMw()...)
+		{
+			_answer := _mba.Group("/answer", _answerMw()...)
+			_answer.POST("/submit", append(_submitmbaanswerMw(), show.SubmitMbaAnswer)...)
+		}
+		{
+			_evaluate0 := _mba.Group("/evaluate", _evaluate0Mw()...)
+			_evaluate0.GET("/get", append(_getmbaevaluateMw(), show.GetMbaEvaluate)...)
+		}
+		{
+			_evaluates := _mba.Group("/evaluates", _evaluatesMw()...)
+			_evaluates.POST("/list", append(_listmbaevaluatesMw(), show.ListMbaEvaluates)...)
+		}
+		{
+			_question := _mba.Group("/question", _questionMw()...)
+			_question.GET("/get", append(_getmbaquestionMw(), show.GetMbaQuestion)...)
+		}
+		{
+			_questions := _mba.Group("/questions", _questionsMw()...)
+			_questions.POST("/list", append(_listmbaquestionsMw(), show.ListMbaQuestions)...)
 		}
 	}
 	{

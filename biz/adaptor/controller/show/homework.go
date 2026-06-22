@@ -235,3 +235,19 @@ func GetUserSubmissions(ctx context.Context, c *app.RequestContext) {
 	resp, err := p.HomeworkService.GetUserSubmissions(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
+
+// ModifySubmissionEvaluateSaveHistory .
+// @router /homework/submission/modify/save_history [POST]
+func ModifySubmissionEvaluateSaveHistory(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.ModifySubmissionEvaluateSaveHistoryReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.HomeworkService.ModifySubmissionEvaluateSaveHistory(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}

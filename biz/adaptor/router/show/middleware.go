@@ -470,3 +470,83 @@ func _getuserprofileMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _modifyMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _modifysubmissionevaluatesavehistoryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _mbaMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _answerMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _submitmbaanswerMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _evaluate0Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getmbaevaluateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _listmbaevaluatelogsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _questionMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getmbaquestionMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _questionsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _listmbaquestionsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _topicsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getmbatopicstatsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _evaluatesMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _listmbaevaluatesMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
