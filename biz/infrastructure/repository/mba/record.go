@@ -23,6 +23,7 @@ type MbaRecord struct {
 	TopicType  int32              `bson:"topic_type"` // 0=论效文 1=论说文
 	Year       int32              `bson:"year"`
 	EssayType  string             `bson:"essay_type"`
+	Title      string             `bson:"title"`       // 作文标题
 	Ocr        []string           `bson:"ocr"`
 	Essay      string             `bson:"essay"`       // 作文原文（ticker worker 重试时使用）
 	Status     int32              `bson:"status"`      // 0=初始化 1=批改中 2=已完成 7=失败
