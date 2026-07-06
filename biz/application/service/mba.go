@@ -154,10 +154,14 @@ func (s *MbaService) SubmitMbaAnswer(ctx context.Context, req *show.SubmitMbaAns
 		TopicType:  question.TopicType,
 		Year:       question.Year,
 		EssayType:  question.EssayType,
+		Title:      req.Title,
 		Ocr:        req.Ocr,
 		Essay:      req.Text,
 		Status:     consts.StatusInitialized,
 		TotalScore: question.TotalScore,
+	}
+	if record.Title == "" {
+		record.Title = question.Title
 	}
 	if err := s.RecordMapper.Insert(ctx, record); err != nil {
 		logx.Error("MbaRecord Insert error: %v", err)
@@ -184,12 +188,20 @@ func (s *MbaService) GetMbaEvaluate(ctx context.Context, req *show.GetMbaEvaluat
 		return nil, err
 	}
 
+	title := record.Title
+	if title == "" {
+		if question, err := s.QuestionMapper.FindOne(ctx, record.QuestionId); err == nil {
+			title = question.Title
+		}
+	}
+
 	return &show.GetMbaEvaluateResp{
 		Id:         record.ID.Hex(),
 		QuestionId: record.QuestionId,
 		ExamType:   show.MbaExamType(record.ExamType),
 		TopicType:  show.MbaTopicType(record.TopicType),
 		Year:       record.Year,
+		Title:      title,
 		Status:     record.Status,
 		Response:   record.Response,
 		Score:      record.Score,
