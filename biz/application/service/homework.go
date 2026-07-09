@@ -1573,6 +1573,10 @@ func (s *HomeworkService) GetHomeworkStatistics(ctx context.Context, req *show.G
 		log.Error("用户无权查看此作业统计, userId: %s, creatorId: %s", userMeta.GetUserId(), h.CreatorID)
 		return nil, consts.ErrForbidden
 	}
+	if h.Topic == consts.TopicTypeWeb {
+		log.Error("课堂练习批改结果结构不支持班级统计, homeworkId: %s, topic: %d", req.HomeworkId, h.Topic)
+		return nil, consts.ErrInvalidParams
+	}
 
 	classInfo, err := s.ClassMapper.FindOne(ctx, h.ClassID)
 	if err != nil {
@@ -1610,6 +1614,10 @@ func (s *HomeworkService) GetHomeworkStatistics(ctx context.Context, req *show.G
 			"scoreEvaluations":       evaluateResult.AIEvaluation.ScoreEvaluation,
 		}
 		statisticsData = append(statisticsData, studentData)
+	}
+	if len(statisticsData) == 0 {
+		log.Error("没有可用于统计的有效批改结果, homeworkId: %s", req.HomeworkId)
+		return nil, consts.ErrNoCompletedSubmissions
 	}
 
 	client := util.GetHttpClient()

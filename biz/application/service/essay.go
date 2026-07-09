@@ -300,7 +300,7 @@ func (s *EssayService) DownloadEvaluate(ctx context.Context, req *show.DownloadE
 	// 	logx.Info("成功缓存下载链接, id: %s, 缓存时间: 1小时", req.Id)
 	// }
 
-	return result, nil
+	return result, nil	
 }
 
 // APIEssayEvaluateStreamV1 API网关专用流式批改作文接口
