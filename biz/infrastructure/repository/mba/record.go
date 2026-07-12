@@ -23,7 +23,7 @@ type MbaRecord struct {
 	TopicType  int32              `bson:"topic_type"` // 0=论效文 1=论说文
 	Year       int32              `bson:"year"`
 	EssayType  string             `bson:"essay_type"`
-	Title      string             `bson:"title"`       // 作文标题
+	Title      string             `bson:"title"` // 作文标题
 	Ocr        []string           `bson:"ocr"`
 	Essay      string             `bson:"essay"`       // 作文原文（ticker worker 重试时使用）
 	Status     int32              `bson:"status"`      // 0=初始化 1=批改中 2=已完成 7=失败
@@ -114,6 +114,21 @@ func (m *RecordMongoMapper) UpdateAfterGrading(ctx context.Context, id string, s
 			"status":      status,
 			"response":    response,
 			"score":       score,
+			"update_time": time.Now(),
+		},
+	})
+	return err
+}
+
+// UpdateEssay 更新作文正文（OCR 识别后回写）
+func (m *RecordMongoMapper) UpdateEssay(ctx context.Context, id string, essay string) error {
+	oid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return consts.ErrInvalidObjectId
+	}
+	_, err = m.conn.UpdateByID(ctx, id, oid, bson.M{
+		"$set": bson.M{
+			"essay":       essay,
 			"update_time": time.Now(),
 		},
 	})
