@@ -202,6 +202,7 @@ func (s *MbaService) GetMbaEvaluate(ctx context.Context, req *show.GetMbaEvaluat
 		TopicType:  show.MbaTopicType(record.TopicType),
 		Year:       record.Year,
 		Title:      title,
+		Text:       record.Essay,
 		Status:     record.Status,
 		Response:   record.Response,
 		Score:      record.Score,
@@ -351,6 +352,9 @@ func (s *MbaService) processOneRecord(ctx context.Context, r *mbaRepo.MbaRecord)
 			return
 		}
 		essay = content
+		if err := s.RecordMapper.UpdateEssay(ctx, r.ID.Hex(), essay); err != nil {
+			logx.Error("processOneRecord UpdateEssay error: %v, recordId: %s", err, r.ID.Hex())
+		}
 	}
 	if essay == "" {
 		logx.Error("processOneRecord: 作文内容为空, recordId: %s", r.ID.Hex())
