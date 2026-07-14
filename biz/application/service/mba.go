@@ -370,9 +370,20 @@ func (s *MbaService) processOneRecord(ctx context.Context, r *mbaRepo.MbaRecord)
 		return
 	}
 
-	// 3. 读取 memory_summary
+	// 3. 读取用户信息（含次数校验和 memory_summary）
+	u, err := s.UserMapper.FindOne(ctx, r.UserId)
+	if err != nil {
+		logx.Error("processOneRecord FindUser error: %v, recordId: %s", err, r.ID.Hex())
+		_ = s.RecordMapper.UpdateAfterGrading(ctx, r.ID.Hex(), consts.StatusFailed, "", 0)
+		return
+	}
+	if u.Count < 1 {
+		logx.Error("processOneRecord: 用户批改次数不足, recordId: %s, userId: %s", r.ID.Hex(), r.UserId)
+		_ = s.RecordMapper.UpdateAfterGrading(ctx, r.ID.Hex(), consts.StatusFailed, "", 0)
+		return
+	}
 	memorySummary := ""
-	if u, err := s.UserMapper.FindOne(ctx, r.UserId); err == nil && u.MbaMemory != nil {
+	if u.MbaMemory != nil {
 		memorySummary = u.MbaMemory[r.EssayType]
 	}
 
@@ -402,6 +413,11 @@ func (s *MbaService) runGrading(ctx context.Context, recordId, userId, essayType
 
 	if err := s.RecordMapper.UpdateAfterGrading(ctx, recordId, consts.StatusCompleted, responseStr, score); err != nil {
 		logx.Error("runGrading UpdateAfterGrading error: %v, recordId: %s", err, recordId)
+	}
+
+	// 扣除用户批改次数
+	if err := s.UserMapper.UpdateCount(ctx, userId, -1); err != nil {
+		logx.Error("runGrading UpdateCount error: %v, recordId: %s, userId: %s", err, recordId, userId)
 	}
 
 	// updated_summary 是下次批改要带的 memory_summary
