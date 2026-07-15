@@ -603,6 +603,9 @@ func (s *HomeworkService) GetSubmissions(ctx context.Context, req *show.GetSubmi
 			sub.SubmitTime = &submitTime
 			if userSubmission.Status == consts.StatusCompleted || userSubmission.Status == consts.StatusModified {
 				sub.GradeResult = &userSubmission.GradeResult
+			} else if userSubmission.Status == consts.StatusFailed {
+				failMessage := displaySubmissionFailMessage(userSubmission.Message)
+				sub.FailMessage = &failMessage
 			}
 		}
 
@@ -651,6 +654,25 @@ func (s *HomeworkService) GetUserSubmissions(ctx context.Context, req *show.GetU
 		SubmissionIds: ids,
 		Total:         total,
 	}, nil
+}
+
+func displaySubmissionFailMessage(reason string) string {
+	switch {
+	case strings.Contains(reason, "老师批改次数不足"):
+		return "老师批改次数不足，请补充批改次数后重试"
+	case strings.Contains(reason, "OCR"), strings.Contains(reason, "识别"):
+		return "图片识别失败，请让学生重新上传清晰图片"
+	case strings.Contains(reason, "作业不存在"):
+		return "作业不存在，无法批改"
+	case strings.Contains(reason, "批改结果为空"), strings.Contains(reason, "批改结果不合法"):
+		return "批改服务返回异常，请稍后重试"
+	case strings.Contains(reason, "扣除批改次数失败"):
+		return "批改次数扣除失败，请稍后重试"
+	case strings.Contains(reason, "保存批改结果失败"), strings.Contains(reason, "保存"):
+		return "批改结果保存失败，请稍后重试"
+	default:
+		return "批改失败，请稍后重试或联系管理员"
+	}
 }
 
 // ReCorrectHomework 批改重批
