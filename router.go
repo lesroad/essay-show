@@ -3,6 +3,7 @@ package main
 import (
 	handler "essay-show/biz/adaptor/controller"
 	"essay-show/biz/adaptor/controller/apigateway"
+	showHandler "essay-show/biz/adaptor/controller/show"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
@@ -10,6 +11,7 @@ import (
 // customizeRegister registers customize routers.
 func customizedRegister(r *server.Hertz) {
 	r.GET("/ping", handler.Ping)
+	r.POST("/membership/notify", showHandler.MembershipNotify)
 
 	// 静态文件服务 - 直接提供文件访问
 	r.StaticFile("/static/test_stream.html", "./static/test_stream.html")

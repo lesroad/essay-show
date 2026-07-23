@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"essay-show/biz/infrastructure/config"
 	"essay-show/biz/infrastructure/consts"
 	"essay-show/biz/infrastructure/repository/class"
@@ -658,4 +659,38 @@ func (c *HttpClient) OpencourseEssayExportPdf(ctx context.Context, data map[stri
 		return nil, err
 	}
 	return resp, nil
+}
+
+// VirtualPaySign 调中台生成小程序虚拟支付所需的签名参数（signData/paySig/signature），
+// 供小程序前端直接传给 wx.requestVirtualPayment 发起支付。
+func (c *HttpClient) VirtualPaySign(ctx context.Context, userID, jsCode, productID string, goodsPriceFen int64, outTradeNo string) (signData, paySig, signature string, err error) {
+	header := map[string]string{
+		"Content-Type": consts.ContentTypeJson,
+		"Charset":      consts.CharSetUTF8,
+	}
+	cfg := config.GetConfig()
+	body := map[string]interface{}{
+		"appId":      cfg.Api.WechatAppId,
+		"userId":     userID,
+		"jsCode":     jsCode,
+		"productId":  productID,
+		"goodsPrice": goodsPriceFen,
+		"outTradeNo": outTradeNo,
+		"notifyUrl":  cfg.Api.SelfBaseURL + "/membership/notify",
+	}
+	resp, err := c.SendRequest(ctx, consts.Post, cfg.Api.PlatfromURL+"/pay/virtual/sign", header, body)
+	if err != nil {
+		return "", "", "", err
+	}
+	data, ok := resp["data"].(map[string]interface{})
+	if !ok {
+		return "", "", "", fmt.Errorf("平台响应格式异常: %v", resp)
+	}
+	signData, _ = data["signData"].(string)
+	paySig, _ = data["paySig"].(string)
+	signature, _ = data["signature"].(string)
+	if signData == "" || paySig == "" || signature == "" {
+		return "", "", "", errors.New("平台返回的 signData/paySig/signature 为空")
+	}
+	return signData, paySig, signature, nil
 }

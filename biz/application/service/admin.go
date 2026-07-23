@@ -14,6 +14,7 @@ import (
 
 type IAdminService interface {
 	GetAdminHomeworkStatistics(ctx context.Context, req *show.GetAdminHomeworkStatisticsReq) (*show.GetAdminHomeworkStatisticsResp, error)
+	AddGradeCount(ctx context.Context, req *show.AddGradeCountReq) (*show.Response, error)
 }
 
 type AdminService struct {
@@ -91,4 +92,42 @@ func (s *AdminService) GetAdminHomeworkStatistics(ctx context.Context, req *show
 	}
 
 	return &show.GetAdminHomeworkStatisticsResp{Statistics: statistics, Total: total}, nil
+}
+
+func (s *AdminService) AddGradeCount(ctx context.Context, req *show.AddGradeCountReq) (*show.Response, error) {
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	operator, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+
+	if operator.Role != consts.RoleAdmin {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	if req.Phone == "" || req.Count <= 0 {
+		return nil, consts.ErrInvalidParams
+	}
+
+	target, err := s.UserMapper.FindOneByPhone(ctx, req.Phone)
+	if err != nil {
+		log.Error("根据手机号获取用户失败, phone: %s, err: %v", req.Phone, err)
+		return nil, consts.ErrNotFound
+	}
+
+	if err = s.UserMapper.UpdateCount(ctx, target.ID.Hex(), req.Count); err != nil {
+		log.Error("增加批改次数失败, userId: %s, count: %d, err: %v", target.ID.Hex(), req.Count, err)
+		return nil, consts.ErrUpdate
+	}
+
+	log.Info("管理员 %s 给用户 %s(%s) 增加批改次数 %d", operator.ID.Hex(), target.ID.Hex(), req.Phone, req.Count)
+	return &show.Response{
+		Code: 0,
+		Msg:  "增加成功",
+	}, nil
 }

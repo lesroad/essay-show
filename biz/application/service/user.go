@@ -174,14 +174,23 @@ func (s *UserService) GetUserInfo(ctx context.Context, req *show.GetUserInfoReq)
 		role = show.UserRole_STUDENT
 	}
 
+	isVip := user.IsVipActive(u)
+	count := u.Count
+	var vipExpireTime int64
+	if isVip {
+		count = -1
+		vipExpireTime = u.VipExpireTime.Unix()
+	}
 	return &show.GetUserInfoResp{
 		Code: 0,
 		Msg:  "查询成功",
 		Payload: &show.GetUserInfoResp_Payload{
-			Name:  u.Username,
-			Count: u.Count,
-			Phone: u.Phone,
-			Role:  role,
+			Name:          u.Username,
+			Count:         count,
+			Phone:         u.Phone,
+			Role:          role,
+			IsVip:         isVip,
+			VipExpireTime: vipExpireTime,
 		},
 	}, nil
 }

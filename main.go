@@ -41,6 +41,9 @@ func main() {
 	// 启动 MBA 批改定时器
 	p.MbaService.StartGrader(context.Background())
 
+	// 启动会员自动续费定时器
+	p.MembershipService.StartExpiryReminder(context.Background())
+
 	// hertz接入optl: https://www.volcengine.com/docs/6431/1439035
 	tracer, cfg := tracing.NewServerTracer()
 	h := server.New(

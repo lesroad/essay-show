@@ -130,6 +130,12 @@ func Register(r *server.Hertz) {
 		}
 	}
 	{
+		_membership := root.Group("/membership", _membershipMw()...)
+		_membership.GET("/products", append(_listmembershipproductsMw(), show.ListMembershipProducts)...)
+		_membership.POST("/sign", append(_signmembershipMw(), show.SignMembership)...)
+		_membership.GET("/status", append(_getmembershipstatusMw(), show.GetMembershipStatus)...)
+	}
+	{
 		_question_bank := root.Group("/question_bank", _question_bankMw()...)
 		_question_bank.GET("/list", append(_listquestionbanksMw(), show.ListQuestionBanks)...)
 	}

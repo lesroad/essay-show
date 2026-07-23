@@ -49,6 +49,8 @@ type API struct {
 	StatelessURL   string
 	AlgorithmURL   string
 	WebEndpointURL string
+	SelfBaseURL    string
+	WechatAppId    string
 }
 
 func NewConfig() (*Config, error) {

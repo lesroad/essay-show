@@ -59,10 +59,12 @@ func (s *EssayService) EssayEvaluateStream(ctx context.Context, req *show.EssayE
 		return consts.ErrNotFound
 	}
 
-	// 检查剩余次数
-	if u.Count <= 0 {
-		util.SendStreamMessage(resultChan, util.STError, "剩余次数不足", nil)
-		return consts.ErrInSufficientCount
+	// 检查剩余次数（VIP 用户跳过）
+	if !user.IsVipActive(u) {
+		if u.Count <= 0 {
+			util.SendStreamMessage(resultChan, util.STError, "剩余次数不足", nil)
+			return consts.ErrInSufficientCount
+		}
 	}
 
 	// 获取锁 - 调整TTL以适应复杂作文批改时间
@@ -150,12 +152,14 @@ exitLoop:
 		return consts.ErrCall
 	}
 
-	// 扣除用户剩余次数
-	err = s.UserMapper.UpdateCount(ctx, meta.GetUserId(), -1)
-	if err != nil {
-		logx.Error("user count update failed %v", err)
-		util.SendStreamMessage(resultChan, util.STError, "用户次数扣减失败", nil)
-		return consts.ErrCall
+	// 扣除用户剩余次数（VIP 用户跳过）
+	if !user.IsVipActive(u) {
+		err = s.UserMapper.UpdateCount(ctx, meta.GetUserId(), -1)
+		if err != nil {
+			logx.Error("user count update failed %v", err)
+			util.SendStreamMessage(resultChan, util.STError, "用户次数扣减失败", nil)
+			return consts.ErrCall
+		}
 	}
 
 	// 发送最终完成消息

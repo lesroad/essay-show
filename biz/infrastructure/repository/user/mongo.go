@@ -103,3 +103,33 @@ func (m *MongoMapper) UpdateMbaMemory(ctx context.Context, id, essayType, memory
 	})
 	return err
 }
+
+// UpdateVip 叠加一次会员购买时长
+func (m *MongoMapper) UpdateVip(ctx context.Context, id string, expireTime time.Time) error {
+	oid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return consts.ErrInvalidObjectId
+	}
+	_, err = m.conn.UpdateByIDNoCache(ctx, oid, bson.M{
+		"$set": bson.M{
+			"vip_expire_time": expireTime,
+			"update_time":     time.Now(),
+		},
+	})
+	return err
+}
+
+func (m *MongoMapper) FindUsersNearExpiry(ctx context.Context, expireAfter, expireBefore time.Time) ([]*User, error) {
+	var users []*User
+	filter := bson.M{
+		"vip_expire_time": bson.M{
+			"$gt": expireAfter,
+			"$lt": expireBefore,
+		},
+	}
+	err := m.conn.Find(ctx, &users, filter, nil)
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+}
