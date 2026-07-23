@@ -76,10 +76,12 @@ var (
 
 // ErrInvalidParams 调用时错误
 var (
-	ErrInvalidParams = NewErrno(codes.InvalidArgument, errors.New("参数错误"))
-	ErrCall          = NewErrno(codes.Unknown, errors.New("调用接口失败，请重试"))
-	ErrOneCall       = NewErrno(codes.Code(3001), errors.New("同一时刻仅可以批改一篇作文, 请等待上一篇作文批改结束"))
-	ErrAlreadyExists = NewErrno(codes.AlreadyExists, errors.New("资源已存在"))
+	ErrInvalidParams            = NewErrno(codes.InvalidArgument, errors.New("参数错误"))
+	ErrCall                     = NewErrno(codes.Unknown, errors.New("调用接口失败，请重试"))
+	ErrOneCall                  = NewErrno(codes.Code(3001), errors.New("同一时刻仅可以批改一篇作文, 请等待上一篇作文批改结束"))
+	ErrAlreadyExists            = NewErrno(codes.AlreadyExists, errors.New("资源已存在"))
+	ErrProductNotFound          = NewErrno(codes.Code(1038), errors.New("套餐不存在或已下架"))
+	ErrPurchaseMembershipFailed = NewErrno(codes.Code(1039), errors.New("发起购买失败，请重试"))
 )
 
 // 数据库相关错误

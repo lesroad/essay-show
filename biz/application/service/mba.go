@@ -377,7 +377,7 @@ func (s *MbaService) processOneRecord(ctx context.Context, r *mbaRepo.MbaRecord)
 		_ = s.RecordMapper.UpdateAfterGrading(ctx, r.ID.Hex(), consts.StatusFailed, "", 0)
 		return
 	}
-	if u.Count < 1 {
+	if !user.IsVipActive(u) && u.Count < 1 {
 		logx.Error("processOneRecord: 用户批改次数不足, recordId: %s, userId: %s", r.ID.Hex(), r.UserId)
 		_ = s.RecordMapper.UpdateAfterGrading(ctx, r.ID.Hex(), consts.StatusFailed, "", 0)
 		return
@@ -387,11 +387,11 @@ func (s *MbaService) processOneRecord(ctx context.Context, r *mbaRepo.MbaRecord)
 		memorySummary = u.MbaMemory[r.EssayType]
 	}
 
-	s.runGrading(ctx, r.ID.Hex(), r.UserId, r.EssayType, question.Content, question.Perspectives, essay, memorySummary)
+	s.runGrading(ctx, r.ID.Hex(), r.UserId, r.EssayType, question.Content, question.Perspectives, essay, memorySummary, !user.IsVipActive(u))
 }
 
 // runGrading 调用 AI 批改接口并将结果写回数据库
-func (s *MbaService) runGrading(ctx context.Context, recordId, userId, essayType, material, perspectives, essay, memorySummary string) {
+func (s *MbaService) runGrading(ctx context.Context, recordId, userId, essayType, material, perspectives, essay, memorySummary string, deductCount bool) {
 	client := util.GetHttpClient()
 	raw, err := client.MbaGrade(ctx, essayType, material, perspectives, essay, memorySummary)
 	if err != nil {
@@ -415,9 +415,11 @@ func (s *MbaService) runGrading(ctx context.Context, recordId, userId, essayType
 		logx.Error("runGrading UpdateAfterGrading error: %v, recordId: %s", err, recordId)
 	}
 
-	// 扣除用户批改次数
-	if err := s.UserMapper.UpdateCount(ctx, userId, -1); err != nil {
-		logx.Error("runGrading UpdateCount error: %v, recordId: %s, userId: %s", err, recordId, userId)
+	// 扣除用户批改次数（VIP 用户跳过）
+	if deductCount {
+		if err := s.UserMapper.UpdateCount(ctx, userId, -1); err != nil {
+			logx.Error("runGrading UpdateCount error: %v, recordId: %s, userId: %s", err, recordId, userId)
+		}
 	}
 
 	// updated_summary 是下次批改要带的 memory_summary

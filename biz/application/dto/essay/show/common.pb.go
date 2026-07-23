@@ -8211,21 +8211,514 @@ func (x *GetUserProfileResp) GetRecentEssayGrade() string {
 	return ""
 }
 
+// ─── 会员套餐 ───
+type MembershipProduct struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Id           string `protobuf:"bytes,1,opt,name=id,proto3" form:"id" json:"id" query:"id"`
+	Name         string `protobuf:"bytes,2,opt,name=name,proto3" form:"name" json:"name" query:"name"`
+	DurationDays int32  `protobuf:"varint,3,opt,name=duration_days,json=durationDays,proto3" form:"duration_days" json:"duration_days" query:"duration_days"`
+	Price        string `protobuf:"bytes,4,opt,name=price,proto3" form:"price" json:"price" query:"price"`
+}
+
+func (x *MembershipProduct) Reset() {
+	*x = MembershipProduct{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[121]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MembershipProduct) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MembershipProduct) ProtoMessage() {}
+
+func (x *MembershipProduct) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[121]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MembershipProduct.ProtoReflect.Descriptor instead.
+func (*MembershipProduct) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{121}
+}
+
+func (x *MembershipProduct) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *MembershipProduct) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *MembershipProduct) GetDurationDays() int32 {
+	if x != nil {
+		return x.DurationDays
+	}
+	return 0
+}
+
+func (x *MembershipProduct) GetPrice() string {
+	if x != nil {
+		return x.Price
+	}
+	return ""
+}
+
+type ListMembershipProductsReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *ListMembershipProductsReq) Reset() {
+	*x = ListMembershipProductsReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[122]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListMembershipProductsReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListMembershipProductsReq) ProtoMessage() {}
+
+func (x *ListMembershipProductsReq) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[122]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListMembershipProductsReq.ProtoReflect.Descriptor instead.
+func (*ListMembershipProductsReq) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{122}
+}
+
+type ListMembershipProductsResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Code     int64                `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg      string               `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	Products []*MembershipProduct `protobuf:"bytes,3,rep,name=products,proto3" form:"products" json:"products" query:"products"`
+}
+
+func (x *ListMembershipProductsResp) Reset() {
+	*x = ListMembershipProductsResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[123]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListMembershipProductsResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListMembershipProductsResp) ProtoMessage() {}
+
+func (x *ListMembershipProductsResp) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[123]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListMembershipProductsResp.ProtoReflect.Descriptor instead.
+func (*ListMembershipProductsResp) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{123}
+}
+
+func (x *ListMembershipProductsResp) GetCode() int64 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *ListMembershipProductsResp) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+func (x *ListMembershipProductsResp) GetProducts() []*MembershipProduct {
+	if x != nil {
+		return x.Products
+	}
+	return nil
+}
+
+// SignMembership 发起一次会员单次购买（微信小程序虚拟支付 xpay）。
+// js_code 是小程序端 wx.login() 返回的临时登录凭证，每次发起支付都要求前端重新获取一次，
+// essay-show 透传给中台用于换取用户身份（openid/session_key），essay-show 自身不做 code2Session。
+type SignMembershipReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ProductId string `protobuf:"bytes,1,opt,name=product_id,json=productId,proto3" form:"product_id" json:"product_id" query:"product_id"`
+	JsCode    string `protobuf:"bytes,2,opt,name=js_code,json=jsCode,proto3" form:"js_code" json:"js_code" query:"js_code"`
+}
+
+func (x *SignMembershipReq) Reset() {
+	*x = SignMembershipReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[124]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SignMembershipReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SignMembershipReq) ProtoMessage() {}
+
+func (x *SignMembershipReq) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[124]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SignMembershipReq.ProtoReflect.Descriptor instead.
+func (*SignMembershipReq) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{124}
+}
+
+func (x *SignMembershipReq) GetProductId() string {
+	if x != nil {
+		return x.ProductId
+	}
+	return ""
+}
+
+func (x *SignMembershipReq) GetJsCode() string {
+	if x != nil {
+		return x.JsCode
+	}
+	return ""
+}
+
+type SignMembershipResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Code      int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg       string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	OrderNo   string `protobuf:"bytes,3,opt,name=order_no,json=orderNo,proto3" form:"order_no" json:"order_no" query:"order_no"`      // 本次购买的业务订单号，前端 wx.requestVirtualPayment 的 signData.outTradeNo 需与此一致
+	SignData  string `protobuf:"bytes,4,opt,name=sign_data,json=signData,proto3" form:"sign_data" json:"sign_data" query:"sign_data"` // 供前端 wx.requestVirtualPayment 的 signData 参数直接使用
+	PaySig    string `protobuf:"bytes,5,opt,name=pay_sig,json=paySig,proto3" form:"pay_sig" json:"pay_sig" query:"pay_sig"`           // 供前端 wx.requestVirtualPayment 的 paySig 参数直接使用
+	Signature string `protobuf:"bytes,6,opt,name=signature,proto3" form:"signature" json:"signature" query:"signature"`               // 供前端 wx.requestVirtualPayment 的 signature 参数直接使用
+}
+
+func (x *SignMembershipResp) Reset() {
+	*x = SignMembershipResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[125]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SignMembershipResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SignMembershipResp) ProtoMessage() {}
+
+func (x *SignMembershipResp) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[125]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SignMembershipResp.ProtoReflect.Descriptor instead.
+func (*SignMembershipResp) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{125}
+}
+
+func (x *SignMembershipResp) GetCode() int64 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *SignMembershipResp) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+func (x *SignMembershipResp) GetOrderNo() string {
+	if x != nil {
+		return x.OrderNo
+	}
+	return ""
+}
+
+func (x *SignMembershipResp) GetSignData() string {
+	if x != nil {
+		return x.SignData
+	}
+	return ""
+}
+
+func (x *SignMembershipResp) GetPaySig() string {
+	if x != nil {
+		return x.PaySig
+	}
+	return ""
+}
+
+func (x *SignMembershipResp) GetSignature() string {
+	if x != nil {
+		return x.Signature
+	}
+	return ""
+}
+
+// 中台转发的虚拟支付道具发货通知
+type MembershipNotifyReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	EventType     string `protobuf:"bytes,1,opt,name=event_type,json=eventType,proto3" form:"event_type" json:"event_type" query:"event_type"`
+	OrderNo       string `protobuf:"bytes,2,opt,name=order_no,json=orderNo,proto3" form:"order_no" json:"order_no" query:"order_no"`
+	TransactionId string `protobuf:"bytes,3,opt,name=transaction_id,json=transactionId,proto3" form:"transaction_id" json:"transaction_id" query:"transaction_id"`
+}
+
+func (x *MembershipNotifyReq) Reset() {
+	*x = MembershipNotifyReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[126]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MembershipNotifyReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MembershipNotifyReq) ProtoMessage() {}
+
+func (x *MembershipNotifyReq) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[126]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MembershipNotifyReq.ProtoReflect.Descriptor instead.
+func (*MembershipNotifyReq) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{126}
+}
+
+func (x *MembershipNotifyReq) GetEventType() string {
+	if x != nil {
+		return x.EventType
+	}
+	return ""
+}
+
+func (x *MembershipNotifyReq) GetOrderNo() string {
+	if x != nil {
+		return x.OrderNo
+	}
+	return ""
+}
+
+func (x *MembershipNotifyReq) GetTransactionId() string {
+	if x != nil {
+		return x.TransactionId
+	}
+	return ""
+}
+
+type GetMembershipStatusReq struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *GetMembershipStatusReq) Reset() {
+	*x = GetMembershipStatusReq{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[127]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetMembershipStatusReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMembershipStatusReq) ProtoMessage() {}
+
+func (x *GetMembershipStatusReq) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[127]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMembershipStatusReq.ProtoReflect.Descriptor instead.
+func (*GetMembershipStatusReq) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{127}
+}
+
+type GetMembershipStatusResp struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Code          int64  `protobuf:"varint,1,opt,name=code,proto3" form:"code" json:"code" query:"code"`
+	Msg           string `protobuf:"bytes,2,opt,name=msg,proto3" form:"msg" json:"msg" query:"msg"`
+	IsVip         bool   `protobuf:"varint,3,opt,name=is_vip,json=isVip,proto3" form:"is_vip" json:"is_vip" query:"is_vip"`
+	VipExpireTime int64  `protobuf:"varint,4,opt,name=vip_expire_time,json=vipExpireTime,proto3" form:"vip_expire_time" json:"vip_expire_time" query:"vip_expire_time"`
+}
+
+func (x *GetMembershipStatusResp) Reset() {
+	*x = GetMembershipStatusResp{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_essay_show_common_proto_msgTypes[128]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetMembershipStatusResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetMembershipStatusResp) ProtoMessage() {}
+
+func (x *GetMembershipStatusResp) ProtoReflect() protoreflect.Message {
+	mi := &file_essay_show_common_proto_msgTypes[128]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetMembershipStatusResp.ProtoReflect.Descriptor instead.
+func (*GetMembershipStatusResp) Descriptor() ([]byte, []int) {
+	return file_essay_show_common_proto_rawDescGZIP(), []int{128}
+}
+
+func (x *GetMembershipStatusResp) GetCode() int64 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *GetMembershipStatusResp) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+func (x *GetMembershipStatusResp) GetIsVip() bool {
+	if x != nil {
+		return x.IsVip
+	}
+	return false
+}
+
+func (x *GetMembershipStatusResp) GetVipExpireTime() int64 {
+	if x != nil {
+		return x.VipExpireTime
+	}
+	return 0
+}
+
 type GetUserInfoResp_Payload struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name  string   `protobuf:"bytes,1,opt,name=name,proto3" form:"name" json:"name" query:"name"`
-	Count int64    `protobuf:"varint,2,opt,name=count,proto3" form:"count" json:"count" query:"count"`
-	Phone string   `protobuf:"bytes,3,opt,name=phone,proto3" form:"phone" json:"phone" query:"phone"`
-	Role  UserRole `protobuf:"varint,4,opt,name=role,proto3,enum=essay.show.UserRole" form:"role" json:"role" query:"role"`
+	Name          string   `protobuf:"bytes,1,opt,name=name,proto3" form:"name" json:"name" query:"name"`
+	Count         int64    `protobuf:"varint,2,opt,name=count,proto3" form:"count" json:"count" query:"count"`
+	Phone         string   `protobuf:"bytes,3,opt,name=phone,proto3" form:"phone" json:"phone" query:"phone"`
+	Role          UserRole `protobuf:"varint,4,opt,name=role,proto3,enum=essay.show.UserRole" form:"role" json:"role" query:"role"`
+	IsVip         bool     `protobuf:"varint,5,opt,name=is_vip,json=isVip,proto3" form:"is_vip" json:"is_vip" query:"is_vip"`
+	VipExpireTime int64    `protobuf:"varint,6,opt,name=vip_expire_time,json=vipExpireTime,proto3" form:"vip_expire_time" json:"vip_expire_time" query:"vip_expire_time"`
 }
 
 func (x *GetUserInfoResp_Payload) Reset() {
 	*x = GetUserInfoResp_Payload{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[121]
+		mi := &file_essay_show_common_proto_msgTypes[129]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8238,7 +8731,7 @@ func (x *GetUserInfoResp_Payload) String() string {
 func (*GetUserInfoResp_Payload) ProtoMessage() {}
 
 func (x *GetUserInfoResp_Payload) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[121]
+	mi := &file_essay_show_common_proto_msgTypes[129]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8282,6 +8775,20 @@ func (x *GetUserInfoResp_Payload) GetRole() UserRole {
 	return UserRole_STUDENT
 }
 
+func (x *GetUserInfoResp_Payload) GetIsVip() bool {
+	if x != nil {
+		return x.IsVip
+	}
+	return false
+}
+
+func (x *GetUserInfoResp_Payload) GetVipExpireTime() int64 {
+	if x != nil {
+		return x.VipExpireTime
+	}
+	return 0
+}
+
 type ListSimpleExercisesResp_Record struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -8294,7 +8801,7 @@ type ListSimpleExercisesResp_Record struct {
 func (x *ListSimpleExercisesResp_Record) Reset() {
 	*x = ListSimpleExercisesResp_Record{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[122]
+		mi := &file_essay_show_common_proto_msgTypes[130]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8307,7 +8814,7 @@ func (x *ListSimpleExercisesResp_Record) String() string {
 func (*ListSimpleExercisesResp_Record) ProtoMessage() {}
 
 func (x *ListSimpleExercisesResp_Record) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[122]
+	mi := &file_essay_show_common_proto_msgTypes[130]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8352,7 +8859,7 @@ type ListSimpleExercisesResp_SimpleExercise struct {
 func (x *ListSimpleExercisesResp_SimpleExercise) Reset() {
 	*x = ListSimpleExercisesResp_SimpleExercise{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[123]
+		mi := &file_essay_show_common_proto_msgTypes[131]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8365,7 +8872,7 @@ func (x *ListSimpleExercisesResp_SimpleExercise) String() string {
 func (*ListSimpleExercisesResp_SimpleExercise) ProtoMessage() {}
 
 func (x *ListSimpleExercisesResp_SimpleExercise) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[123]
+	mi := &file_essay_show_common_proto_msgTypes[131]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8428,7 +8935,7 @@ type DoExerciseReq_Record struct {
 func (x *DoExerciseReq_Record) Reset() {
 	*x = DoExerciseReq_Record{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_essay_show_common_proto_msgTypes[124]
+		mi := &file_essay_show_common_proto_msgTypes[132]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -8441,7 +8948,7 @@ func (x *DoExerciseReq_Record) String() string {
 func (*DoExerciseReq_Record) ProtoMessage() {}
 
 func (x *DoExerciseReq_Record) ProtoReflect() protoreflect.Message {
-	mi := &file_essay_show_common_proto_msgTypes[124]
+	mi := &file_essay_show_common_proto_msgTypes[132]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -8513,21 +9020,25 @@ var file_essay_show_common_proto_rawDesc = []byte{
 	0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d,
 	0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x22, 0x10, 0x0a,
 	0x0e, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x65, 0x71, 0x22,
-	0xeb, 0x01, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x52,
+	0xab, 0x02, 0x0a, 0x0f, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f, 0x52,
 	0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02,
 	0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12, 0x3d, 0x0a, 0x07, 0x70, 0x61, 0x79,
 	0x6c, 0x6f, 0x61, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x23, 0x2e, 0x65, 0x73, 0x73,
 	0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x49,
 	0x6e, 0x66, 0x6f, 0x52, 0x65, 0x73, 0x70, 0x2e, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x52,
-	0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x1a, 0x73, 0x0a, 0x07, 0x50, 0x61, 0x79, 0x6c,
-	0x6f, 0x61, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x14, 0x0a,
-	0x05, 0x70, 0x68, 0x6f, 0x6e, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x70, 0x68,
-	0x6f, 0x6e, 0x65, 0x12, 0x28, 0x0a, 0x04, 0x72, 0x6f, 0x6c, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28,
-	0x0e, 0x32, 0x14, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x55,
-	0x73, 0x65, 0x72, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x04, 0x72, 0x6f, 0x6c, 0x65, 0x22, 0xba, 0x01,
+	0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x1a, 0xb2, 0x01, 0x0a, 0x07, 0x50, 0x61, 0x79,
+	0x6c, 0x6f, 0x61, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x63, 0x6f, 0x75, 0x6e,
+	0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x12, 0x14,
+	0x0a, 0x05, 0x70, 0x68, 0x6f, 0x6e, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x70,
+	0x68, 0x6f, 0x6e, 0x65, 0x12, 0x28, 0x0a, 0x04, 0x72, 0x6f, 0x6c, 0x65, 0x18, 0x04, 0x20, 0x01,
+	0x28, 0x0e, 0x32, 0x14, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e,
+	0x55, 0x73, 0x65, 0x72, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x04, 0x72, 0x6f, 0x6c, 0x65, 0x12, 0x15,
+	0x0a, 0x06, 0x69, 0x73, 0x5f, 0x76, 0x69, 0x70, 0x18, 0x05, 0x20, 0x01, 0x28, 0x08, 0x52, 0x05,
+	0x69, 0x73, 0x56, 0x69, 0x70, 0x12, 0x26, 0x0a, 0x0f, 0x76, 0x69, 0x70, 0x5f, 0x65, 0x78, 0x70,
+	0x69, 0x72, 0x65, 0x5f, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0d,
+	0x76, 0x69, 0x70, 0x45, 0x78, 0x70, 0x69, 0x72, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x22, 0xba, 0x01,
 	0x0a, 0x11, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x49, 0x6e, 0x66, 0x6f,
 	0x52, 0x65, 0x71, 0x12, 0x17, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x09, 0x48, 0x00, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x88, 0x01, 0x01, 0x12, 0x1b, 0x0a, 0x06,
@@ -9563,38 +10074,87 @@ var file_essay_show_common_proto_rawDesc = []byte{
 	0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x10, 0x72, 0x65, 0x63, 0x65, 0x6e,
 	0x74, 0x45, 0x73, 0x73, 0x61, 0x79, 0x47, 0x72, 0x61, 0x64, 0x65, 0x88, 0x01, 0x01, 0x42, 0x15,
 	0x0a, 0x13, 0x5f, 0x72, 0x65, 0x63, 0x65, 0x6e, 0x74, 0x5f, 0x65, 0x73, 0x73, 0x61, 0x79, 0x5f,
-	0x67, 0x72, 0x61, 0x64, 0x65, 0x2a, 0x4b, 0x0a, 0x08, 0x55, 0x73, 0x65, 0x72, 0x52, 0x6f, 0x6c,
-	0x65, 0x12, 0x0b, 0x0a, 0x07, 0x53, 0x54, 0x55, 0x44, 0x45, 0x4e, 0x54, 0x10, 0x00, 0x12, 0x0b,
-	0x0a, 0x07, 0x54, 0x45, 0x41, 0x43, 0x48, 0x45, 0x52, 0x10, 0x01, 0x12, 0x09, 0x0a, 0x05, 0x41,
-	0x44, 0x4d, 0x49, 0x4e, 0x10, 0x02, 0x12, 0x0c, 0x0a, 0x08, 0x45, 0x58, 0x41, 0x4d, 0x5f, 0x31,
-	0x39, 0x39, 0x10, 0x03, 0x12, 0x0c, 0x0a, 0x08, 0x45, 0x58, 0x41, 0x4d, 0x5f, 0x33, 0x39, 0x36,
-	0x10, 0x04, 0x2a, 0x1f, 0x0a, 0x07, 0x53, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x14, 0x0a,
-	0x10, 0x53, 0x55, 0x42, 0x4a, 0x45, 0x43, 0x54, 0x5f, 0x43, 0x4e, 0x5f, 0x45, 0x53, 0x53, 0x41,
-	0x59, 0x10, 0x00, 0x2a, 0x75, 0x0a, 0x0e, 0x48, 0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b, 0x53,
-	0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x0f, 0x0a, 0x0b, 0x49, 0x4e, 0x49, 0x54, 0x49, 0x41, 0x4c,
-	0x49, 0x5a, 0x45, 0x44, 0x10, 0x00, 0x12, 0x19, 0x0a, 0x0c, 0x55, 0x4e, 0x5f, 0x53, 0x55, 0x42,
-	0x4d, 0x49, 0x54, 0x54, 0x45, 0x44, 0x10, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-	0x01, 0x12, 0x0e, 0x0a, 0x0a, 0x43, 0x4f, 0x52, 0x52, 0x45, 0x43, 0x54, 0x49, 0x4e, 0x47, 0x10,
-	0x01, 0x12, 0x0d, 0x0a, 0x09, 0x43, 0x4f, 0x4d, 0x50, 0x4c, 0x45, 0x54, 0x45, 0x44, 0x10, 0x02,
-	0x12, 0x0c, 0x0a, 0x08, 0x4d, 0x4f, 0x44, 0x49, 0x46, 0x49, 0x45, 0x44, 0x10, 0x03, 0x12, 0x0a,
-	0x0a, 0x06, 0x46, 0x41, 0x49, 0x4c, 0x45, 0x44, 0x10, 0x07, 0x2a, 0x2c, 0x0a, 0x10, 0x51, 0x75,
-	0x65, 0x73, 0x74, 0x69, 0x6f, 0x6e, 0x42, 0x61, 0x6e, 0x6b, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0a,
-	0x0a, 0x06, 0x43, 0x55, 0x53, 0x54, 0x4f, 0x4d, 0x10, 0x00, 0x12, 0x0c, 0x0a, 0x08, 0x49, 0x4e,
-	0x5f, 0x43, 0x4c, 0x41, 0x53, 0x53, 0x10, 0x01, 0x2a, 0x31, 0x0a, 0x0b, 0x4d, 0x62, 0x61, 0x45,
-	0x78, 0x61, 0x6d, 0x54, 0x79, 0x70, 0x65, 0x12, 0x10, 0x0a, 0x0c, 0x4d, 0x42, 0x41, 0x5f, 0x45,
-	0x58, 0x41, 0x4d, 0x5f, 0x31, 0x39, 0x39, 0x10, 0x00, 0x12, 0x10, 0x0a, 0x0c, 0x4d, 0x42, 0x41,
-	0x5f, 0x45, 0x58, 0x41, 0x4d, 0x5f, 0x33, 0x39, 0x36, 0x10, 0x01, 0x2a, 0x40, 0x0a, 0x0c, 0x4d,
-	0x62, 0x61, 0x54, 0x6f, 0x70, 0x69, 0x63, 0x54, 0x79, 0x70, 0x65, 0x12, 0x18, 0x0a, 0x14, 0x4d,
-	0x42, 0x41, 0x5f, 0x4c, 0x4f, 0x47, 0x49, 0x43, 0x41, 0x4c, 0x5f, 0x41, 0x4e, 0x41, 0x4c, 0x59,
-	0x53, 0x49, 0x53, 0x10, 0x00, 0x12, 0x16, 0x0a, 0x12, 0x4d, 0x42, 0x41, 0x5f, 0x41, 0x52, 0x47,
-	0x55, 0x4d, 0x45, 0x4e, 0x54, 0x5f, 0x45, 0x53, 0x53, 0x41, 0x59, 0x10, 0x01, 0x42, 0x5b, 0x0a,
-	0x1f, 0x63, 0x6f, 0x6d, 0x2e, 0x78, 0x68, 0x70, 0x6f, 0x6c, 0x61, 0x72, 0x69, 0x73, 0x2e, 0x69,
-	0x64, 0x6c, 0x67, 0x65, 0x6e, 0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77,
-	0x42, 0x0b, 0x43, 0x6f, 0x6d, 0x6d, 0x6f, 0x6e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a,
-	0x29, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2d, 0x73, 0x68, 0x6f, 0x77, 0x2f, 0x62, 0x69, 0x7a, 0x2f,
-	0x61, 0x70, 0x70, 0x6c, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x64, 0x74, 0x6f, 0x2f,
-	0x65, 0x73, 0x73, 0x61, 0x79, 0x2f, 0x73, 0x68, 0x6f, 0x77, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x67, 0x72, 0x61, 0x64, 0x65, 0x22, 0x72, 0x0a, 0x11, 0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x73,
+	0x68, 0x69, 0x70, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61,
+	0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x23,
+	0x0a, 0x0d, 0x64, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x64, 0x61, 0x79, 0x73, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0c, 0x64, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x44,
+	0x61, 0x79, 0x73, 0x12, 0x14, 0x0a, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x18, 0x04, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x05, 0x70, 0x72, 0x69, 0x63, 0x65, 0x22, 0x1b, 0x0a, 0x19, 0x4c, 0x69, 0x73,
+	0x74, 0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x50, 0x72, 0x6f, 0x64, 0x75,
+	0x63, 0x74, 0x73, 0x52, 0x65, 0x71, 0x22, 0x7d, 0x0a, 0x1a, 0x4c, 0x69, 0x73, 0x74, 0x4d, 0x65,
+	0x6d, 0x62, 0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x73,
+	0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12, 0x39, 0x0a, 0x08, 0x70, 0x72,
+	0x6f, 0x64, 0x75, 0x63, 0x74, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x65,
+	0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x2e, 0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72,
+	0x73, 0x68, 0x69, 0x70, 0x50, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x52, 0x08, 0x70, 0x72, 0x6f,
+	0x64, 0x75, 0x63, 0x74, 0x73, 0x22, 0x4b, 0x0a, 0x11, 0x53, 0x69, 0x67, 0x6e, 0x4d, 0x65, 0x6d,
+	0x62, 0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x52, 0x65, 0x71, 0x12, 0x1d, 0x0a, 0x0a, 0x70, 0x72,
+	0x6f, 0x64, 0x75, 0x63, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09,
+	0x70, 0x72, 0x6f, 0x64, 0x75, 0x63, 0x74, 0x49, 0x64, 0x12, 0x17, 0x0a, 0x07, 0x6a, 0x73, 0x5f,
+	0x63, 0x6f, 0x64, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x6a, 0x73, 0x43, 0x6f,
+	0x64, 0x65, 0x22, 0xa9, 0x01, 0x0a, 0x12, 0x53, 0x69, 0x67, 0x6e, 0x4d, 0x65, 0x6d, 0x62, 0x65,
+	0x72, 0x73, 0x68, 0x69, 0x70, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x10, 0x0a,
+	0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x12,
+	0x19, 0x0a, 0x08, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x5f, 0x6e, 0x6f, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x07, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x4e, 0x6f, 0x12, 0x1b, 0x0a, 0x09, 0x73, 0x69,
+	0x67, 0x6e, 0x5f, 0x64, 0x61, 0x74, 0x61, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x73,
+	0x69, 0x67, 0x6e, 0x44, 0x61, 0x74, 0x61, 0x12, 0x17, 0x0a, 0x07, 0x70, 0x61, 0x79, 0x5f, 0x73,
+	0x69, 0x67, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x70, 0x61, 0x79, 0x53, 0x69, 0x67,
+	0x12, 0x1c, 0x0a, 0x09, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72, 0x65, 0x18, 0x06, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x09, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72, 0x65, 0x22, 0x76,
+	0x0a, 0x13, 0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x4e, 0x6f, 0x74, 0x69,
+	0x66, 0x79, 0x52, 0x65, 0x71, 0x12, 0x1d, 0x0a, 0x0a, 0x65, 0x76, 0x65, 0x6e, 0x74, 0x5f, 0x74,
+	0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x65, 0x76, 0x65, 0x6e, 0x74,
+	0x54, 0x79, 0x70, 0x65, 0x12, 0x19, 0x0a, 0x08, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x5f, 0x6e, 0x6f,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x4e, 0x6f, 0x12,
+	0x25, 0x0a, 0x0e, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x69,
+	0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x74, 0x72, 0x61, 0x6e, 0x73, 0x61, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x49, 0x64, 0x22, 0x18, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x4d, 0x65, 0x6d,
+	0x62, 0x65, 0x72, 0x73, 0x68, 0x69, 0x70, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x71,
+	0x22, 0x7e, 0x0a, 0x17, 0x47, 0x65, 0x74, 0x4d, 0x65, 0x6d, 0x62, 0x65, 0x72, 0x73, 0x68, 0x69,
+	0x70, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x73, 0x70, 0x12, 0x12, 0x0a, 0x04, 0x63,
+	0x6f, 0x64, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12,
+	0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73,
+	0x67, 0x12, 0x15, 0x0a, 0x06, 0x69, 0x73, 0x5f, 0x76, 0x69, 0x70, 0x18, 0x03, 0x20, 0x01, 0x28,
+	0x08, 0x52, 0x05, 0x69, 0x73, 0x56, 0x69, 0x70, 0x12, 0x26, 0x0a, 0x0f, 0x76, 0x69, 0x70, 0x5f,
+	0x65, 0x78, 0x70, 0x69, 0x72, 0x65, 0x5f, 0x74, 0x69, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28,
+	0x03, 0x52, 0x0d, 0x76, 0x69, 0x70, 0x45, 0x78, 0x70, 0x69, 0x72, 0x65, 0x54, 0x69, 0x6d, 0x65,
+	0x2a, 0x4b, 0x0a, 0x08, 0x55, 0x73, 0x65, 0x72, 0x52, 0x6f, 0x6c, 0x65, 0x12, 0x0b, 0x0a, 0x07,
+	0x53, 0x54, 0x55, 0x44, 0x45, 0x4e, 0x54, 0x10, 0x00, 0x12, 0x0b, 0x0a, 0x07, 0x54, 0x45, 0x41,
+	0x43, 0x48, 0x45, 0x52, 0x10, 0x01, 0x12, 0x09, 0x0a, 0x05, 0x41, 0x44, 0x4d, 0x49, 0x4e, 0x10,
+	0x02, 0x12, 0x0c, 0x0a, 0x08, 0x45, 0x58, 0x41, 0x4d, 0x5f, 0x31, 0x39, 0x39, 0x10, 0x03, 0x12,
+	0x0c, 0x0a, 0x08, 0x45, 0x58, 0x41, 0x4d, 0x5f, 0x33, 0x39, 0x36, 0x10, 0x04, 0x2a, 0x1f, 0x0a,
+	0x07, 0x53, 0x75, 0x62, 0x6a, 0x65, 0x63, 0x74, 0x12, 0x14, 0x0a, 0x10, 0x53, 0x55, 0x42, 0x4a,
+	0x45, 0x43, 0x54, 0x5f, 0x43, 0x4e, 0x5f, 0x45, 0x53, 0x53, 0x41, 0x59, 0x10, 0x00, 0x2a, 0x75,
+	0x0a, 0x0e, 0x48, 0x6f, 0x6d, 0x65, 0x77, 0x6f, 0x72, 0x6b, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73,
+	0x12, 0x0f, 0x0a, 0x0b, 0x49, 0x4e, 0x49, 0x54, 0x49, 0x41, 0x4c, 0x49, 0x5a, 0x45, 0x44, 0x10,
+	0x00, 0x12, 0x19, 0x0a, 0x0c, 0x55, 0x4e, 0x5f, 0x53, 0x55, 0x42, 0x4d, 0x49, 0x54, 0x54, 0x45,
+	0x44, 0x10, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x01, 0x12, 0x0e, 0x0a, 0x0a,
+	0x43, 0x4f, 0x52, 0x52, 0x45, 0x43, 0x54, 0x49, 0x4e, 0x47, 0x10, 0x01, 0x12, 0x0d, 0x0a, 0x09,
+	0x43, 0x4f, 0x4d, 0x50, 0x4c, 0x45, 0x54, 0x45, 0x44, 0x10, 0x02, 0x12, 0x0c, 0x0a, 0x08, 0x4d,
+	0x4f, 0x44, 0x49, 0x46, 0x49, 0x45, 0x44, 0x10, 0x03, 0x12, 0x0a, 0x0a, 0x06, 0x46, 0x41, 0x49,
+	0x4c, 0x45, 0x44, 0x10, 0x07, 0x2a, 0x2c, 0x0a, 0x10, 0x51, 0x75, 0x65, 0x73, 0x74, 0x69, 0x6f,
+	0x6e, 0x42, 0x61, 0x6e, 0x6b, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0a, 0x0a, 0x06, 0x43, 0x55, 0x53,
+	0x54, 0x4f, 0x4d, 0x10, 0x00, 0x12, 0x0c, 0x0a, 0x08, 0x49, 0x4e, 0x5f, 0x43, 0x4c, 0x41, 0x53,
+	0x53, 0x10, 0x01, 0x2a, 0x31, 0x0a, 0x0b, 0x4d, 0x62, 0x61, 0x45, 0x78, 0x61, 0x6d, 0x54, 0x79,
+	0x70, 0x65, 0x12, 0x10, 0x0a, 0x0c, 0x4d, 0x42, 0x41, 0x5f, 0x45, 0x58, 0x41, 0x4d, 0x5f, 0x31,
+	0x39, 0x39, 0x10, 0x00, 0x12, 0x10, 0x0a, 0x0c, 0x4d, 0x42, 0x41, 0x5f, 0x45, 0x58, 0x41, 0x4d,
+	0x5f, 0x33, 0x39, 0x36, 0x10, 0x01, 0x2a, 0x40, 0x0a, 0x0c, 0x4d, 0x62, 0x61, 0x54, 0x6f, 0x70,
+	0x69, 0x63, 0x54, 0x79, 0x70, 0x65, 0x12, 0x18, 0x0a, 0x14, 0x4d, 0x42, 0x41, 0x5f, 0x4c, 0x4f,
+	0x47, 0x49, 0x43, 0x41, 0x4c, 0x5f, 0x41, 0x4e, 0x41, 0x4c, 0x59, 0x53, 0x49, 0x53, 0x10, 0x00,
+	0x12, 0x16, 0x0a, 0x12, 0x4d, 0x42, 0x41, 0x5f, 0x41, 0x52, 0x47, 0x55, 0x4d, 0x45, 0x4e, 0x54,
+	0x5f, 0x45, 0x53, 0x53, 0x41, 0x59, 0x10, 0x01, 0x42, 0x5b, 0x0a, 0x1f, 0x63, 0x6f, 0x6d, 0x2e,
+	0x78, 0x68, 0x70, 0x6f, 0x6c, 0x61, 0x72, 0x69, 0x73, 0x2e, 0x69, 0x64, 0x6c, 0x67, 0x65, 0x6e,
+	0x2e, 0x65, 0x73, 0x73, 0x61, 0x79, 0x2e, 0x73, 0x68, 0x6f, 0x77, 0x42, 0x0b, 0x43, 0x6f, 0x6d,
+	0x6d, 0x6f, 0x6e, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x29, 0x65, 0x73, 0x73, 0x61,
+	0x79, 0x2d, 0x73, 0x68, 0x6f, 0x77, 0x2f, 0x62, 0x69, 0x7a, 0x2f, 0x61, 0x70, 0x70, 0x6c, 0x69,
+	0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x2f, 0x64, 0x74, 0x6f, 0x2f, 0x65, 0x73, 0x73, 0x61, 0x79,
+	0x2f, 0x73, 0x68, 0x6f, 0x77, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -9610,7 +10170,7 @@ func file_essay_show_common_proto_rawDescGZIP() []byte {
 }
 
 var file_essay_show_common_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
-var file_essay_show_common_proto_msgTypes = make([]protoimpl.MessageInfo, 126)
+var file_essay_show_common_proto_msgTypes = make([]protoimpl.MessageInfo, 134)
 var file_essay_show_common_proto_goTypes = []interface{}{
 	(UserRole)(0),                                   // 0: essay.show.UserRole
 	(Subject)(0),                                    // 1: essay.show.Subject
@@ -9739,15 +10299,23 @@ var file_essay_show_common_proto_goTypes = []interface{}{
 	(*ListMbaEvaluatesResp)(nil),                    // 124: essay.show.ListMbaEvaluatesResp
 	(*GetUserProfileReq)(nil),                       // 125: essay.show.GetUserProfileReq
 	(*GetUserProfileResp)(nil),                      // 126: essay.show.GetUserProfileResp
-	(*GetUserInfoResp_Payload)(nil),                 // 127: essay.show.GetUserInfoResp.Payload
-	(*ListSimpleExercisesResp_Record)(nil),          // 128: essay.show.ListSimpleExercisesResp.Record
-	(*ListSimpleExercisesResp_SimpleExercise)(nil),  // 129: essay.show.ListSimpleExercisesResp.SimpleExercise
-	(*DoExerciseReq_Record)(nil),                    // 130: essay.show.DoExerciseReq.Record
-	nil,                                             // 131: essay.show.ReadingQuestion.OptionsEntry
-	(*basic.PaginationOptions)(nil),                 // 132: basic.PaginationOptions
+	(*MembershipProduct)(nil),                       // 127: essay.show.MembershipProduct
+	(*ListMembershipProductsReq)(nil),               // 128: essay.show.ListMembershipProductsReq
+	(*ListMembershipProductsResp)(nil),              // 129: essay.show.ListMembershipProductsResp
+	(*SignMembershipReq)(nil),                       // 130: essay.show.SignMembershipReq
+	(*SignMembershipResp)(nil),                      // 131: essay.show.SignMembershipResp
+	(*MembershipNotifyReq)(nil),                     // 132: essay.show.MembershipNotifyReq
+	(*GetMembershipStatusReq)(nil),                  // 133: essay.show.GetMembershipStatusReq
+	(*GetMembershipStatusResp)(nil),                 // 134: essay.show.GetMembershipStatusResp
+	(*GetUserInfoResp_Payload)(nil),                 // 135: essay.show.GetUserInfoResp.Payload
+	(*ListSimpleExercisesResp_Record)(nil),          // 136: essay.show.ListSimpleExercisesResp.Record
+	(*ListSimpleExercisesResp_SimpleExercise)(nil),  // 137: essay.show.ListSimpleExercisesResp.SimpleExercise
+	(*DoExerciseReq_Record)(nil),                    // 138: essay.show.DoExerciseReq.Record
+	nil,                                             // 139: essay.show.ReadingQuestion.OptionsEntry
+	(*basic.PaginationOptions)(nil),                 // 140: basic.PaginationOptions
 }
 var file_essay_show_common_proto_depIdxs = []int32{
-	127, // 0: essay.show.GetUserInfoResp.payload:type_name -> essay.show.GetUserInfoResp.Payload
+	135, // 0: essay.show.GetUserInfoResp.payload:type_name -> essay.show.GetUserInfoResp.Payload
 	0,   // 1: essay.show.UpdateUserInfoReq.role:type_name -> essay.show.UserRole
 	21,  // 2: essay.show.DownloadEvaluateReq.excludeOptions:type_name -> essay.show.EvaluateExcludeOptions
 	25,  // 3: essay.show.EvaluateModifyReq.content:type_name -> essay.show.ModifyItem
@@ -9755,13 +10323,13 @@ var file_essay_show_common_proto_depIdxs = []int32{
 	25,  // 5: essay.show.EvaluateModifyReq.structure:type_name -> essay.show.ModifyItem
 	25,  // 6: essay.show.EvaluateModifyReq.development:type_name -> essay.show.ModifyItem
 	25,  // 7: essay.show.EvaluateModifyReq.overallComment:type_name -> essay.show.ModifyItem
-	132, // 8: essay.show.GetEssayEvaluateLogsReq.paginationOptions:type_name -> basic.PaginationOptions
+	140, // 8: essay.show.GetEssayEvaluateLogsReq.paginationOptions:type_name -> basic.PaginationOptions
 	30,  // 9: essay.show.GetEssayEvaluateLogsResp.logs:type_name -> essay.show.Log
 	48,  // 10: essay.show.CreateExerciseResp.exercise:type_name -> essay.show.Exercise
-	132, // 11: essay.show.ListSimpleExercisesReq.paginationOptions:type_name -> basic.PaginationOptions
-	129, // 12: essay.show.ListSimpleExercisesResp.exercises:type_name -> essay.show.ListSimpleExercisesResp.SimpleExercise
+	140, // 11: essay.show.ListSimpleExercisesReq.paginationOptions:type_name -> basic.PaginationOptions
+	137, // 12: essay.show.ListSimpleExercisesResp.exercises:type_name -> essay.show.ListSimpleExercisesResp.SimpleExercise
 	48,  // 13: essay.show.GetExerciseResp.exercise:type_name -> essay.show.Exercise
-	130, // 14: essay.show.DoExerciseReq.records:type_name -> essay.show.DoExerciseReq.Record
+	138, // 14: essay.show.DoExerciseReq.records:type_name -> essay.show.DoExerciseReq.Record
 	53,  // 15: essay.show.DoExerciseResp.records:type_name -> essay.show.Records
 	49,  // 16: essay.show.Exercise.question:type_name -> essay.show.Question
 	52,  // 17: essay.show.Exercise.history:type_name -> essay.show.History
@@ -9769,23 +10337,23 @@ var file_essay_show_common_proto_depIdxs = []int32{
 	51,  // 19: essay.show.ChoiceQuestion.options:type_name -> essay.show.Option
 	53,  // 20: essay.show.History.records:type_name -> essay.show.Records
 	54,  // 21: essay.show.Records.records:type_name -> essay.show.Record
-	132, // 22: essay.show.ListClassesReq.paginationOptions:type_name -> basic.PaginationOptions
+	140, // 22: essay.show.ListClassesReq.paginationOptions:type_name -> basic.PaginationOptions
 	60,  // 23: essay.show.ListClassesResp.classes:type_name -> essay.show.ClassInfo
-	132, // 24: essay.show.GetClassMembersReq.paginationOptions:type_name -> basic.PaginationOptions
+	140, // 24: essay.show.GetClassMembersReq.paginationOptions:type_name -> basic.PaginationOptions
 	63,  // 25: essay.show.GetClassMembersResp.members:type_name -> essay.show.ClassMemberInfo
-	131, // 26: essay.show.ReadingQuestion.options:type_name -> essay.show.ReadingQuestion.OptionsEntry
+	139, // 26: essay.show.ReadingQuestion.options:type_name -> essay.show.ReadingQuestion.OptionsEntry
 	72,  // 27: essay.show.ReadingQuestion.scoring_rubric:type_name -> essay.show.ScoringRubricItem
 	73,  // 28: essay.show.ReadingContent.questions:type_name -> essay.show.ReadingQuestion
 	1,   // 29: essay.show.CreateHomeworkReq.subject:type_name -> essay.show.Subject
 	74,  // 30: essay.show.CreateHomeworkReq.readingContent:type_name -> essay.show.ReadingContent
-	132, // 31: essay.show.ListHomeworksReq.paginationOptions:type_name -> basic.PaginationOptions
+	140, // 31: essay.show.ListHomeworksReq.paginationOptions:type_name -> basic.PaginationOptions
 	80,  // 32: essay.show.ListHomeworksResp.homeworks:type_name -> essay.show.HomeworkInfo
 	1,   // 33: essay.show.HomeworkInfo.subject:type_name -> essay.show.Subject
 	74,  // 34: essay.show.HomeworkInfo.readingContent:type_name -> essay.show.ReadingContent
 	2,   // 35: essay.show.HomeworkInfo.status:type_name -> essay.show.HomeworkStatus
-	132, // 36: essay.show.GetSubmissionsReq.paginationOptions:type_name -> basic.PaginationOptions
+	140, // 36: essay.show.GetSubmissionsReq.paginationOptions:type_name -> basic.PaginationOptions
 	92,  // 37: essay.show.GetSubmissionsResp.submissions:type_name -> essay.show.SubmissionInfo
-	132, // 38: essay.show.GetUserSubmissionsReq.paginationOptions:type_name -> basic.PaginationOptions
+	140, // 38: essay.show.GetUserSubmissionsReq.paginationOptions:type_name -> basic.PaginationOptions
 	2,   // 39: essay.show.SubmissionInfo.status:type_name -> essay.show.HomeworkStatus
 	25,  // 40: essay.show.ModifySubmissionEvaluateReq.content:type_name -> essay.show.ModifyItem
 	25,  // 41: essay.show.ModifySubmissionEvaluateReq.expression:type_name -> essay.show.ModifyItem
@@ -9793,17 +10361,17 @@ var file_essay_show_common_proto_depIdxs = []int32{
 	25,  // 43: essay.show.ModifySubmissionEvaluateReq.development:type_name -> essay.show.ModifyItem
 	25,  // 44: essay.show.ModifySubmissionEvaluateReq.overallComment:type_name -> essay.show.ModifyItem
 	21,  // 45: essay.show.DownloadSubmissionEvaluateReq.excludeOptions:type_name -> essay.show.EvaluateExcludeOptions
-	132, // 46: essay.show.ListQuestionBanksReq.paginationOptions:type_name -> basic.PaginationOptions
+	140, // 46: essay.show.ListQuestionBanksReq.paginationOptions:type_name -> basic.PaginationOptions
 	3,   // 47: essay.show.ListQuestionBanksReq.type:type_name -> essay.show.QuestionBankType
 	105, // 48: essay.show.ListQuestionBanksResp.questionBanks:type_name -> essay.show.QuestionBank
-	132, // 49: essay.show.GetAdminHomeworkStatisticsReq.paginationOptions:type_name -> basic.PaginationOptions
+	140, // 49: essay.show.GetAdminHomeworkStatisticsReq.paginationOptions:type_name -> basic.PaginationOptions
 	109, // 50: essay.show.GetAdminHomeworkStatisticsResp.statistics:type_name -> essay.show.HomeworkStatistics
 	110, // 51: essay.show.HomeworkStatistics.submissions:type_name -> essay.show.SubmissionStatistics
 	4,   // 52: essay.show.MbaQuestionBrief.examType:type_name -> essay.show.MbaExamType
 	5,   // 53: essay.show.MbaQuestionBrief.topicType:type_name -> essay.show.MbaTopicType
 	4,   // 54: essay.show.ListMbaQuestionsReq.examType:type_name -> essay.show.MbaExamType
 	5,   // 55: essay.show.ListMbaQuestionsReq.topicType:type_name -> essay.show.MbaTopicType
-	132, // 56: essay.show.ListMbaQuestionsReq.paginationOptions:type_name -> basic.PaginationOptions
+	140, // 56: essay.show.ListMbaQuestionsReq.paginationOptions:type_name -> basic.PaginationOptions
 	112, // 57: essay.show.ListMbaQuestionsResp.questions:type_name -> essay.show.MbaQuestionBrief
 	4,   // 58: essay.show.MbaQuestion.examType:type_name -> essay.show.MbaExamType
 	5,   // 59: essay.show.MbaQuestion.topicType:type_name -> essay.show.MbaTopicType
@@ -9814,15 +10382,16 @@ var file_essay_show_common_proto_depIdxs = []int32{
 	5,   // 64: essay.show.MbaEvaluateBrief.topicType:type_name -> essay.show.MbaTopicType
 	4,   // 65: essay.show.ListMbaEvaluatesReq.examType:type_name -> essay.show.MbaExamType
 	5,   // 66: essay.show.ListMbaEvaluatesReq.topicType:type_name -> essay.show.MbaTopicType
-	132, // 67: essay.show.ListMbaEvaluatesReq.paginationOptions:type_name -> basic.PaginationOptions
+	140, // 67: essay.show.ListMbaEvaluatesReq.paginationOptions:type_name -> basic.PaginationOptions
 	122, // 68: essay.show.ListMbaEvaluatesResp.evaluates:type_name -> essay.show.MbaEvaluateBrief
-	0,   // 69: essay.show.GetUserInfoResp.Payload.role:type_name -> essay.show.UserRole
-	128, // 70: essay.show.ListSimpleExercisesResp.SimpleExercise.records:type_name -> essay.show.ListSimpleExercisesResp.Record
-	71,  // [71:71] is the sub-list for method output_type
-	71,  // [71:71] is the sub-list for method input_type
-	71,  // [71:71] is the sub-list for extension type_name
-	71,  // [71:71] is the sub-list for extension extendee
-	0,   // [0:71] is the sub-list for field type_name
+	127, // 69: essay.show.ListMembershipProductsResp.products:type_name -> essay.show.MembershipProduct
+	0,   // 70: essay.show.GetUserInfoResp.Payload.role:type_name -> essay.show.UserRole
+	136, // 71: essay.show.ListSimpleExercisesResp.SimpleExercise.records:type_name -> essay.show.ListSimpleExercisesResp.Record
+	72,  // [72:72] is the sub-list for method output_type
+	72,  // [72:72] is the sub-list for method input_type
+	72,  // [72:72] is the sub-list for extension type_name
+	72,  // [72:72] is the sub-list for extension extendee
+	0,   // [0:72] is the sub-list for field type_name
 }
 
 func init() { file_essay_show_common_proto_init() }
@@ -11284,7 +11853,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[121].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserInfoResp_Payload); i {
+			switch v := v.(*MembershipProduct); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11296,7 +11865,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[122].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListSimpleExercisesResp_Record); i {
+			switch v := v.(*ListMembershipProductsReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11308,7 +11877,7 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[123].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListSimpleExercisesResp_SimpleExercise); i {
+			switch v := v.(*ListMembershipProductsResp); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -11320,6 +11889,102 @@ func file_essay_show_common_proto_init() {
 			}
 		}
 		file_essay_show_common_proto_msgTypes[124].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SignMembershipReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[125].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SignMembershipResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[126].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MembershipNotifyReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[127].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetMembershipStatusReq); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[128].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetMembershipStatusResp); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[129].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*GetUserInfoResp_Payload); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[130].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListSimpleExercisesResp_Record); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[131].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListSimpleExercisesResp_SimpleExercise); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_essay_show_common_proto_msgTypes[132].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DoExerciseReq_Record); i {
 			case 0:
 				return &v.state
@@ -11358,7 +12023,7 @@ func file_essay_show_common_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_essay_show_common_proto_rawDesc,
 			NumEnums:      6,
-			NumMessages:   126,
+			NumMessages:   134,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

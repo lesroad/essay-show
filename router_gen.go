@@ -3,8 +3,8 @@
 package main
 
 import (
-	"github.com/cloudwego/hertz/pkg/app/server"
 	router "essay-show/biz/adaptor/router"
+	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
 // register registers all routers.

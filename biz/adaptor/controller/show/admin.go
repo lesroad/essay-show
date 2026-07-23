@@ -40,7 +40,7 @@ func AddGradeCount(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(show.Response)
-
-	c.JSON(consts.StatusOK, resp)
+	p := provider.Get()
+	resp, err := p.AdminService.AddGradeCount(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
 }

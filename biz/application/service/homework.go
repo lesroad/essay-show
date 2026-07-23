@@ -1343,7 +1343,7 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 		markSubmissionFailed(ctx, submission, s.SubmissionMapper, err.Error())
 		return
 	}
-	if teacher.Count < 1 {
+	if !user.IsVipActive(teacher) && teacher.Count < 1 {
 		markSubmissionFailed(ctx, submission, s.SubmissionMapper, "老师批改次数不足")
 		return
 	}
@@ -1419,9 +1419,11 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 			markSubmissionFailed(ctx, submission, s.SubmissionMapper, err.Error())
 			return
 		}
-		// 扣除老师批改次数
-		if err := s.UserMapper.UpdateCount(ctx, submission.TeacherID, -1); err != nil {
-			log.Error("扣除老师批改次数失败: %v", err)
+		// 扣除老师批改次数（VIP 跳过）
+		if !user.IsVipActive(teacher) {
+			if err := s.UserMapper.UpdateCount(ctx, submission.TeacherID, -1); err != nil {
+				log.Error("扣除老师批改次数失败: %v", err)
+			}
 		}
 		log.Info("网页端作业批改完成: %s", submission.ID.Hex())
 		return
@@ -1485,11 +1487,13 @@ func (s *HomeworkService) processOneSubmission(ctx context.Context, submission *
 		return
 	}
 
-	// 扣除老师批改次数
-	if err := s.UserMapper.UpdateCount(ctx, submission.TeacherID, -1); err != nil {
-		markSubmissionFailed(ctx, submission, s.SubmissionMapper, "扣除批改次数失败")
-		log.Error("扣除老师批改次数失败: %v", err)
-		return
+	// 扣除老师批改次数（VIP 跳过）
+	if !user.IsVipActive(teacher) {
+		if err := s.UserMapper.UpdateCount(ctx, submission.TeacherID, -1); err != nil {
+			markSubmissionFailed(ctx, submission, s.SubmissionMapper, "扣除批改次数失败")
+			log.Error("扣除老师批改次数失败: %v", err)
+			return
+		}
 	}
 
 	// 保存批改结果

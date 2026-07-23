@@ -550,3 +550,28 @@ func _listmbaevaluatesMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _membershipMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _cancelmembershipMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _listmembershipproductsMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _signmembershipMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _getmembershipstatusMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

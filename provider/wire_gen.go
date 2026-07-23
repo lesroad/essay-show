@@ -18,6 +18,7 @@ import (
 	"essay-show/biz/infrastructure/repository/invitation"
 	"essay-show/biz/infrastructure/repository/log"
 	mbaRepo "essay-show/biz/infrastructure/repository/mba"
+	membershipRepo "essay-show/biz/infrastructure/repository/membership"
 	"essay-show/biz/infrastructure/repository/question_bank"
 	"essay-show/biz/infrastructure/repository/user"
 )
@@ -101,6 +102,13 @@ func NewProvider() (*Provider, error) {
 		RecordMapper:   mbaRecordMapper,
 		UserMapper:     mongoMapper,
 	}
+	membershipProductMapper := membershipRepo.NewProductMongoMapper(configConfig)
+	membershipOrderMapper := membershipRepo.NewOrderMongoMapper(configConfig)
+	membershipService := &service.MembershipService{
+		ProductMapper: membershipProductMapper,
+		OrderMapper:   membershipOrderMapper,
+		UserMapper:    mongoMapper,
+	}
 	providerProvider := &Provider{
 		Config:              configConfig,
 		UserService:         userService,
@@ -113,6 +121,7 @@ func NewProvider() (*Provider, error) {
 		QuestionBankService: questionBankService,
 		AdminService:        adminService,
 		MbaService:          mbaService,
+		MembershipService:   membershipService,
 	}
 	return providerProvider, nil
 }

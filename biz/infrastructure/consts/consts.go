@@ -76,3 +76,10 @@ const (
 	AuthTypeWechatPhone     = "wechat-phone"
 	AuthTypeWebPhone        = "web-phone"
 )
+
+// 会员订单状态
+const (
+	MembershipOrderStatusPending = 0 // 待处理
+	MembershipOrderStatusSuccess = 1 // 成功
+	MembershipOrderStatusFailed  = 2 // 失败
+)
