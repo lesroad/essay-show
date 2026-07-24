@@ -404,30 +404,28 @@ func (s *HomeworkService) ListHomeworks(ctx context.Context, req *show.ListHomew
 		}
 
 		if u.Role == consts.RoleTeacher {
-			// 获取提交数量
-			homeworkInfos, err := s.SubmissionMapper.FindByHomeworkID(ctx, h.ID.Hex())
+			submissions, err := s.SubmissionMapper.FindByHomeworkID(ctx, h.ID.Hex())
 			if err != nil {
 				log.Error("获取提交情况失败: %v", err)
 				return nil, consts.ErrGetHomeworkList
 			}
-			submitCount := int64(len(homeworkInfos))
+			submitCount := int64(len(submissions))
 
-			// 计算未提交学生数
+			// 未提交学生数
 			notSubmittedCount := c.MemberCount - submitCount
 
-			// 获取已批改数量
-			gradeList, err := s.SubmissionMapper.FindByStatus(ctx, []int{consts.StatusCompleted, consts.StatusModified})
-			if err != nil {
-				log.Error("获取已批改数量失败: %v", err)
-				return nil, consts.ErrGetHomeworkList
+			// 本作业已批改数量
+			gradeCount := int64(0)
+			for _, sub := range submissions {
+				if sub.Status == int(consts.StatusCompleted) || sub.Status == int(consts.StatusModified) {
+					gradeCount++
+				}
 			}
-			gradeCount := int64(len(gradeList))
 
 			homeworkInfo.SubmissionCount = &submitCount
 			homeworkInfo.NotSubmittedCount = &notSubmittedCount
 			homeworkInfo.GradeCount = &gradeCount
 		} else {
-			// 获取提交状态
 			submission, err := s.SubmissionMapper.FindLatestByMemberAndHomework(ctx, member.ID.Hex(), h.ID.Hex())
 			switch {
 			case err == consts.ErrNotFound:
