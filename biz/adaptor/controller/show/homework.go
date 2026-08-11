@@ -251,3 +251,19 @@ func ModifySubmissionEvaluateSaveHistory(ctx context.Context, c *app.RequestCont
 	resp, err := p.HomeworkService.ModifySubmissionEvaluateSaveHistory(ctx, &req)
 	adaptor.PostProcess(ctx, c, &req, resp, err)
 }
+
+// DeleteHomeworkSubmission .
+// @router /homework/submission/delete/:submissionId [DELETE]
+func DeleteHomeworkSubmission(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req show.DeleteHomeworkSubmissionReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	p := provider.Get()
+	resp, err := p.HomeworkService.DeleteHomeworkSubmission(ctx, &req)
+	adaptor.PostProcess(ctx, c, &req, resp, err)
+}

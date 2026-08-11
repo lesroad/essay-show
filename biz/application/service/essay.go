@@ -162,6 +162,9 @@ exitLoop:
 		}
 	}
 
+	// 异步推送批改完成通知，不阻塞主流程、不影响批改结果返回
+	go s.sendEvaluateCompleteNotification(meta.GetUserId(), req.Title, l.ID.Hex(), finalResult)
+
 	// 发送最终完成消息
 	finalData := &show.EssayEvaluateResp{
 		Id:       l.ID.Hex(),
@@ -171,6 +174,67 @@ exitLoop:
 	}
 	util.SendStreamMessage(resultChan, util.STComplete, "批改已完成", finalData)
 	return nil
+}
+
+// sendEvaluateCompleteNotification 批改完成后异步推送小程序订阅消息通知
+// 使用独立的 context，避免请求结束/流关闭后 ctx 被取消导致推送发不出去
+func (s *EssayService) sendEvaluateCompleteNotification(userId, title, logId, finalResult string) {
+	defer func() {
+		if r := recover(); r != nil {
+			logx.Error("批改完成推送通知 panic: %v", r)
+		}
+	}()
+
+	if consts.EvaluateCompleteTemplateId == "" {
+		// 模板尚未在微信后台配置，先跳过，避免无意义的失败调用
+		return
+	}
+
+	// 解析总分，取不到就不填充分数，只用默认提示语
+	var scoreText string
+	var evaluateResult stateless.Evaluate
+	if err := json.Unmarshal([]byte(finalResult), &evaluateResult); err == nil {
+		scoreText = evaluateResult.AIEvaluation.ScoreEvaluation.Scores.AllWithTotal // 形如 "85/100"
+	}
+
+	essayTitle := title
+	if essayTitle == "" {
+		essayTitle = "我的作文"
+	}
+	essayTitle = truncateRunes(essayTitle, 20) // 微信 thing 字段最多20个字符
+
+	remark := "作文批改已完成，快去查看详情吧~"
+	if scoreText != "" {
+		remark = fmt.Sprintf("得分%s，快去查看详情吧~", scoreText)
+	}
+	remark = truncateRunes(remark, 20)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	page := fmt.Sprintf(consts.EvaluateCompleteJumpPage, logId)
+	client := util.GetHttpClient()
+	resp, err := client.SendWechatMessage(ctx, userId, consts.EvaluateCompleteTemplateId, map[string]string{
+		// TODO: 下面两个 key（thing1/thing2）要换成微信后台该模板实际生成的字段key
+		"thing1": essayTitle,
+		"thing2": remark,
+	}, &page)
+	if err != nil {
+		logx.Error("批改完成推送失败: userId=%s, logId=%s, err=%v", userId, logId, err)
+		return
+	}
+	if code, ok := resp["code"].(float64); !ok || code != 0 {
+		logx.Error("批改完成推送失败: userId=%s, logId=%s, resp=%v", userId, logId, resp)
+	}
+}
+
+// truncateRunes 按字符（而不是字节）截断字符串，避免中文被截断出乱码
+func truncateRunes(s string, limit int) string {
+	r := []rune(s)
+	if len(r) <= limit {
+		return s
+	}
+	return string(r[:limit])
 }
 
 // GetEvaluateLogs 分页查找获取正常的批改记录

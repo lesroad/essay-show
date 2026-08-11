@@ -575,3 +575,18 @@ func _getmembershipstatusMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _submission0Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _delete2Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _deletehomeworksubmissionMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

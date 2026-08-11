@@ -38,6 +38,7 @@ type IHomeworkService interface {
 	ReCorrectHomework(ctx context.Context, req *show.ReCorrectHomeworkReq) (*show.ReCorrectHomeworkResp, error)
 	ReEvaluateHomework(ctx context.Context, req *show.ReEvaluateHomeworkReq) (*show.ReEvaluateHomeworkResp, error)
 	DeleteHomework(ctx context.Context, req *show.DeleteHomeworkReq) (*show.Response, error)
+	DeleteHomeworkSubmission(ctx context.Context, req *show.DeleteHomeworkSubmissionReq) (*show.Response, error)
 	GetHomeworkStatistics(ctx context.Context, req *show.GetHomeworkStatisticsReq) (*show.GetHomeworkStatisticsResp, error)
 	StartGrader(ctx context.Context) error
 }
@@ -1566,6 +1567,44 @@ func (s *HomeworkService) DeleteHomework(ctx context.Context, req *show.DeleteHo
 	err = s.HomeworkMapper.Delete(ctx, req.HomeworkId)
 	if err != nil {
 		log.Error("删除作业失败: %v", err)
+		return nil, consts.ErrCall
+	}
+
+	return &show.Response{
+		Code: 0,
+		Msg:  "删除成功",
+	}, nil
+}
+
+func (s *HomeworkService) DeleteHomeworkSubmission(ctx context.Context, req *show.DeleteHomeworkSubmissionReq) (*show.Response, error) {
+	userMeta := adaptor.ExtractUserMeta(ctx)
+	if userMeta.GetUserId() == "" {
+		return nil, consts.ErrNotAuthentication
+	}
+
+	user, err := s.UserMapper.FindOne(ctx, userMeta.GetUserId())
+	if err != nil {
+		log.Error("获取用户信息失败: %v", err)
+		return nil, consts.ErrNotFound
+	}
+	if user.Role != consts.RoleTeacher {
+		log.Error("用户不是教师，无权删除批改记录, userId: %s, role: %d", userMeta.GetUserId(), user.Role)
+		return nil, consts.ErrNotAuthentication
+	}
+
+	submission, err := s.SubmissionMapper.FindOne(ctx, req.SubmissionId)
+	if err != nil {
+		log.Error("批改记录不存在: submissionId=%s, error=%v", req.SubmissionId, err)
+		return nil, consts.ErrNotFound
+	}
+	if submission.TeacherID != userMeta.GetUserId() {
+		log.Error("用户无权删除此批改记录, submissionId=%s, userId=%s, teacherId=%s",
+			req.SubmissionId, userMeta.GetUserId(), submission.TeacherID)
+		return nil, consts.ErrNotFound
+	}
+
+	if err := s.SubmissionMapper.Delete(ctx, req.SubmissionId); err != nil {
+		log.Error("删除批改记录失败: submissionId=%s, error=%v", req.SubmissionId, err)
 		return nil, consts.ErrCall
 	}
 
