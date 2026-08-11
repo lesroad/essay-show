@@ -56,6 +56,11 @@ const (
 	InvitationTemplateId = "KglmTXE65kiACeTM85kwpA2oO9SU0urRGBJTo4gH9O0"
 	InvitationJumpPage   = "pages/tabbar/profile"
 
+	// TODO: 在微信公众平台「订阅消息-公共模板库」选用模板后，把生成的模板ID填到这里
+	EvaluateCompleteTemplateId = ""
+	// TODO: 确认小程序批改详情页真实路由后替换，%s 会被替换为批改记录ID
+	EvaluateCompleteJumpPage = "pages/report/report?id=%s"
+
 	RecorrectTypeFirst  = 0 // 首次提交
 	RecorrectTypeImage  = 1 // 上传图片重批
 	RecorrectTypeText   = 2 // 修改原文后重批

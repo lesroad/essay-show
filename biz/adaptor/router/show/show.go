@@ -102,6 +102,13 @@ func Register(r *server.Hertz) {
 			_lesson_plan.POST("/download", append(_downloadlessonplanMw(), show.DownloadLessonPlan)...)
 		}
 		{
+			_submission0 := _homework0.Group("/submission", _submission0Mw()...)
+			{
+				_delete2 := _submission0.Group("/delete", _delete2Mw()...)
+				_delete2.DELETE("/:submissionId", append(_deletehomeworksubmissionMw(), show.DeleteHomeworkSubmission)...)
+			}
+		}
+		{
 			_user := _homework0.Group("/user", _userMw()...)
 			_user.GET("/submissions", append(_getusersubmissionsMw(), show.GetUserSubmissions)...)
 		}
